@@ -1,0 +1,279 @@
+// ─── Shared TypeScript Types for Bridge of Compassion ────────────────────
+
+export interface NavItem {
+  label: string
+  href: string
+  children?: NavItem[]
+}
+
+export interface Program {
+  id: string
+  title: string
+  slug: string
+  category: string
+  shortDescription: string
+  description: string
+  imageUrl?: string | null
+  featured: boolean
+  displayOrder: number
+  status: 'DRAFT' | 'PUBLISHED'
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export interface Event {
+  id: string
+  title: string
+  category: string
+  shortDescription?: string | null
+  description: string
+  date: Date | string
+  startTime: string
+  endTime?: string | null
+  location: string
+  featuredImage?: string | null
+  registrationLink?: string | null
+  registrationOpen: boolean
+  featured: boolean
+  published: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export interface NewsPost {
+  id: string
+  title: string
+  slug: string
+  excerpt?: string | null
+  content: string
+  category?: string | null
+  featuredImage?: string | null
+  imagePublicId?: string | null
+  author?: string | null
+  featured: boolean
+  published: boolean
+  publishedAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export interface Story {
+  id: string
+  title: string
+  excerpt: string
+  category: string
+  date: string            // ISO date string
+  imagePlaceholder: string
+  href: string
+  readTime: string
+}
+
+export interface ImpactStat {
+  value: string           // e.g. "500+" — placeholder until client provides real data
+  label: string
+  description: string
+  icon: string
+}
+
+export interface TeamMember {
+  id: string
+  name: string
+  role: string
+  bio: string
+  imagePlaceholder: string
+}
+
+export interface GalleryItem {
+  id: string
+  title?: string | null
+  caption?: string | null
+  altText?: string | null
+  imageUrl: string
+  imagePublicId?: string | null
+  category?: string | null
+  featured: boolean
+  displayOrder: number
+  published: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export interface GalleryImage {
+  id: string
+  src: string
+  alt: string
+  caption?: string
+  category: string
+  width: number
+  height: number
+}
+
+export interface ContactCommunication {
+  id: string
+  contactSubmissionId: string
+  subject: string
+  message: string
+  recipientEmail: string
+  sentByUserId?: string | null
+  sentByName?: string | null
+  sentAt: Date | string
+  deliveryStatus: string
+  providerMessageId?: string | null
+  createdAt: Date | string
+}
+
+export interface ContactSubmission {
+  id: string
+  name: string
+  email: string
+  phone?: string | null
+  subject: string
+  message: string
+  status: 'NEW' | 'READ' | 'REPLIED' | 'ARCHIVED'
+  adminNotes?: string | null
+  communications?: ContactCommunication[]
+  createdAt: Date | string
+  updatedAt: Date | string
+}
+
+// Legacy form-only type (kept for backward compatibility)
+export interface ContactFormData {
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string
+  subject: string
+  message: string
+}
+
+
+export interface VolunteerFormData {
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string
+  location?: string
+  interests: string[]
+  availability: string
+  message?: string
+  consent: boolean
+}
+
+export interface VolunteerCommunication {
+  id: string
+  volunteerApplicationId: string
+  subject: string
+  message: string
+  recipientEmail: string
+  sentByUserId?: string | null
+  sentByName?: string | null
+  sentAt: Date | string
+  deliveryStatus: string
+  providerMessageId?: string | null
+  createdAt: Date | string
+}
+
+export interface VolunteerApplication {
+  id: string
+  firstName: string
+  lastName: string
+  email: string
+  phone?: string | null
+  location?: string | null
+  interests: string[]
+  availability: string
+  message?: string | null
+  consent: boolean
+  status: 'NEW' | 'REVIEWING' | 'CONTACTED' | 'ACTIVE' | 'INACTIVE'
+  adminNotes?: string | null
+  communications?: VolunteerCommunication[]
+  createdAt: Date | string
+  updatedAt: Date | string
+}
+
+export interface NewsletterSubscriber {
+  id: string
+  email: string
+  firstName?: string | null
+  status: 'ACTIVE' | 'UNSUBSCRIBED'
+  subscribedAt: Date | string
+  unsubscribedAt?: Date | string | null
+}
+
+export interface NewsletterFormData {
+  email: string
+  firstName?: string
+}
+
+export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'cyan' | 'environmental' | 'outline-green' | 'soft' | 'tertiary'
+export type ButtonSize = 'sm' | 'md' | 'lg'
+
+export type DonationStatusType = 'INTENT' | 'PENDING' | 'COMPLETED' | 'FAILED' | 'CANCELLED' | 'REFUNDED'
+
+export interface DonationRecord {
+  id: string
+  amount: number | string
+  currency: string
+  donorName?: string | null
+  donorEmail?: string | null
+  donorPhone?: string | null
+  isAnonymous: boolean
+  message?: string | null
+  frequency: 'ONE_TIME' | 'MONTHLY' | 'ANNUAL'
+  status: DonationStatusType
+  paymentProvider?: string | null
+  paymentRef?: string | null
+  paypalOrderId?: string | null
+  paypalCaptureId?: string | null
+  paypalPayerId?: string | null
+  paypalPayerEmail?: string | null
+  receiptSent: boolean
+  receiptSentAt?: Date | string | null
+  createdAt: Date | string
+  updatedAt: Date | string
+}
+
+export interface DonationSummaryStats {
+  totalRaised: number
+  completedCount: number
+  pendingCount: number
+  refundedCount: number
+  failedCount: number
+  totalRecords: number
+}
+
+// ─── Site Settings ────────────────────────────────────────────────────────────
+
+export interface SiteSettingsRecord {
+  id: string
+  organizationName: string
+  publicEmail: string
+  phone?: string | null
+  addressLine1?: string | null
+  addressLine2?: string | null
+  city?: string | null
+  province?: string | null
+  postalCode?: string | null
+  country?: string | null
+  publicLocationLabel?: string | null
+
+  // Social
+  facebookUrl?: string | null
+  instagramUrl?: string | null
+  linkedinUrl?: string | null
+  youtubeUrl?: string | null
+
+  // Site & Donations
+  footerTagline?: string | null
+  defaultCurrency: string
+  donationPresetAmounts: number[]
+
+  // SEO
+  seoTitle?: string | null
+  seoDescription?: string | null
+
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+

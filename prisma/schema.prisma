@@ -1,0 +1,313 @@
+// ─── Prisma Schema — Bridge of Compassion ────────────────────────────────────
+// Database: PostgreSQL via Neon (serverless)
+// ORM:      Prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─── Admin Users ──────────────────────────────────────────────────────────────
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // bcrypt hash — never store plaintext
+  name      String?
+  avatarUrl String?  // Cloudinary image URL
+  role      Role     @default(ADMIN)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+enum Role {
+  ADMIN
+  SUPER_ADMIN
+}
+
+// ─── Contact Submissions ──────────────────────────────────────────────────────
+
+model ContactSubmission {
+  id             String                  @id @default(cuid())
+  name           String
+  email          String
+  phone          String?
+  subject        String
+  message        String
+  status         ContactStatus           @default(NEW)
+  adminNotes     String?
+  communications ContactCommunication[]
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+
+  @@map("contact_submissions")
+}
+
+model ContactCommunication {
+  id                  String            @id @default(cuid())
+  contactSubmissionId String
+  contactSubmission   ContactSubmission @relation(fields: [contactSubmissionId], references: [id], onDelete: Cascade)
+  subject             String
+  message             String
+  recipientEmail      String
+  sentByUserId        String?
+  sentByName          String?
+  sentAt              DateTime          @default(now())
+  deliveryStatus      String            @default("SENT")
+  providerMessageId   String?
+  createdAt           DateTime          @default(now())
+
+  @@map("contact_communications")
+}
+
+enum ContactStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+// ─── Volunteer Applications ───────────────────────────────────────────────────
+
+model VolunteerApplication {
+  id             String                   @id @default(cuid())
+  firstName      String
+  lastName       String
+  email          String
+  phone          String?
+  location       String?
+  interests      String[]                 // areas of interest (stored as text array)
+  availability   String
+  message        String?
+  consent        Boolean
+  status         VolunteerStatus          @default(NEW)
+  adminNotes     String?
+  communications VolunteerCommunication[]
+  createdAt      DateTime                 @default(now())
+  updatedAt      DateTime                 @updatedAt
+
+  @@map("volunteer_applications")
+}
+
+model VolunteerCommunication {
+  id                     String               @id @default(cuid())
+  volunteerApplicationId String
+  volunteerApplication   VolunteerApplication @relation(fields: [volunteerApplicationId], references: [id], onDelete: Cascade)
+  subject                String
+  message                String
+  recipientEmail         String
+  sentByUserId           String?
+  sentByName             String?
+  sentAt                 DateTime             @default(now())
+  deliveryStatus         String               @default("SENT")
+  providerMessageId      String?
+  createdAt              DateTime             @default(now())
+
+  @@map("volunteer_communications")
+}
+
+enum VolunteerStatus {
+  NEW
+  REVIEWING
+  CONTACTED
+  ACTIVE
+  INACTIVE
+}
+
+// ─── Newsletter Subscribers ───────────────────────────────────────────────────
+
+model NewsletterSubscriber {
+  id             String           @id @default(cuid())
+  email          String           @unique
+  firstName      String?
+  status         SubscriberStatus @default(ACTIVE)
+  subscribedAt   DateTime         @default(now())
+  unsubscribedAt DateTime?
+
+  @@map("newsletter_subscribers")
+}
+
+enum SubscriberStatus {
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+// ─── Programs ─────────────────────────────────────────────────────────────────
+
+model Program {
+  id               String        @id @default(cuid())
+  title            String
+  slug             String        @unique
+  category         String        // e.g. "Environmental Education", "Outdoor Learning", etc.
+  shortDescription String        // Summary for cards & previews
+  description      String        // Full rich description
+  imageUrl         String?       // Featured image URL
+  featured         Boolean       @default(false)
+  displayOrder     Int           @default(0)
+  status           ProgramStatus @default(DRAFT)
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@map("programs")
+}
+
+enum ProgramStatus {
+  DRAFT
+  PUBLISHED
+}
+
+// ─── Events ───────────────────────────────────────────────────────────────────
+
+model Event {
+  id               String   @id @default(cuid())
+  title            String
+  category         String   @default("Environmental")
+  shortDescription String?
+  description      String
+  date             DateTime
+  startTime        String
+  endTime          String?
+  location         String
+  featuredImage    String?
+  registrationLink String?
+  registrationOpen Boolean  @default(true)
+  featured         Boolean  @default(false)
+  published        Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("events")
+}
+
+// ─── News / Stories ───────────────────────────────────────────────────────────
+
+model NewsPost {
+  id            String    @id @default(cuid())
+  title         String
+  slug          String    @unique
+  excerpt       String?
+  content       String
+  category      String?   // e.g. "Environmental", "Youth", "Community", "Conservation"
+  featuredImage String?   // Featured image Cloudinary URL
+  imagePublicId String?   // Cloudinary public ID for clean deletion/replacement
+  author        String?
+  featured      Boolean   @default(false)
+  published     Boolean   @default(false)
+  publishedAt   DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("news_posts")
+}
+
+// ─── Gallery ──────────────────────────────────────────────────────────────────
+
+model GalleryItem {
+  id            String   @id @default(cuid())
+  title         String?
+  caption       String?
+  altText       String?
+  imageUrl      String   // Cloudinary media URL
+  imagePublicId String?  // Cloudinary public ID for clean deletion/replacement
+  category      String?  @default("Community")
+  featured      Boolean  @default(false)
+  displayOrder  Int      @default(0)
+  published     Boolean  @default(false)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("gallery_items")
+}
+
+// ─── Donations ────────────────────────────────────────────────────────────────
+// Server-authoritative donation records backed by PayPal Sandbox / Live.
+// Status lifecycle: INTENT → PENDING → COMPLETED | FAILED | CANCELLED | REFUNDED
+// A donation is COMPLETED only when PayPal server-to-server capture is verified.
+
+model Donation {
+  id               String            @id @default(cuid())
+  amount           Decimal           @db.Decimal(10, 2)
+  currency         String            @default("CAD")
+  donorName        String?
+  donorEmail       String?
+  donorPhone       String?
+  isAnonymous      Boolean           @default(false)
+  message          String?
+  frequency        DonationFrequency @default(ONE_TIME)
+  status           DonationStatus    @default(INTENT)
+  paymentProvider  String?           @default("paypal")
+  paymentRef       String?           // external provider transaction/session ID
+  paypalOrderId    String?           @unique
+  paypalCaptureId  String?           @unique
+  paypalPayerId    String?
+  paypalPayerEmail String?
+  receiptSent      Boolean           @default(false)
+  receiptSentAt    DateTime?
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@map("donations")
+}
+
+enum DonationFrequency {
+  ONE_TIME
+  MONTHLY
+  ANNUAL
+}
+
+enum DonationStatus {
+  INTENT      // User has expressed intent; no payment initiated
+  PENDING     // Payment initiated with provider, awaiting confirmation
+  COMPLETED   // Confirmed by payment provider
+  FAILED      // Payment provider reported failure
+  CANCELLED   // User or system cancelled before completion
+  REFUNDED    // Verified payment provider refund
+}
+
+// ─── Site Settings ────────────────────────────────────────────────────────────
+// Singleton global configuration record (id = "site").
+// Manages organization contact info, social links, donation defaults, and SEO.
+
+model SiteSettings {
+  id                    String   @id @default("site")
+  organizationName      String   @default("Bridge of Compassion")
+  publicEmail           String   @default("admin.bridgeofcompassion@gmail.com")
+  phone                 String?
+  addressLine1          String?
+  addressLine2          String?
+  city                  String?  @default("Toronto")
+  province              String?  @default("Ontario")
+  postalCode            String?
+  country               String?  @default("Canada")
+  publicLocationLabel   String?  @default("Toronto, Ontario")
+
+  // Social Links (null/empty = not rendered publicly)
+  facebookUrl           String?
+  instagramUrl          String?
+  linkedinUrl           String?
+  youtubeUrl            String?
+
+  // Site & Content
+  footerTagline         String?  @default("Nurturing children, protecting nature, and building futures through hands-on environmental education and community action.")
+  defaultCurrency       String   @default("CAD")
+  donationPresetAmounts Int[]    @default([25, 50, 100, 250, 500])
+
+  // SEO Defaults
+  seoTitle              String?  @default("Bridge of Compassion | Environmental Education & Youth Action")
+  seoDescription        String?  @default("Bridge of Compassion empowers children, young people, and communities through environmental education, sustainability programs, climate action, outdoor learning, and community initiatives.")
+
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+
