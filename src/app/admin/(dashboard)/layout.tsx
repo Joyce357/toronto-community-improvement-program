@@ -9,7 +9,7 @@ import SessionProvider from './SessionProvider'
 import AdminLayoutClient from '@/components/admin/AdminLayoutClient'
 
 export const metadata = {
-  title: { default: 'Admin — Bridge of Compassion', template: '%s | Admin' },
+  title: { default: 'Admin — TCIP', template: '%s | Admin' },
   robots: { index: false, follow: false },
 }
 

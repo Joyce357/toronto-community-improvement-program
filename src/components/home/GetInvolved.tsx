@@ -1,192 +1,132 @@
-'use client'
-
 import Link from 'next/link'
-import Container from '@/components/ui/Container'
-import { useVolunteerModal } from '@/context/VolunteerModalContext'
-
-const pathways = [
-  {
-    id: 'volunteer',
-    title: 'Volunteer',
-    description:
-      'Join community cleanups, tree planting days, and youth outdoor learning programmes. Every volunteer makes an impact.',
-    iconColor: 'text-brand-green',
-    iconBg: 'bg-brand-sage/40',
-    borderColor: 'hover:border-brand-green',
-    href: '/volunteer',
-    cta: 'Become a Volunteer',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'donate',
-    title: 'Donate',
-    description:
-      'Your financial contribution directly funds tree planting, youth workshops, and environmental educational resources.',
-    iconColor: 'text-accent-pink',
-    iconBg: 'bg-pink-50',
-    borderColor: 'hover:border-accent-pink',
-    href: '/donate',
-    cta: 'Make a Donation',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'partner',
-    title: 'Partner With Us',
-    description:
-      'Schools, community groups, and green organizations can amplify environmental impact by partnering with us.',
-    iconColor: 'text-brand-cyan',
-    iconBg: 'bg-brand-sky',
-    borderColor: 'hover:border-brand-cyan',
-    href: '/get-involved#partner',
-    cta: 'Explore Partnership',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'support',
-    title: 'Spread the Word',
-    description:
-      'Share our mission, attend workshops, or connect young leaders with environmental initiatives in your community.',
-    iconColor: 'text-accent-orange',
-    iconBg: 'bg-orange-50',
-    borderColor: 'hover:border-accent-orange',
-    href: '/get-involved',
-    cta: 'Get Involved',
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
-          d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-      </svg>
-    ),
-  },
-]
 
 export default function GetInvolved() {
-  const { openVolunteerModal } = useVolunteerModal()
-
   return (
-    <section
-      className="section-py bg-brand-cream dark:bg-dark-bg border-y border-border-soft/60 dark:border-dark-border relative overflow-hidden transition-colors duration-200"
-      aria-labelledby="get-involved-heading"
-    >
-      <Container className="relative z-10">
-
-        {/* Section heading */}
-        <div className="text-center max-w-2xl mx-auto mb-7 sm:mb-9">
-          <span className="eyebrow block mb-2">
-            Get Involved
+    <section id="get-involved" className="w-full bg-surface-bright py-space-3xl scroll-mt-20 border-b border-outline-variant/30">
+      <div className="max-w-7xl mx-auto px-4 md:px-margin-desktop">
+        
+        {/* Header */}
+        <div className="text-center max-w-2xl mx-auto mb-space-2xl">
+          <span className="font-eyebrow-bold text-eyebrow-bold text-primary uppercase tracking-widest block mb-2">
+            JOIN OUR MOVEMENT
           </span>
-          <h2
-            id="get-involved-heading"
-            className="text-brand-navy dark:text-dark-text-primary text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-2.5 text-balance tracking-tight"
-          >
-            Be Part of the Environmental Movement
+          <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
+            Be Part of the Change
           </h2>
-          <div className="divider-green mx-auto mb-2.5" />
-          <p className="text-text-secondary dark:text-dark-text-secondary text-sm sm:text-base leading-relaxed">
-            There are many ways to support young people, community sustainability, and the
-            natural world. Find the path that fits you.
+          <p className="font-body-md text-body-md text-on-surface-variant mt-2">
+            Whether giving your time, building a civic workplace partnership, or funding vital bursaries, your involvement transforms lives in Toronto.
           </p>
         </div>
 
-        {/* Pathway cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {pathways.map((pathway) => {
-            const isVolunteer = pathway.id === 'volunteer'
-
-            return isVolunteer ? (
-              <button
-                key={pathway.id}
-                type="button"
-                onClick={openVolunteerModal}
-                className={`group flex flex-col text-left p-5 sm:p-6 rounded-2xl bg-brand-warm-white dark:bg-dark-card border border-border-soft dark:border-dark-border
-                           hover:border-brand-green/40 dark:hover:border-brand-cyan/40 hover:shadow-card-hover hover:-translate-y-0.5
-                           transition-all duration-200 focus-visible:ring-2 focus-visible:ring-brand-navy dark:focus-visible:ring-brand-cyan cursor-pointer ${pathway.borderColor}`}
-                aria-label={pathway.cta}
-              >
-                {/* Icon */}
-                <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl ${pathway.iconBg} dark:bg-dark-surface ${pathway.iconColor} flex items-center justify-center mb-3 sm:mb-3.5 group-hover:scale-105 transition-transform duration-200`}>
-                  {pathway.icon}
-                </div>
-
-                {/* Text */}
-                <h3 className="text-base sm:text-lg font-bold text-brand-navy dark:text-dark-text-primary mb-1.5 group-hover:text-brand-green dark:group-hover:text-brand-cyan transition-colors">
-                  {pathway.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-text-secondary dark:text-dark-text-secondary leading-relaxed flex-1">
-                  {pathway.description}
-                </p>
-
-                {/* CTA arrow */}
-                <div className="flex items-center gap-1.5 mt-4 sm:mt-5 text-xs sm:text-sm font-bold text-brand-green dark:text-brand-cyan group-hover:text-brand-navy dark:group-hover:text-dark-text-primary transition-colors duration-200">
-                  {pathway.cta}
-                  <svg
-                    className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </div>
-              </button>
-            ) : (
+        {/* 3 Columns with Varied Accent Styles */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-gutter-desktop">
+          
+          {/* Column 1: Volunteer Skills */}
+          <div className="bg-surface-container-low rounded-3xl p-8 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 border border-outline-variant/30">
+            <div>
+              <div className="w-14 h-14 rounded-2xl bg-secondary-container flex items-center justify-center text-on-secondary-container mb-6">
+                <span className="material-symbols-outlined text-3xl">volunteer_activism</span>
+              </div>
+              <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold">
+                Volunteer Your Skills
+              </h3>
+              <p className="font-body-md text-body-md text-on-surface-variant mt-3 leading-relaxed">
+                Support secondary school youth tutoring, lead newcomer conversation circles, assist with job fair logistics, or mentor emerging professionals.
+              </p>
+              <ul className="mt-4 flex flex-col gap-2 font-body-sm text-body-sm text-on-surface">
+                <li className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-base">check_circle</span>
+                  <span>Flexible weekend &amp; evening slots</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-base">check_circle</span>
+                  <span>Formal volunteer certificate provided</span>
+                </li>
+              </ul>
+            </div>
+            <div className="pt-8">
               <Link
-                key={pathway.id}
-                href={pathway.href}
-                className={`group flex flex-col p-5 sm:p-6 rounded-2xl bg-brand-warm-white dark:bg-dark-card border border-border-soft dark:border-dark-border
-                           hover:border-brand-green/40 dark:hover:border-brand-cyan/40 hover:shadow-card-hover hover:-translate-y-0.5
-                           transition-all duration-200 focus-visible:ring-2 focus-visible:ring-brand-navy dark:focus-visible:ring-brand-cyan ${pathway.borderColor}`}
-                aria-label={pathway.cta}
+                href="/volunteer"
+                className="inline-flex items-center gap-2 font-title-md text-title-md text-primary hover:text-primary-container transition-colors group"
               >
-                {/* Icon */}
-                <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl ${pathway.iconBg} dark:bg-dark-surface ${pathway.iconColor} flex items-center justify-center mb-3 sm:mb-3.5 group-hover:scale-105 transition-transform duration-200`}>
-                  {pathway.icon}
-                </div>
-
-                {/* Text */}
-                <h3 className="text-base sm:text-lg font-bold text-brand-navy dark:text-dark-text-primary mb-1.5 group-hover:text-brand-green dark:group-hover:text-brand-cyan transition-colors">
-                  {pathway.title}
-                </h3>
-                <p className="text-xs sm:text-sm text-text-secondary dark:text-dark-text-secondary leading-relaxed flex-1">
-                  {pathway.description}
-                </p>
-
-                {/* CTA arrow */}
-                <div className="flex items-center gap-1.5 mt-4 sm:mt-5 text-xs sm:text-sm font-bold text-brand-green dark:text-brand-cyan group-hover:text-brand-navy dark:group-hover:text-dark-text-primary transition-colors duration-200">
-                  {pathway.cta}
-                  <svg
-                    className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </div>
+                <span>Apply to Volunteer</span>
+                <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">
+                  arrow_forward
+                </span>
               </Link>
-            )
-          })}
+            </div>
+          </div>
+
+          {/* Column 2: Corporate & Civic Partners */}
+          <div className="bg-surface-container rounded-3xl p-8 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 border border-outline-variant/30">
+            <div>
+              <div className="w-14 h-14 rounded-2xl bg-primary-fixed flex items-center justify-center text-on-primary-fixed mb-6">
+                <span className="material-symbols-outlined text-3xl">corporate_fare</span>
+              </div>
+              <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold">
+                Partner With TCIP
+              </h3>
+              <p className="font-body-md text-body-md text-on-surface-variant mt-3 leading-relaxed">
+                Co-design internships, sponsor technology workstations, or host workplace job shadowing to unlock untapped talent across Toronto.
+              </p>
+              <ul className="mt-4 flex flex-col gap-2 font-body-sm text-body-sm text-on-surface">
+                <li className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-base">check_circle</span>
+                  <span>Diversity hiring &amp; career pipelines</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-primary text-base">check_circle</span>
+                  <span>Community impact recognition</span>
+                </li>
+              </ul>
+            </div>
+            <div className="pt-8">
+              <Link
+                href="/get-involved"
+                className="inline-flex items-center gap-2 font-title-md text-title-md text-primary hover:text-primary-container transition-colors group"
+              >
+                <span>Explore Partnerships</span>
+                <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">
+                  arrow_forward
+                </span>
+              </Link>
+            </div>
+          </div>
+
+          {/* Column 3: Donate / Support Our Work */}
+          <div className="bg-primary text-on-primary rounded-3xl p-8 flex flex-col justify-between shadow-md hover:shadow-lg transition-all duration-300">
+            <div>
+              <div className="w-14 h-14 rounded-2xl bg-surface-container-lowest/20 flex items-center justify-center text-on-primary mb-6">
+                <span className="material-symbols-outlined text-3xl">favorite</span>
+              </div>
+              <h3 className="font-headline-sm text-headline-sm text-on-primary font-bold">
+                Support Our Work
+              </h3>
+              <p className="font-body-md text-body-md text-on-primary-container mt-3 leading-relaxed">
+                Your charitable gift directly funds emergency settlement bursaries, laptops for STEM labs, and dental hygiene supplies for vulnerable families.
+              </p>
+              <div className="mt-6 p-4 rounded-2xl bg-surface-container-lowest/10 backdrop-blur-sm">
+                <p className="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider font-semibold">
+                  Direct Impact
+                </p>
+                <p className="font-body-sm text-body-sm text-on-primary mt-1">
+                  $75 provides a newcomer student with school supplies and transit passes for a month.
+                </p>
+              </div>
+            </div>
+            <div className="pt-8">
+              <Link
+                href="/donate"
+                className="w-full inline-flex items-center justify-center bg-surface-container-lowest hover:bg-surface-container text-on-surface font-title-md text-title-md py-3.5 px-6 rounded-full shadow-sm transition-colors text-center"
+              >
+                Make a Donation
+              </Link>
+            </div>
+          </div>
+
         </div>
 
-
-      </Container>
+      </div>
     </section>
   )
 }

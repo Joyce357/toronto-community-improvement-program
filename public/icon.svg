@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" rx="14" fill="#171717"/>
+  <rect x="0.75" y="0.75" width="62.5" height="62.5" rx="13.25" stroke="#2D2D2D" stroke-width="1.5" fill="none"/>
+  <!-- Signature TCIP Red micro-accent dot -->
+  <circle cx="53" cy="11" r="3.75" fill="#D72638"/>
+  <!-- TCIP letters -->
+  <text x="31" y="42" font-family="-apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="22" font-weight="900" letter-spacing="-0.8" text-anchor="middle">
+    <tspan fill="#FFFFFF">T</tspan><tspan fill="#16A34A">C</tspan><tspan fill="#FFFFFF">IP</tspan>
+  </text>
+</svg>

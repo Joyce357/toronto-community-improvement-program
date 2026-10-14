@@ -7,7 +7,7 @@ import { getCanonicalUrl } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'Contact',
-  description: 'Get in touch with Bridge of Compassion. We would love to hear from you regarding environmental programs, volunteering, and community partnerships.',
+  description: 'Get in touch with Toronto Community Improvement Program (TCIP). We would love to hear from you regarding community programs, volunteering, and partnerships.',
   alternates: { canonical: getCanonicalUrl('/contact') },
   openGraph: { url: getCanonicalUrl('/contact') },
 }
@@ -18,23 +18,21 @@ export default async function ContactPage() {
   return (
     <>
       {/* Hero */}
-      <section className="bg-brand-navy-dark dark:bg-dark-bg section-py text-brand-warm-white relative overflow-hidden transition-colors duration-200">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-cyan/15 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-green/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-        <div className="container-boc text-center relative z-10">
-          <p className="eyebrow text-brand-cyan mb-4">Get in Touch</p>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-brand-warm-white mb-4 text-balance tracking-tight">
-            Contact Us
+      <section className="bg-brand-cream dark:bg-dark-bg section-py text-brand-black dark:text-white relative overflow-hidden transition-colors duration-200 border-b border-border-soft dark:border-dark-border">
+        <div className="container-site text-center relative z-10">
+          <p className="eyebrow text-brand-green mb-3">Get in Touch</p>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-brand-black dark:text-white mb-4 text-balance tracking-tight">
+            Contact TCIP
           </h1>
-          <p className="text-brand-warm-white/80 text-lg max-w-xl mx-auto">
-            Have a question, a partnership idea, or want to get involved with our environmental programs? We would love to hear from you.
+          <p className="text-text-secondary dark:text-dark-text-secondary text-base sm:text-lg max-w-xl mx-auto">
+            Have a question, a neighborhood partnership idea, or want to get involved with our programs? We would love to connect with you.
           </p>
         </div>
       </section>
 
       {/* Contact section */}
       <section className="section-py bg-brand-warm-white dark:bg-dark-bg transition-colors duration-200">
-        <div className="container-boc">
+        <div className="container-tcip">
           <div className="grid lg:grid-cols-5 gap-12 items-start">
 
             {/* Left: Form */}

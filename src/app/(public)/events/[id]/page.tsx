@@ -108,7 +108,7 @@ export default async function EventDetailPage({ params }: Props) {
     },
     organizer: {
       '@type': 'Organization',
-      name: 'Bridge of Compassion',
+      name: 'Toronto Community Improvement Program',
       url: getBaseUrl(),
     },
     ...(event.featuredImage ? { image: event.featuredImage } : {}),
@@ -121,7 +121,7 @@ export default async function EventDetailPage({ params }: Props) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }}
       />
-      <div className="min-h-screen bg-brand-warm-white dark:bg-dark-bg transition-colors duration-200">
+      <div className="min-h-screen bg-tcip-offwhite">
         {/* ── Breadcrumb & Top Bar ─────────────────────────────────────────── */}
       <div className="bg-brand-cream/60 dark:bg-dark-surface border-b border-border-soft/60 dark:border-dark-border py-3 sm:py-4 transition-colors duration-200">
         <Container>

@@ -103,7 +103,7 @@ export default function GalleryGrid({ initialItems }: GalleryGridProps) {
                 <div className="relative aspect-[4/3] w-full overflow-hidden bg-brand-cream/40 dark:bg-dark-surface">
                   <Image
                     src={item.imageUrl}
-                    alt={item.altText || item.caption || item.title || 'Bridge of Compassion Gallery'}
+                    alt={item.altText || item.caption || item.title || 'Toronto Community Improvement Program Gallery Photo'}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     className="object-cover group-hover:scale-105 transition-transform duration-300"

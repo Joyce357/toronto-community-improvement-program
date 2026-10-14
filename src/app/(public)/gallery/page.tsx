@@ -7,7 +7,7 @@ import { getCanonicalUrl } from '@/lib/seo'
 
 export const metadata: Metadata = {
   title: 'Gallery',
-  description: 'Photos from Bridge of Compassion events, programs, and community conservation activities.',
+  description: 'Photos from Toronto Community Improvement Program (TCIP) workshops, youth initiatives, and neighborhood events.',
   alternates: { canonical: getCanonicalUrl('/gallery') },
   openGraph: { url: getCanonicalUrl('/gallery') },
 }
@@ -20,16 +20,14 @@ export default async function GalleryPage() {
   return (
     <>
       {/* Hero Section */}
-      <section className="bg-brand-navy-dark dark:bg-dark-bg section-py text-brand-warm-white relative overflow-hidden transition-colors duration-200">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-cyan/15 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-green/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
+      <section className="bg-brand-cream dark:bg-dark-bg section-py text-brand-black dark:text-white relative overflow-hidden transition-colors duration-200 border-b border-border-soft dark:border-dark-border">
         <Container className="text-center relative z-10">
-          <p className="eyebrow text-brand-cyan mb-3">Our Community &amp; Work</p>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-brand-warm-white mb-4 tracking-tight">
+          <p className="eyebrow text-brand-green mb-3">Our Community &amp; Work</p>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-brand-black dark:text-white mb-4 tracking-tight">
             Photo Gallery
           </h1>
-          <p className="text-brand-warm-white/80 text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
-            A visual journey through our environmental stewardship initiatives, youth programs, and community restoration projects.
+          <p className="text-text-secondary dark:text-dark-text-secondary text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
+            A visual showcase of our skills training workshops, youth leadership sessions, and neighborhood community events.
           </p>
         </Container>
       </section>

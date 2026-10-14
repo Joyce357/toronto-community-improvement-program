@@ -1,5 +1,5 @@
 // ─── Cloudinary Server Helper ─────────────────────────────────────────────
-// Server-only helper for durable media upload & management across Bridge of Compassion.
+// Server-only helper for durable media upload & management across Toronto Community Improvement Program.
 
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary'
 

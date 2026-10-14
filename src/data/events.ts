@@ -29,7 +29,7 @@ export const events: Event[] = [
     location: '[Location TBC]',
     shortDescription: 'Attend our orientation to learn about volunteer opportunities.',
     description:
-      'New to Bridge of Compassion? Attend our orientation to learn about volunteer opportunities, how we work, and how you can make an impact.',
+      'New to Toronto Community Improvement Program? Attend our orientation to learn about volunteer opportunities, how we work, and how you can make an impact.',
     category: 'Volunteer',
     registrationLink: '#',
     registrationOpen: true,

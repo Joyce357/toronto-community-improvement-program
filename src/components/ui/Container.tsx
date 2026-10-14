@@ -12,7 +12,7 @@ export default function Container({
   as: Tag = 'div',
 }: ContainerProps) {
   return (
-    <Tag className={`container-boc ${className}`}>
+    <Tag className={`container-tcip ${className}`}>
       {children}
     </Tag>
   )

@@ -1,6 +1,6 @@
 // ─── NextAuth Type Augmentation ──────────────────────────────────────────
 // Extends the default NextAuth Session/User/JWT types with
-// the additional fields used by Bridge of Compassion admin auth.
+// the additional fields used by TCIP admin auth.
 
 import 'next-auth'
 import 'next-auth/jwt'

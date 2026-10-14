@@ -1,4 +1,4 @@
-// ─── Shared TypeScript Types for Bridge of Compassion ────────────────────
+// ─── Shared TypeScript Types for Toronto Community Improvement Program (TCIP) ───
 
 export interface NavItem {
   label: string
@@ -205,7 +205,22 @@ export interface NewsletterFormData {
   firstName?: string
 }
 
-export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'cyan' | 'environmental' | 'outline-green' | 'soft' | 'tertiary'
+export type ButtonVariant =
+  | 'primary'
+  | 'secondary'
+  | 'dark'
+  | 'ghost'
+  | 'cyan'
+  | 'environmental'
+  | 'outline'
+  | 'outline-navy'
+  | 'outline-green'
+  | 'outline-emerald'
+  | 'accent'
+  | 'gold'
+  | 'soft'
+  | 'tertiary'
+  | 'danger'
 export type ButtonSize = 'sm' | 'md' | 'lg'
 
 export type DonationStatusType = 'INTENT' | 'PENDING' | 'COMPLETED' | 'FAILED' | 'CANCELLED' | 'REFUNDED'

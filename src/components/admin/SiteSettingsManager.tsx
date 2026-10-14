@@ -327,7 +327,7 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               name="facebookUrl"
               value={formData.facebookUrl}
               onChange={handleChange}
-              placeholder="https://facebook.com/bridgeofcompassion"
+              placeholder="https://facebook.com/torontocip"
               className={inputClass('facebookUrl')}
             />
             {fieldErrors.facebookUrl && (
@@ -347,7 +347,7 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               name="instagramUrl"
               value={formData.instagramUrl}
               onChange={handleChange}
-              placeholder="https://instagram.com/bridgeofcompassion"
+              placeholder="https://instagram.com/torontocip"
               className={inputClass('instagramUrl')}
             />
             {fieldErrors.instagramUrl && (
@@ -367,7 +367,7 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               name="linkedinUrl"
               value={formData.linkedinUrl}
               onChange={handleChange}
-              placeholder="https://linkedin.com/company/bridgeofcompassion"
+              placeholder="https://linkedin.com/company/torontocip"
               className={inputClass('linkedinUrl')}
             />
             {fieldErrors.linkedinUrl && (
@@ -387,7 +387,7 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               name="youtubeUrl"
               value={formData.youtubeUrl}
               onChange={handleChange}
-              placeholder="https://youtube.com/@bridgeofcompassion"
+              placeholder="https://youtube.com/@torontocip"
               className={inputClass('youtubeUrl')}
             />
             {fieldErrors.youtubeUrl && (

@@ -1,139 +1,131 @@
-import Container from '@/components/ui/Container'
-
-interface ImpactTheme {
-  id: string
-  metric?: string // Optional for when verified numbers become available from the client
-  title: string
-  description: string
-  iconBg: string
-  iconColor: string
-  icon: React.ReactNode
-}
-
-const impactThemes: ImpactTheme[] = [
-  {
-    id: 'outdoor-learning',
-    title: 'Outdoor Learning',
-    description: 'Helping young people learn through direct experiences with nature.',
-    iconBg: 'bg-brand-green/20',
-    iconColor: 'text-brand-leaf',
-    icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M12 2L6.5 11h3.5v7h4v-7h3.5L12 2zM4 19h16v2H4v-2z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'environmental-education',
-    title: 'Environmental Education',
-    description: 'Building practical knowledge for responsible environmental choices.',
-    iconBg: 'bg-brand-cyan/20',
-    iconColor: 'text-brand-cyan',
-    icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'community-action',
-    title: 'Community Action',
-    description: 'Turning environmental learning into meaningful local participation.',
-    iconBg: 'bg-amber-500/20',
-    iconColor: 'text-accent-orange',
-    icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="10" />
-        <path d="M2 12h20" />
-        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" />
-      </svg>
-    ),
-  },
-  {
-    id: 'youth-leadership',
-    title: 'Youth Leadership',
-    description: 'Helping young people build confidence, responsibility, and leadership.',
-    iconBg: 'bg-pink-500/20',
-    iconColor: 'text-accent-pink',
-    icon: (
-      <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-      </svg>
-    ),
-  },
-]
-
 export default function ImpactStats() {
   return (
-    <section
-      className="section-py bg-brand-navy-dark text-brand-warm-white relative overflow-hidden"
-      aria-labelledby="impact-heading"
-    >
-      {/* Subtle organic radial accents */}
-      <div
-        className="absolute inset-0 opacity-15 pointer-events-none"
-        aria-hidden="true"
-        style={{
-          backgroundImage: `radial-gradient(circle at 15% 50%, #1FA7D8 0%, transparent 60%),
-                            radial-gradient(circle at 85% 50%, #4F7F32 0%, transparent 60%)`,
-        }}
-      />
-
-      <Container className="relative z-10">
-
-        {/* Section Heading */}
-        <div className="text-center max-w-2xl mx-auto mb-7 sm:mb-9">
-          <span className="inline-block text-brand-cyan text-xs sm:text-sm font-bold tracking-widest uppercase mb-2">
-            Our Purpose &amp; Impact
+    <section id="impact" className="w-full bg-surface-bright py-space-3xl scroll-mt-20 border-b border-outline-variant/30">
+      <div className="max-w-7xl mx-auto px-4 md:px-margin-desktop">
+        
+        {/* Section Header */}
+        <div className="mb-space-xl">
+          <span className="font-eyebrow-bold text-eyebrow-bold text-primary uppercase tracking-widest block mb-2">
+            VERIFIED REACH
           </span>
-          <h2
-            id="impact-heading"
-            className="text-brand-warm-white text-2xl sm:text-3xl lg:text-4xl font-extrabold mb-2.5 text-balance tracking-tight"
-          >
-            Empowering Youth, Protecting Nature
+          <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
+            Measurable, Human-Centered Progress Across Toronto
           </h2>
-          <div className="w-12 h-1 bg-brand-green rounded-full mx-auto mb-2.5" />
-          <p className="text-brand-warm-white/80 text-sm sm:text-base leading-relaxed">
-            Connecting young people with the living world through experiential learning,
-            practical conservation, and community stewardship.
-          </p>
         </div>
 
-        {/* 4-column qualitative impact strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {impactThemes.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-col items-center text-center p-4.5 sm:p-5 rounded-2xl bg-white/[0.06] border border-white/10
-                         hover:bg-white/[0.1] hover:border-white/20 transition-all duration-200 group hover:-translate-y-0.5"
-            >
-              {/* Icon */}
-              <div className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center ${item.iconBg} ${item.iconColor} mb-3 sm:mb-3.5 transition-transform duration-200 group-hover:scale-105`}>
-                {item.icon}
-              </div>
-
-              {/* Optional future metric placeholder */}
-              {item.metric && (
-                <p className="text-2xl sm:text-3xl font-extrabold text-brand-warm-white mb-1.5">
-                  {item.metric}
-                </p>
-              )}
-
-              {/* Title */}
-              <h3 className="text-brand-warm-white font-bold text-base mb-1.5">
-                {item.title}
+        {/* Asymmetric 5 cols / 7 cols layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-stretch">
+          
+          {/* Large Visual Anchor Column (5 cols) */}
+          <div className="lg:col-span-5 relative rounded-3xl overflow-hidden min-h-[420px] shadow-md flex flex-col justify-end p-8 bg-surface-container-high border border-outline-variant/30">
+            <img
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbeJd1juVQ6JsClOcSctj023GjPtaVD94GINgL1FTQGa7BjNEbbWVauC8SlH9SOOB9UmwOsOW1NP-l1r3T3UeJDro6s82zc4kiK8kGRzQXUzOWHwCm_EqGA8zHHF1Wri97WETXXJ0_9IL_tHdhGNovT0iHTG2re0zXTfFqGoa4s8Fqvp9vbZA-l5D_Lfe1AE1pEgVqKFWsPhmaUyb02QIPosYfcScsawjVxY0HzW_6Y32de16hRNgG"
+              alt="TCIP Community Impact in Action in Toronto"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-on-primary-fixed via-on-primary-fixed/40 to-transparent" />
+            <div className="relative z-10 text-on-primary">
+              <span className="bg-primary px-3 py-1 rounded-full font-eyebrow-bold text-eyebrow-bold uppercase inline-block mb-3 shadow-xs">
+                100% COMMUNITY-LED
+              </span>
+              <h3 className="font-headline-md text-headline-md leading-tight mb-2">
+                Direct Grassroots Investment
               </h3>
-
-              {/* Description */}
-              <p className="text-brand-warm-white/75 text-xs sm:text-sm leading-relaxed">
-                {item.description}
+              <p className="font-body-md text-body-md text-primary-fixed leading-relaxed">
+                Every initiative is co-designed with community members living in Scarborough, Rexdale, North York, and downtown Toronto.
               </p>
             </div>
-          ))}
+          </div>
+
+          {/* 3 Supporting Impact Metric Columns (7 cols) */}
+          <div className="lg:col-span-7 grid grid-cols-1 md:grid-cols-3 gap-gutter-desktop">
+            
+            {/* Metric 1: Employment */}
+            <div className="bg-surface-container-low rounded-3xl p-6 flex flex-col justify-between shadow-sm border border-outline-variant/30">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-secondary-container flex items-center justify-center text-on-secondary-container mb-6">
+                  <span className="material-symbols-outlined text-2xl">work</span>
+                </div>
+                <span className="font-display-xl text-display-xl text-primary font-bold block leading-none">
+                  350+
+                </span>
+                <h4 className="font-title-md text-title-md text-on-surface mt-2 font-bold">
+                  Job Seekers Supported
+                </h4>
+                <p className="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+                  Resume coaching, mock technical interviews, and on-the-spot hiring events with GTA corporate partners.
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-outline-variant/30">
+                <div className="flex justify-between font-label-sm text-label-sm mb-1.5 text-on-surface">
+                  <span>Placement Success</span>
+                  <span className="font-bold text-primary">78%</span>
+                </div>
+                <div className="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+                  <div className="h-2 rounded-full bg-primary" style={{ width: '78%' }} />
+                </div>
+              </div>
+            </div>
+
+            {/* Metric 2: Youth Mentored */}
+            <div className="bg-surface-container-low rounded-3xl p-6 flex flex-col justify-between shadow-sm border border-outline-variant/30">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-primary-fixed flex items-center justify-center text-on-primary-fixed mb-6">
+                  <span className="material-symbols-outlined text-2xl">school</span>
+                </div>
+                <span className="font-display-xl text-display-xl text-primary font-bold block leading-none">
+                  500+
+                </span>
+                <h4 className="font-title-md text-title-md text-on-surface mt-2 font-bold">
+                  Youth In STEM &amp; Arts
+                </h4>
+                <p className="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+                  Engaged in creative code, digital filmmaking, and robotics across 18 public secondary school hubs.
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-outline-variant/30">
+                <div className="flex justify-between font-label-sm text-label-sm mb-1.5 text-on-surface">
+                  <span>Active School Hubs</span>
+                  <span className="font-bold text-primary">18 Centres</span>
+                </div>
+                <div className="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+                  <div className="h-2 rounded-full bg-primary" style={{ width: '90%' }} />
+                </div>
+              </div>
+            </div>
+
+            {/* Metric 3: Healthcare Access */}
+            <div className="bg-surface-container-low rounded-3xl p-6 flex flex-col justify-between shadow-sm border border-outline-variant/30">
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed mb-6">
+                  <span className="material-symbols-outlined text-2xl">health_and_safety</span>
+                </div>
+                <span className="font-display-xl text-display-xl text-tertiary font-bold block leading-none">
+                  1.2k+
+                </span>
+                <h4 className="font-title-md text-title-md text-on-surface mt-2 font-bold">
+                  Health Screenings
+                </h4>
+                <p className="font-body-sm text-body-sm text-on-surface-variant mt-2 leading-relaxed">
+                  Preventative dental consultations, maternal checkups, and hygiene kits provided free of charge.
+                </p>
+              </div>
+              <div className="mt-6 pt-4 border-t border-outline-variant/30">
+                <div className="flex justify-between font-label-sm text-label-sm mb-1.5 text-on-surface">
+                  <span>Care Distribution</span>
+                  <span className="font-bold text-tertiary">100% Free</span>
+                </div>
+                <div className="w-full h-2 rounded-full bg-surface-container overflow-hidden">
+                  <div className="h-2 rounded-full bg-tertiary" style={{ width: '100%' }} />
+                </div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
 
-      </Container>
+      </div>
     </section>
   )
 }

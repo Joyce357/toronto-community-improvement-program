@@ -105,7 +105,7 @@ export default function VolunteerForm({
       }
 
       setStatus('success')
-      setApiMsg(data.message ?? 'Thank you for volunteering with Bridge of Compassion. Your application has been received.')
+      setApiMsg(data.message ?? 'Thank you for volunteering with Toronto Community Improvement Program. Your application has been received.')
       if (onSuccess) {
         onSuccess()
       }
@@ -139,11 +139,11 @@ export default function VolunteerForm({
           🤝
         </div>
         <div className="space-y-1.5">
-          <h3 className="text-xl sm:text-2xl font-extrabold text-brand-navy dark:text-dark-text-primary">
+          <h3 className="text-xl sm:text-2xl font-extrabold text-brand-black dark:text-dark-text-primary">
             Application Received!
           </h3>
           <p className="text-text-secondary dark:text-dark-text-secondary text-xs sm:text-sm max-w-md mx-auto leading-relaxed">
-            {apiMsg || 'Thank you for volunteering with Bridge of Compassion. Your application has been received.'}
+            {apiMsg || 'Thank you for volunteering with Toronto Community Improvement Program. Your application has been received.'}
           </p>
         </div>
         <p className="text-xs text-text-secondary/80 dark:text-dark-text-secondary/80">
@@ -300,7 +300,7 @@ export default function VolunteerForm({
             className="mt-0.5 w-4 h-4 rounded border-border-soft dark:border-dark-border text-brand-green focus:ring-brand-green"
           />
           <span className="text-xs text-text-secondary dark:text-dark-text-secondary leading-relaxed">
-            I consent to Bridge of Compassion storing my information to process this application
+            I consent to Toronto Community Improvement Program storing my information to process this application
             and contact me about volunteer opportunities. <span className="text-red-500">*</span>
           </span>
         </label>

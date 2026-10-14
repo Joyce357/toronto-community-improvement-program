@@ -8,8 +8,8 @@ import type { SiteSettingsRecord } from '@/types'
 
 export const DEFAULT_SITE_SETTINGS: SiteSettingsRecord = {
   id:                    'site',
-  organizationName:      'Bridge of Compassion',
-  publicEmail:           'admin.bridgeofcompassion@gmail.com',
+  organizationName:      'Toronto Community Improvement Program',
+  publicEmail:           'contact@torontocip.com',
   phone:                 null,
 
   addressLine1:          null,
@@ -27,13 +27,13 @@ export const DEFAULT_SITE_SETTINGS: SiteSettingsRecord = {
   youtubeUrl:            null,
 
   // Site & Content
-  footerTagline:         'Nurturing children, protecting nature, and building futures through hands-on environmental education and community action.',
+  footerTagline:         'Empowering Toronto newcomers, youth, and families through community programs, skill building, and collaborative advocacy.',
   defaultCurrency:       'CAD',
   donationPresetAmounts: [25, 50, 100, 250, 500],
 
   // SEO
-  seoTitle:              'Bridge of Compassion | Environmental Education & Youth Action',
-  seoDescription:        'Bridge of Compassion empowers children, young people, and communities through environmental education, sustainability programs, climate action, outdoor learning, and community initiatives.',
+  seoTitle:              'Toronto Community Improvement Program | Building Stronger Communities',
+  seoDescription:        'Toronto Community Improvement Program supports newcomers, youth, families, and underserved communities through education, empowerment, advocacy, and community development initiatives.',
 }
 
 

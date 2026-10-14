@@ -1,137 +1,212 @@
 import Link from 'next/link'
-import Image from 'next/image'
-import Container from '@/components/ui/Container'
-import SectionHeading from '@/components/ui/SectionHeading'
-import Button from '@/components/ui/Button'
-import { getFeaturedNews, getNewsCategoryStyle } from '@/lib/news'
-import { formatDate } from '@/lib/utils'
+import { getFeaturedNews } from '@/lib/news'
+import type { NewsPost } from '@/types'
 
 export default async function StoriesPreview() {
-  const featured = await getFeaturedNews(3)
+  let stories: NewsPost[] = []
+
+  try {
+    stories = await getFeaturedNews(1)
+  } catch {
+    // fallback
+  }
+
+  const story = stories?.[0]
+  const featuredStory = {
+    id: story?.id || 'featured-1',
+    title: story?.title || 'Annual Youth Summer Job Fair: Connecting 200+ Youth with GTA Employers',
+    slug: story?.slug || 'youth-summer-job-fair',
+    category: story?.category || 'Community Impact Report',
+    dateLabel: 'July 2024',
+    readTime: '4 min read',
+    excerpt:
+      story?.excerpt ||
+      'How TCIP convened leading municipal employers, tech studios, and healthcare providers to offer on-the-spot interviews, resume critiques, and immediate paid vocational internships to Black and newcomer young adults across the GTA.',
+    image:
+      story?.featuredImage ||
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuD29wMRhc0BpWpmqJass7z3zg943Jq-XyZM9bPKwkMf0nR_Y-DwwD9g94t9op5o8I1yPY3OXauCzuR_DaUFuJtmxXnXY_IHA9ImKnuJIiTPD18_rjOwAOC0y9g4uMPMEUQobt-pcAMOwqedDDgDdQstmpx78wxzdCiCO6F4uf0ip3rgLjP5oTNcQksk0kE0_5wBEtiTvEGrSepIs3caBNKjMQW0QWEZjOBpiHRERZpzyjLRcfYVVxFb',
+    fallback: '/images/tcip-hero-community.jpg',
+    location: 'Metro Hall, Toronto',
+  }
+
+  const upcomingEvents = [
+    {
+      id: 'event-1',
+      month: 'OCT',
+      day: '24',
+      badge: 'WORKSHOP LAB',
+      title: 'Newcomer Career Readiness & Portfolio Review',
+      location: 'Metro Hall, 55 John St • 6:00 PM – 8:30 PM EST',
+      tag: 'Free Registration',
+      btnText: 'Register Free',
+      href: '/events',
+      accentBorder: 'border-primary',
+      tagColor: 'text-primary',
+      btnColor: 'bg-primary hover:bg-primary-container text-on-primary',
+    },
+    {
+      id: 'event-2',
+      month: 'NOV',
+      day: '08',
+      badge: 'COMMUNITY HEALTH',
+      title: 'Scarborough Health & Dental Screening Clinic',
+      location: 'Cedar Ridge Creative Centre • 10:00 AM – 3:00 PM EST',
+      tag: 'Walk-ins Welcome',
+      btnText: 'Book Time',
+      href: '/contact',
+      accentBorder: 'border-tertiary',
+      tagColor: 'text-tertiary',
+      btnColor: 'bg-surface-container-lowest hover:bg-surface-container text-on-surface shadow-sm',
+    },
+  ]
 
   return (
-    <section className="section-py bg-brand-warm-white dark:bg-dark-bg transition-colors duration-200" aria-labelledby="stories-heading">
-      <Container>
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-8 sm:mb-10">
-          <SectionHeading
-            eyebrow="News &amp; Stories"
-            title="Stories of Environmental Impact"
-            subtitle="Real stories from young people, volunteers, and the ecosystems we are privileged to protect."
-            id="stories-heading"
-          />
-          <Button href="/news" variant="secondary" size="md" className="shrink-0">
-            View All Stories
-          </Button>
+    <section id="events" className="w-full bg-surface-bright py-space-3xl scroll-mt-20 border-b border-outline-variant/30">
+      <div className="max-w-7xl mx-auto px-4 md:px-margin-desktop">
+        
+        {/* Header */}
+        <div className="mb-space-2xl">
+          <span className="font-eyebrow-bold text-eyebrow-bold text-primary uppercase tracking-widest block mb-2">
+            LIVING STORIES &amp; GATHERINGS
+          </span>
+          <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
+            Voices of Change &amp; Upcoming Events
+          </h2>
         </div>
 
-        {featured.length === 0 ? (
-          <div className="text-center py-12 px-6 bg-white dark:bg-dark-card rounded-3xl border border-border-soft dark:border-dark-border shadow-xs max-w-xl mx-auto">
-            <div className="w-12 h-12 rounded-xl bg-brand-sage/40 dark:bg-dark-surface flex items-center justify-center text-2xl mx-auto mb-3">
-              📰
+        {/* 12-Column Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop">
+          
+          {/* Left: Featured Story Feature (55% / 7 cols) */}
+          <div className="lg:col-span-7 bg-surface-container-low rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between border border-outline-variant/30">
+            <div className="w-full h-80 relative overflow-hidden bg-surface-container">
+              <img
+                src={featuredStory.image}
+                alt={featuredStory.title}
+                className="w-full h-full object-cover"
+              />
+              <span className="absolute top-4 left-4 bg-tertiary text-on-tertiary px-3 py-1 rounded-full font-eyebrow-bold text-eyebrow-bold uppercase shadow-xs">
+                FEATURED STORY
+              </span>
             </div>
-            <h3 className="text-base font-bold text-brand-navy dark:text-dark-text-primary mb-1.5">New Stories Coming Soon</h3>
-            <p className="text-xs sm:text-sm text-text-secondary dark:text-dark-text-secondary leading-relaxed mb-4">
-              We are documenting our latest youth mentorship outcomes and community restoration milestones.
-            </p>
-            <Button href="/news" variant="primary" size="sm">
-              Explore News &amp; Updates
-            </Button>
-          </div>
-        ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
-            {featured.map((story) => {
-              const catStyle = getNewsCategoryStyle(story.category)
-              const dateStr = story.publishedAt || story.createdAt
 
-              return (
+            <div className="p-8 flex flex-col justify-between flex-grow">
+              <div>
+                <div className="flex items-center gap-3 text-on-surface-variant font-label-sm text-label-sm mb-3">
+                  <span>{featuredStory.dateLabel || 'July 2024'}</span>
+                  <span>•</span>
+                  <span>{featuredStory.readTime || '4 min read'}</span>
+                  <span>•</span>
+                  <span className="text-primary font-semibold">{featuredStory.category}</span>
+                </div>
+                <h3 className="font-headline-md text-headline-md text-on-surface leading-tight font-bold">
+                  {featuredStory.title}
+                </h3>
+                <p className="font-body-md text-body-md text-on-surface-variant mt-3 leading-relaxed">
+                  {featuredStory.excerpt}
+                </p>
+              </div>
+
+              <div className="pt-6 mt-6 border-t border-outline-variant/30 flex items-center justify-between">
                 <Link
-                  key={story.id}
-                  href={`/news/${story.slug}`}
-                  className="group card flex flex-col focus-visible:ring-2 focus-visible:ring-brand-navy dark:focus-visible:ring-brand-cyan bg-white dark:bg-dark-card border border-border-soft dark:border-dark-border hover:border-brand-green/40 dark:hover:border-brand-cyan/40 hover:shadow-card-hover rounded-2xl overflow-hidden transition-all duration-200"
-                  aria-label={`Read: ${story.title}`}
+                  href="/events"
+                  className="inline-flex items-center gap-2 font-title-md text-title-md text-primary hover:text-primary-container transition-colors group"
                 >
-                  {/* Image container */}
-                  <div className="aspect-[16/9] relative overflow-hidden bg-brand-cream/60 dark:bg-dark-surface border-b border-border-soft/60 dark:border-dark-border">
-                    {story.featuredImage ? (
-                      <Image
-                        src={story.featuredImage}
-                        alt={story.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      />
-                    ) : (
-                      <div className="absolute inset-0 flex items-center justify-center text-brand-green/30 dark:text-brand-cyan/30">
-                        <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1}
-                            d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                        </svg>
-                      </div>
-                    )}
-
-                    {/* Category badge */}
-                    {story.category && (
-                      <div className="absolute top-2.5 left-2.5">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-bold border backdrop-blur-xs bg-white/95 dark:bg-dark-surface/95 ${catStyle.text} ${catStyle.border} shadow-2xs`}
-                        >
-                          {story.category}
-                        </span>
-                      </div>
-                    )}
-
-                    {/* Featured badge */}
-                    {story.featured && (
-                      <div className="absolute top-2.5 right-2.5">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-400 text-amber-950 shadow-xs">
-                          ★ Featured
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Content */}
-                  <div className="flex flex-col flex-1 p-5">
-                    {dateStr && (
-                      <div className="flex items-center gap-2 mb-2 text-text-secondary dark:text-dark-text-secondary text-xs font-medium">
-                        <time dateTime={typeof dateStr === 'string' ? dateStr : dateStr.toISOString()}>
-                          {formatDate(dateStr)}
-                        </time>
-                        {story.author && (
-                          <>
-                            <span aria-hidden="true">·</span>
-                            <span className="truncate">{story.author}</span>
-                          </>
-                        )}
-                      </div>
-                    )}
-
-                    <h3 className="text-brand-navy dark:text-dark-text-primary text-base font-bold leading-snug mb-2 group-hover:text-brand-green dark:group-hover:text-brand-cyan transition-colors duration-200 line-clamp-2">
-                      {story.title}
-                    </h3>
-
-                    {story.excerpt && (
-                      <p className="text-text-secondary dark:text-dark-text-secondary text-xs sm:text-sm leading-relaxed flex-1 mb-4 line-clamp-3">
-                        {story.excerpt}
-                      </p>
-                    )}
-
-                    <div className="flex items-center gap-1.5 text-brand-green dark:text-brand-cyan text-xs sm:text-sm font-bold group-hover:text-brand-navy dark:group-hover:text-dark-text-primary transition-colors duration-200 mt-auto pt-1">
-                      <span>Read Story</span>
-                      <svg
-                        className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
-                        fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </div>
-                  </div>
+                  <span>Read Full Story</span>
+                  <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">
+                    arrow_forward
+                  </span>
                 </Link>
-              )
-            })}
+                <span className="font-label-sm text-label-sm text-on-surface-variant">
+                  {featuredStory.location || 'Metro Hall, Toronto'}
+                </span>
+              </div>
+            </div>
           </div>
-        )}
-      </Container>
-    </section>
 
+          {/* Right: Stacked Upcoming Events (45% / 5 cols) */}
+          <div className="lg:col-span-5 flex flex-col gap-space-md">
+            <div className="flex items-center justify-between">
+              <h3 className="font-headline-sm text-headline-sm text-on-surface font-bold">
+                Upcoming Gatherings
+              </h3>
+              <Link
+                href="/events"
+                className="font-label-md text-label-md text-primary hover:underline font-semibold"
+              >
+                View All Events
+              </Link>
+            </div>
+
+            {/* Event Cards */}
+            {upcomingEvents.map((evt) => (
+              <div
+                key={evt.id}
+                className="bg-surface-container-low rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow flex gap-5 items-start border border-outline-variant/30"
+              >
+                {/* Date Badge */}
+                <div
+                  className={`w-16 h-20 rounded-2xl bg-surface-container-lowest flex flex-col items-center justify-center shrink-0 shadow-sm border-t-4 ${evt.accentBorder}`}
+                >
+                  <span className={`font-eyebrow-bold text-eyebrow-bold uppercase ${evt.tagColor}`}>
+                    {evt.month}
+                  </span>
+                  <span className="font-headline-md text-headline-md text-on-surface font-extrabold leading-none mt-1">
+                    {evt.day}
+                  </span>
+                </div>
+
+                {/* Content */}
+                <div className="flex flex-col justify-between flex-grow">
+                  <div>
+                    <span className="font-eyebrow-bold text-eyebrow-bold text-on-surface-variant uppercase tracking-wider">
+                      {evt.badge}
+                    </span>
+                    <h4 className="font-title-md text-title-md text-on-surface font-bold mt-1 leading-snug">
+                      {evt.title}
+                    </h4>
+                    <p className="font-body-sm text-body-sm text-on-surface-variant mt-1.5">
+                      {evt.location}
+                    </p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-outline-variant/30 flex items-center justify-between">
+                    <span className={`font-label-sm text-label-sm font-semibold ${evt.tagColor}`}>
+                      {evt.tag}
+                    </span>
+                    <Link
+                      href={evt.href}
+                      className={`${evt.btnColor} px-4 py-1.5 rounded-full font-label-sm text-label-sm transition-colors`}
+                    >
+                      {evt.btnText}
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            ))}
+
+            {/* Quick Event Newsletter Prompt */}
+            <div className="bg-surface-container p-6 rounded-3xl flex items-center justify-between gap-4 border border-outline-variant/30">
+              <div>
+                <p className="font-title-md text-label-md font-bold text-on-surface">
+                  Never miss a workshop or job fair
+                </p>
+                <p className="font-body-sm text-body-sm text-on-surface-variant">
+                  Get notified directly via our monthly calendar.
+                </p>
+              </div>
+              <Link
+                href="/contact"
+                className="bg-primary hover:bg-primary-container text-on-primary px-5 py-2 rounded-full font-label-sm text-label-sm whitespace-nowrap transition-colors shadow-xs"
+              >
+                Subscribe
+              </Link>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
   )
 }

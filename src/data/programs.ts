@@ -1,7 +1,7 @@
 import type { Program } from '@/types'
 
 // ─── Initial Activity Themes / Programs ───────────────────────────────────────
-// Based on approved Bridge of Compassion activity areas.
+// Based on approved Toronto Community Improvement Program activity areas.
 
 export const initialPrograms: Program[] = [
   {

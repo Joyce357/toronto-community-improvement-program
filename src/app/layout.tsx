@@ -12,19 +12,23 @@ export const metadata: Metadata = {
   metadataBase: new URL(getBaseUrl()),
   title: {
     default: DEFAULT_SITE_SETTINGS.seoTitle!,
-    template: '%s | Bridge of Compassion',
+    template: '%s | Toronto Community Improvement Program',
   },
   description: DEFAULT_SITE_SETTINGS.seoDescription!,
-  applicationName: 'Bridge of Compassion',
+  applicationName: 'Toronto Community Improvement Program',
   icons: {
-    icon: '/favicon.ico',
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: '32x32' },
+      { url: '/icon.png', sizes: '64x64', type: 'image/png' },
+    ],
     shortcut: '/favicon.ico',
-    apple: '/icon.png',
+    apple: '/apple-touch-icon.png',
   },
   openGraph: {
     type: 'website',
     locale: 'en_CA',
-    siteName: 'Bridge of Compassion',
+    siteName: 'Toronto Community Improvement Program',
     title: DEFAULT_SITE_SETTINGS.seoTitle!,
     description: DEFAULT_SITE_SETTINGS.seoDescription!,
     // DEFAULT OG IMAGE: WAITING FOR FINAL APPROVED SOCIAL SHARE ASSET
@@ -64,22 +68,16 @@ export default function RootLayout({
             __html: `
               (function() {
                 try {
-                  var storedTheme = localStorage.getItem('boc_theme');
-                  var supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  if (storedTheme === 'dark' || (!storedTheme && supportDarkMode) || (storedTheme === 'system' && supportDarkMode)) {
-                    document.documentElement.classList.add('dark');
-                    document.documentElement.style.colorScheme = 'dark';
-                  } else {
-                    document.documentElement.classList.remove('dark');
-                    document.documentElement.style.colorScheme = 'light';
-                  }
+                  localStorage.removeItem('boc_theme');
                 } catch (e) {}
+                document.documentElement.classList.remove('dark');
+                document.documentElement.style.colorScheme = 'light';
               })();
             `,
           }}
         />
       </head>
-      <body className="min-h-screen flex flex-col antialiased bg-brand-warm-white text-text-primary dark:bg-dark-bg dark:text-dark-text-primary transition-colors duration-200">
+      <body className="min-h-screen flex flex-col antialiased bg-tcip-offwhite text-text-primary transition-colors duration-200">
         <ThemeProvider>
           {children}
         </ThemeProvider>

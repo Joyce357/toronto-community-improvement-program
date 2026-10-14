@@ -1,112 +1,86 @@
-import Container from '@/components/ui/Container'
-import SectionHeading from '@/components/ui/SectionHeading'
-import Button from '@/components/ui/Button'
-
-const values = [
-  {
-    icon: '🌱',
-    title: 'Outdoor Learning',
-    description: 'We connect young people with nature through practical, hands-on outdoor education.',
-  },
-  {
-    icon: '🤝',
-    title: 'Community Action',
-    description: 'Every project is rooted in collective responsibility and practical service.',
-  },
-  {
-    icon: '🌳',
-    title: 'Environmental Stewardship',
-    description: 'We protect and restore ecosystems, plant trees, and care for biodiversity.',
-  },
-  {
-    icon: '✨',
-    title: 'Youth Leadership',
-    description: 'Empowering young people to lead environmental initiatives in their communities.',
-  },
-]
+import Link from 'next/link'
 
 export default function WhoWeAre() {
   return (
-    <section id="about" className="section-py bg-brand-warm-white dark:bg-dark-bg scroll-mt-16 overflow-hidden transition-colors duration-200" aria-labelledby="who-we-are-heading">
-      <Container>
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-
-          {/* Content side */}
-          <div>
-            <SectionHeading
-              eyebrow="Who We Are"
-              title="Grounded in Nature, Driven by Community"
-              subtitle="Bridge of Compassion is an environmental nonprofit organization dedicated to fostering ecological stewardship, empowering youth leadership, and creating meaningful community action."
-            />
-
-            <p className="text-text-secondary dark:text-dark-text-secondary text-sm sm:text-base leading-relaxed mt-3.5 sm:mt-4 mb-5 sm:mb-6">
-              We believe that lasting environmental change begins with education and connection.
-              When young people experience the natural world firsthand, they develop the care,
-              skills, and leadership needed to protect it. That is the bridge we are building.
-            </p>
-
-            {/* Values grid */}
-            <div className="grid sm:grid-cols-2 gap-3 sm:gap-3.5 mb-6">
-              {values.map((value) => (
-                <div
-                  key={value.title}
-                  className="flex items-start gap-3 p-3 sm:p-3.5 rounded-xl bg-brand-warm-white dark:bg-dark-card border border-border-soft dark:border-dark-border hover:border-brand-green/40 dark:hover:border-brand-cyan/40 hover:shadow-card transition-all duration-200"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-brand-sage/40 dark:bg-dark-surface flex items-center justify-center text-base shrink-0">
-                    <span role="img" aria-label={value.title}>
-                      {value.icon}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="text-brand-navy dark:text-dark-text-primary text-xs sm:text-sm font-bold mb-0.5">
-                      {value.title}
-                    </h3>
-                    <p className="text-text-secondary dark:text-dark-text-secondary text-xs leading-relaxed">
-                      {value.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
+    <section id="about" className="w-full bg-surface-container-low py-space-3xl scroll-mt-20 border-b border-outline-variant/30">
+      <div className="max-w-7xl mx-auto px-4 md:px-margin-desktop">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-gutter-desktop items-center">
+          
+          {/* Left: Image Composition with Floating Badge (6 cols) */}
+          <div className="lg:col-span-6 relative">
+            <div className="relative w-full h-[460px] rounded-3xl overflow-hidden shadow-md bg-surface-container">
+              <img
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXp5nRqA8TdcGyS9n81UGkkWFHIQx7Pc8WxLLANLYH_vac1lmwVTyBt4pUpDVoNNCqj-MLQI8HE4_fWmvEfllb-GFW-rM9az0hphUuXV_GD4lH7CDuayo3IO0hmbBAdXE9x9-LDYvbcwZTx0RcVqT6HXdVpPQxUiyj4bZhzjHkcOh8PfvABi8Xwo4T9UQ-X06UdY-USDaSudOZDhWDfhaZ-cVKvtA05IlwTJQczx8lHVsHMwAM-w9n"
+                alt="Adaikpoh Dumebi, Founder & Executive Director of TCIP"
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/60 via-transparent to-transparent" />
             </div>
 
-            <Button href="/programs" variant="primary" size="md">
-              Explore Our Programs
-            </Button>
+            {/* Floating Founder Spotlight Card */}
+            <div className="mt-4 sm:mt-0 sm:absolute sm:-bottom-8 sm:-right-6 bg-surface-container-lowest p-6 rounded-2xl shadow-xl max-w-sm border border-outline-variant/30">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container shrink-0">
+                  <span className="material-symbols-outlined text-2xl">format_quote</span>
+                </div>
+                <div>
+                  <span className="font-eyebrow-bold text-eyebrow-bold text-on-surface-variant uppercase tracking-wider">
+                    ESTABLISHED 2020
+                  </span>
+                  <p className="font-title-md text-title-md text-on-surface font-bold">
+                    Adaikpoh Dumebi
+                  </p>
+                  <span className="font-label-sm text-label-sm text-primary font-semibold">
+                    Founder &amp; Executive Director
+                  </span>
+                </div>
+              </div>
+              <p className="font-body-sm text-body-sm text-on-surface-variant mt-3 italic leading-relaxed">
+                &ldquo;When one newcomer finds steady ground, an entire neighbourhood rises with them.&rdquo;
+              </p>
+            </div>
           </div>
 
-          {/* Visual side */}
-          <div className="relative">
-            <div className="relative rounded-2xl lg:rounded-3xl overflow-hidden aspect-4/3 sm:aspect-14/11 shadow-card border border-border-soft dark:border-dark-border bg-brand-cream dark:bg-dark-surface">
-              <div className="img-placeholder w-full h-full flex flex-col items-center justify-center p-8 text-center">
-                <div className="w-16 h-16 rounded-2xl bg-brand-green/20 dark:bg-brand-cyan/20 flex items-center justify-center text-3xl mb-3">
-                  🌳
-                </div>
-                <p className="font-bold text-brand-navy dark:text-dark-text-primary text-sm sm:text-base">
-                  Connecting Youth &amp; Nature
-                </p>
-                <p className="text-text-secondary dark:text-dark-text-secondary text-xs mt-1 max-w-xs">
-                  Hands-on workshops, tree planting, and local community stewardship in action.
-                </p>
-              </div>
+          {/* Right: Story Narrative & Large Manifesto Pull-Quote (6 cols) */}
+          <div className="lg:col-span-6 flex flex-col gap-space-md pt-8 lg:pt-0" id="founder">
+            <div className="inline-flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-primary" />
+              <span className="font-eyebrow-bold text-eyebrow-bold text-on-surface-variant uppercase tracking-widest">
+                WHO WE ARE &amp; OUR ORIGINS
+              </span>
             </div>
 
-            {/* Floating purpose card */}
-            <div className="absolute -bottom-4 -left-4 sm:-bottom-5 sm:-left-5 bg-brand-navy dark:bg-dark-surface text-brand-warm-white dark:text-dark-text-primary px-5 py-4 rounded-xl sm:rounded-2xl shadow-xl max-w-[220px] sm:max-w-[240px] border border-brand-navy-dark dark:border-dark-border">
-              <p className="text-brand-cyan text-[11px] font-bold tracking-widest uppercase mb-1">
-                Our Purpose
-              </p>
-              <p className="text-brand-warm-white dark:text-dark-text-primary text-xs sm:text-sm font-medium leading-snug">
-                Turning environmental knowledge into meaningful action.
-              </p>
+            <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight">
+              Building Communities Where Everyone Can Thrive
+            </h2>
+
+            <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+              Founded in 2020 by Adaikpoh Dumebi, who recognized the critical need for an organization dedicated to helping immigrants of Black descent navigate systemic barriers. Since then, TCIP has grown into a thriving non-profit serving hundreds of individuals and families across the Greater Toronto Area each year.
+            </p>
+
+            {/* Large Editorial Pull-Quote Module */}
+            <div className="bg-surface-container-lowest p-8 rounded-2xl shadow-sm border-l-4 border-l-primary relative">
+              <span className="font-headline-sm text-headline-sm text-on-surface italic leading-snug block">
+                “We are advocating for a world where black immigrants belong, thrive and are empowered to succeed. Where they will feel seen, safe and deeply valued. We achieve this through advocacy, education and community.”
+              </span>
+              <span className="font-eyebrow-bold text-eyebrow-bold text-primary block mt-4 uppercase tracking-wider">
+                — TCIP Guiding Mandate
+              </span>
             </div>
 
-            {/* Decorative soft accent elements */}
-            <div className="absolute -top-3 right-0 w-20 h-20 bg-brand-sky/50 rounded-full opacity-40 -z-10" aria-hidden="true" />
-            <div className="absolute top-6 right-0 w-10 h-10 bg-brand-sage/50 rounded-full opacity-60 -z-10" aria-hidden="true" />
+            <Link
+              href="/#founder"
+              className="inline-flex items-center gap-2 font-title-md text-title-md text-primary hover:text-primary-container transition-colors group mt-2"
+            >
+              <span>Read Our Full Founding Journey &amp; Mission</span>
+              <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">
+                arrow_forward
+              </span>
+            </Link>
           </div>
 
         </div>
-      </Container>
+      </div>
     </section>
   )
 }

@@ -155,8 +155,8 @@ export default function DonationForm() {
           }
 
           // Store temporary donation and order IDs for capture or cancellation
-          sessionStorage.setItem('pending_boc_donation_id', data.donationId)
-          sessionStorage.setItem('pending_boc_order_id', data.orderId)
+          sessionStorage.setItem('pending_tcip_donation_id', data.donationId)
+          sessionStorage.setItem('pending_tcip_order_id', data.orderId)
           setStatus('idle')
           return data.orderId
         },
@@ -164,7 +164,7 @@ export default function DonationForm() {
           setStatus('processing')
           setErrorMessage('')
 
-          const donationId = sessionStorage.getItem('pending_boc_donation_id') || ''
+          const donationId = sessionStorage.getItem('pending_tcip_donation_id') || sessionStorage.getItem('pending_boc_donation_id') || ''
 
           try {
             const captureRes = await fetch('/api/donations/capture-order', {
@@ -184,6 +184,8 @@ export default function DonationForm() {
               return
             }
 
+            sessionStorage.removeItem('pending_tcip_donation_id')
+            sessionStorage.removeItem('pending_tcip_order_id')
             sessionStorage.removeItem('pending_boc_donation_id')
             sessionStorage.removeItem('pending_boc_order_id')
             setCompletedDetails({
@@ -208,8 +210,8 @@ export default function DonationForm() {
         },
         onCancel: async () => {
           setStatus('cancelled')
-          const donationId = sessionStorage.getItem('pending_boc_donation_id')
-          const orderId = sessionStorage.getItem('pending_boc_order_id')
+          const donationId = sessionStorage.getItem('pending_tcip_donation_id') || sessionStorage.getItem('pending_boc_donation_id')
+          const orderId = sessionStorage.getItem('pending_tcip_order_id') || sessionStorage.getItem('pending_boc_order_id')
 
           if (donationId && orderId) {
             try {
@@ -221,6 +223,8 @@ export default function DonationForm() {
             } catch (cancelErr) {
               console.warn('[Donation Cancel] Failed to notify server of cancellation:', cancelErr)
             } finally {
+              sessionStorage.removeItem('pending_tcip_donation_id')
+              sessionStorage.removeItem('pending_tcip_order_id')
               sessionStorage.removeItem('pending_boc_donation_id')
               sessionStorage.removeItem('pending_boc_order_id')
             }

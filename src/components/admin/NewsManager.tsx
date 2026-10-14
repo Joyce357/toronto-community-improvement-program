@@ -30,10 +30,10 @@ interface FormState {
 const defaultFormState: FormState = {
   title: '',
   slug: '',
-  category: 'Environmental',
+  category: 'Community',
   excerpt: '',
   content: '',
-  author: 'Bridge of Compassion Team',
+  author: 'TCIP Team',
   featuredImage: '',
   imagePublicId: '',
   featured: false,
@@ -638,7 +638,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
                     type="text"
                     value={formData.author}
                     onChange={(e) => setFormData({ ...formData, author: e.target.value })}
-                    placeholder="e.g. Bridge of Compassion Team"
+                    placeholder="e.g. TCIP Team"
                     className={inputClass}
                   />
                 </div>

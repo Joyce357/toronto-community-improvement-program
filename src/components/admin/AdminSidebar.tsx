@@ -65,19 +65,19 @@ export default function AdminSidebar({ userName, userEmail, userAvatar, mobileOp
       <div className="px-5 py-5 border-b border-white/10 flex items-center justify-between">
         <Link
           href="/admin"
-          className="block focus-visible:ring-2 focus-visible:ring-brand-cyan rounded-lg"
+          className="block focus-visible:ring-2 focus-visible:ring-brand-gold rounded-xl p-1"
           onClick={isMobile ? onCloseMobile : undefined}
         >
-          <div className="relative w-44 h-12 bg-white/95 rounded-xl p-1.5 shadow-sm mb-1.5">
-            <Image
-              src="/images/bridgeofcompassion-logo.png"
-              alt="Bridge of Compassion"
-              fill
-              className="object-contain p-0.5"
-              sizes="180px"
-            />
+          <div className="flex items-center gap-2.5 bg-white/95 rounded-xl p-2 shadow-sm mb-1.5">
+            <div className="w-8 h-8 rounded-lg bg-brand-navy text-white font-extrabold text-xs flex items-center justify-center tracking-wider">
+              <span className="text-brand-gold mr-0.5">T</span>CIP
+            </div>
+            <div className="flex flex-col">
+              <span className="font-extrabold text-brand-navy text-sm leading-tight">TCIP Admin</span>
+              <span className="text-[10px] text-text-secondary leading-none">Management</span>
+            </div>
           </div>
-          <span className="block text-brand-cyan text-[11px] font-semibold tracking-wider uppercase px-1">Admin Portal</span>
+          <span className="block text-brand-gold text-[10px] font-semibold tracking-wider uppercase px-1">Toronto Community Improvement</span>
         </Link>
         {isMobile && onCloseMobile && (
           <button onClick={onCloseMobile} className="lg:hidden p-1 text-white/70 hover:text-white rounded-lg text-sm">

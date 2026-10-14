@@ -20,7 +20,7 @@ const STATUS_TABS: { label: string; value: StatusFilter }[] = [
   { label: 'Inactive', value: 'INACTIVE' },
 ]
 
-const DEFAULT_REPLY_SUBJECT = 'Re: Your Volunteer Application — Bridge of Compassion'
+const DEFAULT_REPLY_SUBJECT = 'Re: Your Volunteer Application — Toronto Community Improvement Program'
 
 export default function VolunteersManager({
   initialApplications,

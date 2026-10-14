@@ -5,7 +5,6 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { signOut } from 'next-auth/react'
 import { useState } from 'react'
-import ThemeToggle from '@/components/ui/ThemeToggle'
 
 interface AdminTopbarProps {
   userName?: string | null
@@ -75,11 +74,8 @@ export default function AdminTopbar({ userName, userEmail, userAvatar, onToggleM
         </div>
       </div>
 
-      {/* Right: Actions, ThemeToggle & User Info */}
+      {/* Right: Actions & User Info */}
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* Theme Toggle */}
-        <ThemeToggle />
-
         {/* View Website Action */}
         <Link
           href="/"

@@ -107,7 +107,7 @@ export default function GalleryLightbox({
         <div className="relative w-full aspect-[4/3] sm:aspect-[16/10] max-h-[70vh] bg-black/40 rounded-2xl overflow-hidden shadow-2xl border border-white/10 flex items-center justify-center">
           <Image
             src={currentItem.imageUrl}
-            alt={currentItem.altText || currentItem.caption || currentItem.title || 'Bridge of Compassion Gallery Photo'}
+            alt={currentItem.altText || currentItem.caption || currentItem.title || 'Toronto Community Improvement Program Photo'}
             fill
             priority
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 90vw, 1200px"

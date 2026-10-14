@@ -124,10 +124,10 @@ export default async function AdminDashboardPage() {
             <span>🌱</span> Live Platform Overview
           </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-2">
-            Welcome to Bridge of Compassion
+            Welcome to TCIP Mission Hub
           </h1>
           <p className="text-brand-warm-white/80 text-sm sm:text-base leading-relaxed">
-            Monitor community outreach, donations, volunteer applications, and program impact from your unified mission hub.
+            Monitor community outreach, donations, volunteer applications, and program impact for Toronto Community Improvement Program.
           </p>
         </div>
       </div>

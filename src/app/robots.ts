@@ -1,5 +1,5 @@
 // ─── robots.ts ────────────────────────────────────────────────────────────────
-// Controls crawler access to Bridge of Compassion routes.
+// Controls crawler access to Toronto Community Improvement Program (TCIP) routes.
 // Public routes are allowed; all admin and API routes are disallowed.
 // Sitemap URL is included only when NEXT_PUBLIC_SITE_URL is configured (not localhost).
 

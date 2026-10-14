@@ -11,7 +11,7 @@ import { getCanonicalUrl } from '@/lib/seo'
 export const metadata: Metadata = {
   title: 'Programs',
   description:
-    'Explore hands-on environmental education, youth leadership, and community sustainability initiatives at Bridge of Compassion.',
+    'Explore community skills training, youth mentorship, newcomer support, and neighborhood initiatives at Toronto Community Improvement Program (TCIP).',
   alternates: { canonical: getCanonicalUrl('/programs') },
   openGraph: { url: getCanonicalUrl('/programs') },
 }
@@ -31,9 +31,9 @@ export default async function ProgramsPage() {
 
   if (dbError) {
     return (
-      <div className="min-h-screen bg-brand-warm-white dark:bg-dark-bg flex items-center justify-center transition-colors duration-200">
+      <div className="min-h-screen bg-brand-cream dark:bg-dark-bg flex items-center justify-center transition-colors duration-200">
         <div className="text-center max-w-md px-6 py-12">
-          <p className="text-lg font-bold text-brand-navy dark:text-dark-text-primary mb-2">Programs temporarily unavailable</p>
+          <p className="text-lg font-bold text-brand-black dark:text-dark-text-primary mb-2">Programs temporarily unavailable</p>
           <p className="text-sm text-text-secondary dark:text-dark-text-secondary">
             We&apos;re having trouble loading our programs right now. Please try again shortly.
           </p>
@@ -43,19 +43,19 @@ export default async function ProgramsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-warm-white dark:bg-dark-bg transition-colors duration-200">
+    <div className="min-h-screen bg-white dark:bg-dark-bg transition-colors duration-200">
       {/* ── Page Header / Hero ────────────────────────────────────────────── */}
-      <section className="relative py-12 sm:py-16 lg:py-20 bg-gradient-to-b from-brand-cream/70 via-brand-cream to-brand-warm-white dark:from-dark-bg dark:via-dark-surface dark:to-dark-bg border-b border-border-soft/60 dark:border-dark-border transition-colors duration-200">
+      <section className="relative py-12 sm:py-16 lg:py-20 bg-brand-cream dark:bg-dark-surface border-b border-border-soft dark:border-dark-border transition-colors duration-200">
         <Container>
           <div className="max-w-3xl mx-auto text-center">
-            <span className="eyebrow block mb-2.5">What We Do</span>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-navy dark:text-dark-text-primary tracking-tight text-balance mb-4">
-              Programs &amp; Environmental Initiatives
+            <span className="eyebrow block mb-2.5 text-brand-green">What We Do</span>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-black dark:text-dark-text-primary tracking-tight text-balance mb-4">
+              Community Programs &amp; Initiatives
             </h1>
             <div className="divider-green mx-auto mb-4" />
             <p className="text-text-secondary dark:text-dark-text-secondary text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
-              Empowering children, youth, and families through practical environmental
-              education, hands-on conservation, and sustainable community action.
+              Empowering Toronto youth, newcomers, and neighborhood residents through practical skills training,
+              mentorship pathways, and grassroots community leadership.
             </p>
           </div>
         </Container>
@@ -182,25 +182,25 @@ export default async function ProgramsPage() {
       </section>
 
       {/* ── Bottom CTA ────────────────────────────────────────────────────── */}
-      <section className="py-12 sm:py-16 bg-brand-sky/40 dark:bg-dark-surface border-t border-brand-sky/70 dark:border-dark-border transition-colors duration-200">
+      <section className="py-12 sm:py-16 bg-tcip-sage border-t border-tcip-border">
         <Container>
           <div className="text-center max-w-2xl mx-auto">
-            <h2 className="text-2xl sm:text-3xl font-extrabold text-brand-navy dark:text-dark-text-primary mb-3">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-tcip-charcoal mb-3">
               Want to get involved in our programs?
             </h2>
-            <p className="text-text-secondary dark:text-dark-text-secondary text-sm sm:text-base leading-relaxed mb-6">
-              Join our community volunteer days or partner with us to bring environmental workshops to your school or neighborhood.
+            <p className="text-tcip-muted text-sm sm:text-base leading-relaxed mb-6">
+              Join our community volunteer days or partner with us to bring community workshops, youth mentorship, and skills clinics to your neighborhood.
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <Link
                 href="/volunteer"
-                className="px-6 py-3 bg-brand-green dark:bg-brand-cyan hover:bg-brand-navy dark:hover:bg-brand-cyan/90 text-white dark:text-brand-navy-dark text-sm font-bold rounded-xl shadow-xs transition-colors"
+                className="px-6 py-3 bg-tcip-green hover:bg-tcip-green-dark text-white text-sm font-bold rounded-xl shadow-xs transition-colors"
               >
                 Volunteer With Us
               </Link>
               <Link
                 href="/contact"
-                className="px-6 py-3 bg-white dark:bg-dark-card hover:bg-brand-cream dark:hover:bg-dark-card-hover text-brand-navy dark:text-dark-text-primary text-sm font-bold rounded-xl border border-border-soft dark:border-dark-border shadow-xs transition-colors"
+                className="px-6 py-3 bg-white hover:bg-tcip-offwhite text-tcip-charcoal text-sm font-bold rounded-xl border border-tcip-border shadow-xs transition-colors"
               >
                 Contact Our Team
               </Link>

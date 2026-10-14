@@ -67,7 +67,7 @@ export async function checkRateLimit(
       redis,
       limiter:   Ratelimit.slidingWindow(limit, duration),
       analytics: true,
-      prefix:    'boc_rl',
+      prefix:    'tcip_rl',
     })
 
     const result = await ratelimit.limit(identifier)

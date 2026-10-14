@@ -16,14 +16,21 @@ interface ButtonProps {
 }
 
 const variantClass: Record<ButtonVariant, string> = {
-  primary:        'btn-primary',
-  environmental:  'btn-environmental',
-  secondary:      'btn-secondary',
-  ghost:          'btn-ghost',
-  cyan:           'btn-cyan',
-  'outline-green': 'btn-outline-green',
-  soft:           'btn-soft',
-  tertiary:       'btn-soft',
+  primary:           'btn-primary',
+  secondary:         'btn-secondary',
+  dark:              'btn-dark',
+  accent:            'btn-accent',
+  gold:              'btn-gold',
+  outline:           'btn-outline',
+  'outline-navy':    'btn-outline-navy',
+  'outline-green':   'btn-outline-green',
+  'outline-emerald': 'btn-outline-emerald',
+  environmental:     'btn-environmental',
+  cyan:              'btn-cyan',
+  ghost:             'btn-ghost',
+  soft:              'btn-soft',
+  tertiary:          'btn-soft',
+  danger:            'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-600',
 }
 
 const sizeClass: Record<ButtonSize, string> = {

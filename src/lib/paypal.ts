@@ -94,7 +94,7 @@ export async function createPayPalOrder(params: CreateOrderParams): Promise<PayP
       {
         reference_id: params.donationId,
         custom_id: params.donationId,
-        description: 'Bridge of Compassion Donation',
+        description: 'Toronto Community Improvement Program Donation',
         amount: {
           currency_code: params.currency,
           value: params.amount.toFixed(2),
@@ -102,7 +102,7 @@ export async function createPayPalOrder(params: CreateOrderParams): Promise<PayP
       },
     ],
     application_context: {
-      brand_name: 'Bridge of Compassion',
+      brand_name: 'Toronto Community Improvement Program',
       shipping_preference: 'NO_SHIPPING',
       user_action: 'PAY_NOW',
     },

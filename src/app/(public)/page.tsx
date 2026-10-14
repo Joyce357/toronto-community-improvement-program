@@ -1,19 +1,19 @@
 import type { Metadata } from 'next'
-import Hero           from '@/components/home/Hero'
-import WhoWeAre       from '@/components/home/WhoWeAre'
-import ImpactStats    from '@/components/home/ImpactStats'
-import ProgramsPreview from '@/components/home/ProgramsPreview'
-import WhyBridge      from '@/components/home/WhyBridge'
-import GetInvolved    from '@/components/home/GetInvolved'
-import StoriesPreview  from '@/components/home/StoriesPreview'
-import EventsPreview   from '@/components/home/EventsPreview'
-import FinalCTA        from '@/components/home/FinalCTA'
+import Hero              from '@/components/home/Hero'
+import WhoWeAre          from '@/components/home/WhoWeAre'
+import TeamLeadership    from '@/components/home/TeamLeadership'
+import ProgramsPreview   from '@/components/home/ProgramsPreview'
+import ImpactStats       from '@/components/home/ImpactStats'
+import HomeGallery       from '@/components/home/HomeGallery'
+import StoriesPreview    from '@/components/home/StoriesPreview'
+import Partnerships      from '@/components/home/Partnerships'
+import GetInvolved       from '@/components/home/GetInvolved'
+import Testimonials      from '@/components/home/Testimonials'
+import HomeContact       from '@/components/home/HomeContact'
 import { getBaseUrl, getCanonicalUrl } from '@/lib/seo'
 import { DEFAULT_SITE_SETTINGS } from '@/lib/settings'
 
 export const metadata: Metadata = {
-  // Absolute title — does not use the template ('%s | Bridge of Compassion') so it
-  // matches the confirmed SiteSettings seoTitle exactly on the homepage.
   title: {
     absolute: DEFAULT_SITE_SETTINGS.seoTitle!,
   },
@@ -31,14 +31,11 @@ export const metadata: Metadata = {
 export default function HomePage() {
   const baseUrl = getBaseUrl()
 
-  // Organization JSON-LD — only confirmed factual fields.
-  // sameAs: empty — no social URLs are configured in SiteSettings yet.
   const orgJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: DEFAULT_SITE_SETTINGS.organizationName,
     url: baseUrl,
-    logo: `${baseUrl}/images/bridgeofcompassion-logo.png`,
     email: DEFAULT_SITE_SETTINGS.publicEmail,
     location: {
       '@type': 'Place',
@@ -49,7 +46,6 @@ export default function HomePage() {
         addressCountry: 'CA',
       },
     },
-    // sameAs will be populated when social URLs are added to SiteSettings
   }
 
   return (
@@ -60,26 +56,41 @@ export default function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
       />
 
-      {/* Skip to main content — accessibility */}
-      <a
-        href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[9999]
-                   focus:px-4 focus:py-2 focus:bg-brand-sage focus:text-brand-navy focus:rounded-lg
-                   focus:font-semibold focus:shadow-lg focus:border focus:border-brand-green"
-      >
-        Skip to main content
-      </a>
+      {/* Homepage sections in exact Stitch editorial UI/UX sequence */}
+      <div className="flex flex-col w-full">
+        {/* SECTION 1: HERO / WELCOME (Asymmetric 2-Column: 45% Text / 55% Slideshow) */}
+        <Hero />
 
-      {/* Homepage sections in order */}
-      <Hero />
-      <WhoWeAre />
-      <ImpactStats />
-      <ProgramsPreview />
-      <WhyBridge />
-      <GetInvolved />
-      <StoriesPreview />
-      <EventsPreview />
-      <FinalCTA />
+        {/* SECTION 2: WHO WE ARE & FOUNDER STORY (Asymmetric Split 2-Column: 50% Photo / 50% Editorial Pull-Quote) */}
+        <WhoWeAre />
+
+        {/* SECTION 3: THE TEAM & COMMUNITY LEADERSHIP (Bespoke 3-Column Editorial Grid) */}
+        <TeamLeadership />
+
+        {/* SECTION 4: PROGRAMS & AREAS OF WORK (Varied-Width 4-Column Mosaic Grid) */}
+        <ProgramsPreview />
+
+        {/* SECTION 5: COMMUNITY IMPACT (Asymmetric 1 Hero Column + 3 Stacked Metric Columns) */}
+        <ImpactStats />
+
+        {/* SECTION 6: IMAGES OF IMPACT (True Editorial Masonry / Mosaic Photo Gallery) */}
+        <HomeGallery />
+
+        {/* SECTION 7: COMMUNITY STORIES & UPCOMING EVENTS (1 Large Story Column + 2 Stacked Event Cards) */}
+        <StoriesPreview />
+
+        {/* SECTION 8: OUR PARTNERS & CIVIC SUPPORTERS (Clean 6-Column Institutional Row) */}
+        <Partnerships />
+
+        {/* SECTION 9: GET INVOLVED (3 Dedicated Action Pathway Columns) */}
+        <GetInvolved />
+
+        {/* SECTION 10: WHAT PEOPLE SAY (2-Column Balanced Testimonial Grid) */}
+        <Testimonials />
+
+        {/* SECTION 11: CONTACT & SEE US IN PERSON (2-Column Practical Layout: 45% Info / 55% Intake Form) */}
+        <HomeContact />
+      </div>
     </>
   )
 }

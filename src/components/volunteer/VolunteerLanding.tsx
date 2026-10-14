@@ -10,32 +10,29 @@ export default function VolunteerLanding() {
   return (
     <>
       {/* ─── Hero Section ──────────────────────────────────────────────── */}
-      <section className="bg-brand-navy-dark dark:bg-dark-bg section-py text-brand-warm-white relative overflow-hidden transition-colors duration-200">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-cyan/15 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-green/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-
+      <section className="bg-brand-cream dark:bg-dark-bg section-py text-brand-black dark:text-white relative overflow-hidden transition-colors duration-200 border-b border-border-soft dark:border-dark-border">
         <Container className="text-center relative z-10">
-          <span className="eyebrow text-brand-cyan mb-3 block">Get Involved</span>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-brand-warm-white mb-4 text-balance tracking-tight">
-            Volunteer with Bridge of Compassion
+          <span className="eyebrow text-brand-green mb-3 block">Get Involved</span>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-brand-black dark:text-white mb-4 text-balance tracking-tight">
+            Volunteer with TCIP
           </h1>
-          <p className="text-brand-warm-white/80 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
-            Your time, talent, and passion help nurture young leaders and protect our natural world.
-            Join our dedicated network of community volunteers.
+          <p className="text-text-secondary dark:text-dark-text-secondary text-base sm:text-lg max-w-2xl mx-auto leading-relaxed mb-8">
+            Your time, skills, and energy help empower youth, support newcomers, and strengthen Toronto neighborhoods.
+            Join our dedicated community of volunteers.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5">
             <button
               type="button"
               onClick={openVolunteerModal}
-              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-brand-green dark:bg-brand-cyan text-brand-warm-white dark:text-brand-navy-dark font-bold text-sm sm:text-base hover:bg-brand-green/90 dark:hover:bg-brand-cyan/90 transition-all shadow-md hover:shadow-lg cursor-pointer transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-brand-green text-white font-bold text-sm sm:text-base hover:bg-brand-green-dark transition-all shadow-xs cursor-pointer transform hover:-translate-y-0.5"
             >
               Apply to Volunteer
             </button>
             <Button
               href="/#about"
-              variant="outline-green"
-              className="w-full sm:w-auto px-6 py-3.5 rounded-xl text-brand-warm-white border-white/30 hover:bg-white/10 text-sm font-semibold"
+              variant="outline"
+              className="w-full sm:w-auto px-6 py-3.5 rounded-xl text-sm font-bold"
             >
               Learn Our Mission
             </Button>
@@ -44,17 +41,17 @@ export default function VolunteerLanding() {
       </section>
 
       {/* ─── Impact Pillars ────────────────────────────────────────────── */}
-      <section className="section-py bg-brand-cream/60 dark:bg-dark-bg border-b border-border-soft/60 dark:border-dark-border transition-colors duration-200">
+      <section className="section-py bg-white dark:bg-dark-bg border-b border-border-soft dark:border-dark-border transition-colors duration-200">
         <Container>
           <div className="text-center max-w-2xl mx-auto mb-10">
             <span className="eyebrow block mb-2">Why Volunteer</span>
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-navy dark:text-dark-text-primary tracking-tight">
-              Create Meaningful Change
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-brand-black dark:text-dark-text-primary tracking-tight">
+              Create Meaningful Community Change
             </h2>
             <div className="divider-green mx-auto mb-3" />
             <p className="text-text-secondary dark:text-dark-text-secondary text-sm sm:text-base leading-relaxed">
-              Every hour you give directly enriches outdoor learning, preserves local green spaces,
-              and inspires the next generation of environmental leaders.
+              Every hour you give directly enriches youth mentorship, expands workforce readiness,
+              and inspires positive neighborhood action across Toronto.
             </p>
           </div>
 

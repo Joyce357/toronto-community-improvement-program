@@ -26,7 +26,7 @@ function getDefaultReplySubject(subject: string | null | undefined): string {
   if (subject && subject.trim()) {
     return `Re: ${subject.trim()}`
   }
-  return 'Re: Your Message to Bridge of Compassion'
+  return 'Re: Your Message to Toronto Community Improvement Program'
 }
 
 export default function ContactsManager({ initialSubmissions }: ContactsManagerProps) {

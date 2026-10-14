@@ -23,7 +23,7 @@ export interface EmailResult {
   error?: string
 }
 
-const FROM_ADDRESS = process.env.EMAIL_FROM ?? 'no-reply@bridgeofcompassion.org'
+const FROM_ADDRESS = process.env.EMAIL_FROM ?? 'no-reply@torontocip.com'
 
 /**
  * Send an email through the configured provider.
@@ -85,7 +85,7 @@ export async function notifyAdminContact(data: {
   subject: string
   message: string
 }): Promise<EmailResult> {
-  const adminEmail = process.env.ADMIN_EMAIL ?? 'admin.bridgeofcompassion@gmail.com'
+  const adminEmail = process.env.ADMIN_EMAIL ?? 'contact@torontocip.com'
   return sendEmail({
     to:      adminEmail,
     subject: `[Contact] ${data.subject} — from ${data.name}`,
@@ -111,7 +111,7 @@ export async function notifyAdminVolunteer(data: {
   interests:    string[]
   availability: string
 }): Promise<EmailResult> {
-  const adminEmail = process.env.ADMIN_EMAIL ?? 'admin.bridgeofcompassion@gmail.com'
+  const adminEmail = process.env.ADMIN_EMAIL ?? 'contact@torontocip.com'
   return sendEmail({
     to:      adminEmail,
     subject: `[Volunteer] New application from ${data.firstName} ${data.lastName}`,
@@ -127,7 +127,7 @@ export async function notifyAdminVolunteer(data: {
 }
 
 /**
- * Send an email reply from Bridge of Compassion to a volunteer applicant.
+ * Send an email reply from Toronto Community Improvement Program to a volunteer applicant.
  */
 export async function sendVolunteerReplyEmail(data: {
   recipientEmail: string
@@ -135,7 +135,7 @@ export async function sendVolunteerReplyEmail(data: {
   subject:        string
   message:        string
 }): Promise<EmailResult> {
-  const replyTo = process.env.ADMIN_EMAIL ?? 'admin.bridgeofcompassion@gmail.com'
+  const replyTo = process.env.ADMIN_EMAIL ?? 'contact@torontocip.com'
 
   const html = `
     <!DOCTYPE html>
@@ -145,21 +145,21 @@ export async function sendVolunteerReplyEmail(data: {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${data.subject}</title>
         <style>
-          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1c2826; background-color: #fcfbf7; margin: 0; padding: 24px; line-height: 1.6; }
-          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e2ebd8; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
-          .header { background-color: #122921; color: #fcfbf7; padding: 28px 24px; text-align: center; }
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1c2826; background-color: #fafaf7; margin: 0; padding: 24px; line-height: 1.6; }
+          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e3e6e3; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+          .header { background-color: #171717; color: #ffffff; padding: 28px 24px; text-align: center; }
           .header h1 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-          .header p { margin: 6px 0 0; font-size: 12px; color: #6ee7b7; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+          .header p { margin: 6px 0 0; font-size: 12px; color: #16a34a; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
           .content { padding: 28px 24px; font-size: 15px; color: #2d3748; }
-          .message-box { background: #f8faf6; border-left: 4px solid #2d6a4f; padding: 16px 20px; border-radius: 0 12px 12px 0; margin: 20px 0; font-size: 14.5px; color: #1c2826; }
-          .footer { background: #f8faf6; border-top: 1px solid #e2ebd8; padding: 20px 24px; font-size: 12px; color: #718096; text-align: center; }
+          .message-box { background: #edf5ef; border-left: 4px solid #16a34a; padding: 16px 20px; border-radius: 0 12px 12px 0; margin: 20px 0; font-size: 14.5px; color: #242424; }
+          .footer { background: #fafaf7; border-top: 1px solid #e3e6e3; padding: 20px 24px; font-size: 12px; color: #66706b; text-align: center; }
           .footer p { margin: 4px 0; }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <h1>Bridge of Compassion</h1>
+            <h1>Toronto Community Improvement Program</h1>
             <p>Volunteer Application Update</p>
           </div>
           <div class="content">
@@ -167,19 +167,19 @@ export async function sendVolunteerReplyEmail(data: {
             <div class="message-box">
               ${data.message.replace(/\n/g, '<br>')}
             </div>
-            <p>Thank you for your interest and commitment to our community and the natural world.</p>
-            <p>Warm regards,<br><strong>Bridge of Compassion Team</strong></p>
+            <p>Thank you for your interest and commitment to our community programs.</p>
+            <p>Warm regards,<br><strong>TCIP Team</strong></p>
           </div>
           <div class="footer">
-            <p><strong>Bridge of Compassion</strong></p>
-            <p>Nurturing Children • Protecting Nature • Building Futures</p>
+            <p><strong>Toronto Community Improvement Program</strong></p>
+            <p>Youth Leadership • Career Pathways • Neighborhood Well-being</p>
           </div>
         </div>
       </body>
     </html>
   `
 
-  const text = `Bridge of Compassion — Volunteer Application Update\n\nHello ${data.recipientName},\n\n${data.message}\n\nThank you for your commitment to our community and the natural world.\n\nWarm regards,\nBridge of Compassion Team\n\n---\nBridge of Compassion\nNurturing Children • Protecting Nature • Building Futures`
+  const text = `Toronto Community Improvement Program — Volunteer Application Update\n\nHello ${data.recipientName},\n\n${data.message}\n\nThank you for your commitment to our community programs.\n\nWarm regards,\nTCIP Team\n\n---\nToronto Community Improvement Program\nYouth Leadership • Career Pathways • Neighborhood Well-being`
 
   return sendEmail({
     to:      data.recipientEmail,
@@ -191,9 +191,9 @@ export async function sendVolunteerReplyEmail(data: {
 }
 
 /**
- * Send an email reply from Bridge of Compassion to a contact inquiry submitter.
+ * Send an email reply from Toronto Community Improvement Program to a contact inquiry submitter.
  * FROM: EMAIL_FROM env var (org sender)
- * Reply-To: ADMIN_EMAIL env var (admin.bridgeofcompassion@gmail.com)
+ * Reply-To: ADMIN_EMAIL env var (contact@torontocip.com)
  * TO: contact submitter's email — always sourced from the DB record, never from browser input
  */
 export async function sendContactReplyEmail(data: {
@@ -202,7 +202,7 @@ export async function sendContactReplyEmail(data: {
   subject:        string
   message:        string
 }): Promise<EmailResult> {
-  const replyTo = process.env.ADMIN_EMAIL ?? 'admin.bridgeofcompassion@gmail.com'
+  const replyTo = process.env.ADMIN_EMAIL ?? 'contact@torontocip.com'
 
   const html = `
     <!DOCTYPE html>
@@ -212,21 +212,21 @@ export async function sendContactReplyEmail(data: {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${data.subject}</title>
         <style>
-          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1c2826; background-color: #fcfbf7; margin: 0; padding: 24px; line-height: 1.6; }
-          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e2ebd8; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
-          .header { background-color: #122921; color: #fcfbf7; padding: 28px 24px; text-align: center; }
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1c2826; background-color: #fafaf7; margin: 0; padding: 24px; line-height: 1.6; }
+          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e3e6e3; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+          .header { background-color: #171717; color: #ffffff; padding: 28px 24px; text-align: center; }
           .header h1 { margin: 0; font-size: 20px; font-weight: 800; letter-spacing: -0.5px; }
-          .header p { margin: 6px 0 0; font-size: 12px; color: #6ee7b7; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+          .header p { margin: 6px 0 0; font-size: 12px; color: #16a34a; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
           .content { padding: 28px 24px; font-size: 15px; color: #2d3748; }
-          .message-box { background: #f8faf6; border-left: 4px solid #2d6a4f; padding: 16px 20px; border-radius: 0 12px 12px 0; margin: 20px 0; font-size: 14.5px; color: #1c2826; }
-          .footer { background: #f8faf6; border-top: 1px solid #e2ebd8; padding: 20px 24px; font-size: 12px; color: #718096; text-align: center; }
+          .message-box { background: #edf5ef; border-left: 4px solid #16a34a; padding: 16px 20px; border-radius: 0 12px 12px 0; margin: 20px 0; font-size: 14.5px; color: #242424; }
+          .footer { background: #fafaf7; border-top: 1px solid #e3e6e3; padding: 20px 24px; font-size: 12px; color: #66706b; text-align: center; }
           .footer p { margin: 4px 0; }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <h1>Bridge of Compassion</h1>
+            <h1>Toronto Community Improvement Program</h1>
             <p>Response to Your Inquiry</p>
           </div>
           <div class="content">
@@ -236,18 +236,18 @@ export async function sendContactReplyEmail(data: {
               ${data.message.replace(/\n/g, '<br>')}
             </div>
             <p>If you have any further questions, please reply to this email or contact us directly.</p>
-            <p>Warm regards,<br><strong>Bridge of Compassion Team</strong></p>
+            <p>Warm regards,<br><strong>TCIP Team</strong></p>
           </div>
           <div class="footer">
-            <p><strong>Bridge of Compassion</strong></p>
-            <p>Nurturing Children • Protecting Nature • Building Futures</p>
+            <p><strong>Toronto Community Improvement Program</strong></p>
+            <p>Youth Leadership • Career Pathways • Neighborhood Well-being</p>
           </div>
         </div>
       </body>
     </html>
   `
 
-  const text = `Bridge of Compassion — Response to Your Inquiry\n\nHello ${data.recipientName},\n\nThank you for reaching out to us. Here is our response:\n\n${data.message}\n\nIf you have further questions, please reply to this email or contact us directly.\n\nWarm regards,\nBridge of Compassion Team\n\n---\nBridge of Compassion\nNurturing Children • Protecting Nature • Building Futures`
+  const text = `Toronto Community Improvement Program — Response to Your Inquiry\n\nHello ${data.recipientName},\n\nThank you for reaching out to us. Here is our response:\n\n${data.message}\n\nIf you have further questions, please reply to this email or contact us directly.\n\nWarm regards,\nTCIP Team\n\n---\nToronto Community Improvement Program\nYouth Leadership • Career Pathways • Neighborhood Well-being`
 
   return sendEmail({
     to:      data.recipientEmail,
@@ -272,7 +272,7 @@ export async function sendDonationReceiptEmail(data: {
   paypalCaptureId?: string | null
   paypalOrderId?:   string | null
 }): Promise<EmailResult> {
-  const replyTo = process.env.ADMIN_EMAIL ?? 'admin.bridgeofcompassion@gmail.com'
+  const replyTo = process.env.ADMIN_EMAIL ?? 'contact@torontocip.com'
 
   const displayDonor = data.donorName?.trim() || 'Valued Supporter'
   const formattedAmount = Number(data.amount).toFixed(2)
@@ -282,7 +282,7 @@ export async function sendDonationReceiptEmail(data: {
     day: 'numeric',
   })
   const referenceId = data.paypalCaptureId || data.paypalOrderId || 'REF-PENDING'
-  const subject = `Donation Receipt — Bridge of Compassion (Ref: ${referenceId})`
+  const subject = `Donation Receipt — Toronto Community Improvement Program (Ref: ${referenceId})`
 
   const html = `
     <!DOCTYPE html>
@@ -292,33 +292,33 @@ export async function sendDonationReceiptEmail(data: {
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>${subject}</title>
         <style>
-          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1c2826; background-color: #fcfbf7; margin: 0; padding: 24px; line-height: 1.6; }
-          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e2ebd8; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
-          .header { background-color: #122921; color: #fcfbf7; padding: 28px 24px; text-align: center; }
+          body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1c2826; background-color: #fafaf7; margin: 0; padding: 24px; line-height: 1.6; }
+          .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 16px; border: 1px solid #e3e6e3; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.04); }
+          .header { background-color: #171717; color: #ffffff; padding: 28px 24px; text-align: center; }
           .header h1 { margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
-          .header p { margin: 6px 0 0; font-size: 13px; color: #6ee7b7; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+          .header p { margin: 6px 0 0; font-size: 13px; color: #16a34a; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
           .content { padding: 28px 24px; font-size: 15px; color: #2d3748; }
-          .receipt-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #f8faf6; border-radius: 12px; overflow: hidden; border: 1px solid #e2ebd8; }
-          .receipt-table td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #eef3e8; }
+          .receipt-table { width: 100%; border-collapse: collapse; margin: 20px 0; background: #fafaf7; border-radius: 12px; overflow: hidden; border: 1px solid #e3e6e3; }
+          .receipt-table td { padding: 12px 16px; font-size: 14px; border-bottom: 1px solid #e3e6e3; }
           .receipt-table tr:last-child td { border-bottom: none; }
           .receipt-table .label { font-weight: 600; color: #4a5568; width: 40%; }
-          .receipt-table .value { font-weight: 700; color: #122921; text-align: right; }
-          .total-row { background: #eef7ee; }
-          .total-row .value { font-size: 16px; color: #1b4332; }
-          .disclaimer { background: #fdfbf7; border: 1px solid #fae8c8; border-radius: 10px; padding: 14px 16px; margin: 24px 0 16px; font-size: 12px; color: #78350f; line-height: 1.5; }
-          .footer { background: #f8faf6; border-top: 1px solid #e2ebd8; padding: 20px 24px; font-size: 12px; color: #718096; text-align: center; }
+          .receipt-table .value { font-weight: 700; color: #171717; text-align: right; }
+          .total-row { background: #edf5ef; }
+          .total-row .value { font-size: 16px; color: #15803d; }
+          .disclaimer { background: #fafaf7; border: 1px solid #e3e6e3; border-radius: 10px; padding: 14px 16px; margin: 24px 0 16px; font-size: 12px; color: #66706b; line-height: 1.5; }
+          .footer { background: #fafaf7; border-top: 1px solid #e3e6e3; padding: 20px 24px; font-size: 12px; color: #66706b; text-align: center; }
           .footer p { margin: 4px 0; }
         </style>
       </head>
       <body>
         <div class="container">
           <div class="header">
-            <h1>Bridge of Compassion</h1>
+            <h1>Toronto Community Improvement Program</h1>
             <p>Donation Acknowledgement</p>
           </div>
           <div class="content">
             <p>Hello ${displayDonor},</p>
-            <p>Thank you for supporting Bridge of Compassion. Your generous gift is greatly appreciated.</p>
+            <p>Thank you for supporting Toronto Community Improvement Program. Your generous gift is greatly appreciated.</p>
             
             <table class="receipt-table">
               <tr>
@@ -350,18 +350,18 @@ export async function sendDonationReceiptEmail(data: {
             </div>
 
             <p style="margin-top: 20px;">If you have any questions regarding your donation, please reply directly to this email.</p>
-            <p>Warm regards,<br><strong>Bridge of Compassion Team</strong></p>
+            <p>Warm regards,<br><strong>TCIP Team</strong></p>
           </div>
           <div class="footer">
-            <p><strong>Bridge of Compassion</strong></p>
-            <p>Nurturing Children • Protecting Nature • Building Futures</p>
+            <p><strong>Toronto Community Improvement Program</strong></p>
+            <p>Youth Leadership • Career Pathways • Neighborhood Well-being</p>
           </div>
         </div>
       </body>
     </html>
   `
 
-  const text = `Bridge of Compassion — Donation Acknowledgement\n\nHello ${displayDonor},\n\nThank you for supporting Bridge of Compassion. Your generous gift is greatly appreciated.\n\nDonation Summary:\n- Donor: ${displayDonor}\n- Date: ${formattedDate}\n- Amount: ${data.currency} $${formattedAmount}\n- Payment Method: PayPal\n- Reference ID: ${referenceId}\n\nNotice: This acknowledgement confirms your payment and is not represented as an official charitable tax receipt.\n\nWarm regards,\nBridge of Compassion Team\n\n---\nBridge of Compassion\nNurturing Children • Protecting Nature • Building Futures`
+  const text = `Toronto Community Improvement Program — Donation Acknowledgement\n\nHello ${displayDonor},\n\nThank you for supporting Toronto Community Improvement Program. Your generous gift is greatly appreciated.\n\nDonation Summary:\n- Donor: ${displayDonor}\n- Date: ${formattedDate}\n- Amount: ${data.currency} $${formattedAmount}\n- Payment Method: PayPal\n- Reference ID: ${referenceId}\n\nNotice: This acknowledgement confirms your payment and is not represented as an official charitable tax receipt.\n\nWarm regards,\nTCIP Team\n\n---\nToronto Community Improvement Program\nYouth Leadership • Career Pathways • Neighborhood Well-being`
 
   return sendEmail({
     to:      data.recipientEmail,

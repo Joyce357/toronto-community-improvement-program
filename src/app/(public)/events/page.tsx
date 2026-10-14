@@ -8,7 +8,7 @@ import { getCanonicalUrl } from '@/lib/seo'
 export const metadata: Metadata = {
   title: 'Events',
   description:
-    'Upcoming events from Bridge of Compassion. Join us for community cleanups, workshops, fundraisers, and environmental stewardship.',
+    'Upcoming events from Toronto Community Improvement Program (TCIP). Join us for skills workshops, career clinics, youth forums, and community initiatives.',
   alternates: { canonical: getCanonicalUrl('/events') },
   openGraph: { url: getCanonicalUrl('/events') },
 }
@@ -44,9 +44,9 @@ export default async function EventsPage() {
 
   if (dbError) {
     return (
-      <div className="min-h-screen bg-brand-warm-white dark:bg-dark-bg flex items-center justify-center transition-colors duration-200">
+      <div className="min-h-screen bg-brand-cream dark:bg-dark-bg flex items-center justify-center transition-colors duration-200">
         <div className="text-center max-w-md px-6 py-12">
-          <p className="text-lg font-bold text-brand-navy dark:text-dark-text-primary mb-2">Events temporarily unavailable</p>
+          <p className="text-lg font-bold text-brand-black dark:text-dark-text-primary mb-2">Events temporarily unavailable</p>
           <p className="text-sm text-text-secondary dark:text-dark-text-secondary">
             We&apos;re having trouble loading upcoming events right now. Please check back shortly.
           </p>
@@ -56,24 +56,25 @@ export default async function EventsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-brand-warm-white dark:bg-dark-bg transition-colors duration-200">
+    <div className="min-h-screen bg-white dark:bg-dark-bg transition-colors duration-200">
       {/* ── Hero ────────────────────────────────────────────────────────── */}
-      <section className="bg-brand-navy-dark dark:bg-dark-bg section-py text-brand-warm-white relative overflow-hidden transition-colors duration-200">
-        <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-cyan/15 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-green/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-        <Container className="text-center relative z-10">
-          <p className="eyebrow text-brand-cyan mb-4">What&apos;s On</p>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-brand-warm-white mb-4 tracking-tight">
-            Upcoming Events
-          </h1>
-          <p className="text-brand-warm-white/80 text-base sm:text-lg max-w-xl mx-auto font-medium">
-            Connect with your community and take part in hands-on environmental stewardship, workshops, and gatherings.
-          </p>
+      <section className="relative py-12 sm:py-16 lg:py-20 bg-brand-cream dark:bg-dark-surface border-b border-border-soft dark:border-dark-border transition-colors duration-200">
+        <Container>
+          <div className="max-w-3xl mx-auto text-center">
+            <span className="eyebrow block mb-2.5 text-brand-green">Community Calendar</span>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-brand-black dark:text-dark-text-primary tracking-tight text-balance mb-4">
+              Upcoming Community Events
+            </h1>
+            <div className="divider-green mx-auto mb-4" />
+            <p className="text-text-secondary dark:text-dark-text-secondary text-base sm:text-lg leading-relaxed max-w-2xl mx-auto">
+              Join us for workshops, youth forums, job clinics, and community initiatives across Toronto.
+            </p>
+          </div>
         </Container>
       </section>
 
       {/* ── Events Grid / Empty State ───────────────────────────────────── */}
-      <section className="section-py bg-brand-warm-white dark:bg-dark-bg transition-colors duration-200">
+      <section className="section-py bg-white dark:bg-dark-bg transition-colors duration-200">
         <Container>
           {events.length === 0 ? (
             <div className="max-w-md mx-auto text-center py-16 px-6 bg-brand-cream/50 dark:bg-dark-card rounded-3xl border border-border-soft dark:border-dark-border">

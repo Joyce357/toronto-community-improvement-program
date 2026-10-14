@@ -83,7 +83,7 @@ export default async function NewsPostPage({ params }: Props) {
       : undefined,
     publisher: {
       '@type': 'Organization',
-      name: 'Bridge of Compassion',
+      name: 'Toronto Community Improvement Program',
       url: getBaseUrl(),
     },
     ...(post.featuredImage ? { image: post.featuredImage } : {}),

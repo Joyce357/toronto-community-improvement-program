@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, Suspense } from 'react'
-import Image from 'next/image'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
@@ -51,17 +50,16 @@ function LoginForm() {
       <div className="bg-brand-warm-white dark:bg-dark-card rounded-3xl shadow-2xl overflow-hidden border border-border-soft dark:border-dark-border transition-colors duration-200">
         {/* Header */}
         <div className="bg-brand-navy dark:bg-dark-surface px-8 py-8 text-center border-b border-brand-navy-dark dark:border-dark-border">
-          <div className="relative w-44 h-14 mx-auto bg-white/95 rounded-xl p-1.5 shadow-sm mb-4">
-            <Image
-              src="/images/bridgeofcompassion-logo.png"
-              alt="Bridge of Compassion"
-              fill
-              className="object-contain p-1"
-              sizes="180px"
-            />
+          <div className="inline-flex items-center gap-2.5 mx-auto bg-white/95 rounded-2xl px-4 py-2 shadow-sm mb-4">
+            <div className="w-8 h-8 rounded-xl bg-brand-navy text-white font-extrabold text-xs flex items-center justify-center tracking-wider">
+              <span className="text-brand-gold mr-0.5">T</span>CIP
+            </div>
+            <span className="font-extrabold text-brand-navy text-base tracking-tight">
+              TCIP Admin
+            </span>
           </div>
           <h1 className="text-brand-warm-white text-lg font-bold">Admin Portal</h1>
-          <p className="text-brand-cyan text-xs mt-0.5 font-semibold tracking-wider uppercase">Environmental Management</p>
+          <p className="text-brand-gold text-xs mt-0.5 font-semibold tracking-wider uppercase">Toronto Community Improvement Program</p>
         </div>
 
         {/* Form */}
@@ -89,7 +87,7 @@ function LoginForm() {
               className="w-full px-4 py-3 border border-border-soft dark:border-dark-border rounded-xl text-text-primary dark:text-dark-text-primary text-sm
                          focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-transparent
                          transition-all duration-200 placeholder:text-text-secondary/60 dark:placeholder:text-dark-text-secondary/50 bg-white dark:bg-dark-surface"
-              placeholder="admin@bridgeofcompassion.org"
+              placeholder="admin@torontocip.com"
             />
           </div>
 

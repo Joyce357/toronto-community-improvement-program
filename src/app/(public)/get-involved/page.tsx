@@ -8,7 +8,7 @@ import { getCanonicalUrl } from '@/lib/seo'
 export const metadata: Metadata = {
   title: 'Get Involved',
   description:
-    'Discover how you can get involved with Bridge of Compassion through volunteering, donations, and community partnerships for environmental action.',
+    'Discover how you can get involved with Toronto Community Improvement Program (TCIP) through volunteering, donations, and community partnerships for civic empowerment.',
   alternates: { canonical: getCanonicalUrl('/get-involved') },
   openGraph: { url: getCanonicalUrl('/get-involved') },
 }
@@ -17,24 +17,15 @@ export default function GetInvolvedPage() {
   return (
     <>
       {/* ── Hero Section ─────────────────────────────────────────────────── */}
-      <section className="bg-brand-navy-dark dark:bg-dark-bg section-py text-brand-warm-white relative overflow-hidden transition-colors duration-200">
-        <div
-          className="absolute -top-24 -right-24 w-96 h-96 bg-brand-cyan/15 rounded-full blur-3xl pointer-events-none"
-          aria-hidden="true"
-        />
-        <div
-          className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-green/20 rounded-full blur-3xl pointer-events-none"
-          aria-hidden="true"
-        />
+      <section className="bg-brand-cream dark:bg-dark-bg section-py text-brand-black dark:text-white relative overflow-hidden transition-colors duration-200 border-b border-border-soft dark:border-dark-border">
         <Container className="text-center relative z-10">
-          <p className="eyebrow text-brand-cyan mb-3">Join Our Mission</p>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-brand-warm-white mb-4 text-balance tracking-tight">
-            Get Involved with Bridge of Compassion
+          <p className="eyebrow text-brand-green mb-3">Join Our Movement</p>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-brand-black dark:text-white mb-4 text-balance tracking-tight">
+            Get Involved with TCIP
           </h1>
-          <p className="text-brand-warm-white/80 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
-            Whether you give your time as a volunteer, support our programs with a donation,
-            or partner with us on local initiatives—you help young people connect with nature
-            and lead real environmental change.
+          <p className="text-text-secondary dark:text-dark-text-secondary text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed">
+            Whether you give your time as a volunteer mentor, support our programs as a donor,
+            or partner with us on neighborhood initiatives — you help create real pathways of opportunity for Toronto residents.
           </p>
         </Container>
       </section>
@@ -141,12 +132,12 @@ export default function GetInvolvedPage() {
               </h2>
               <div className="divider-green mb-4" />
               <p className="text-text-secondary dark:text-dark-text-secondary text-sm sm:text-base leading-relaxed mb-4">
-                At Bridge of Compassion, community participation is at the heart of everything we do.
-                When we empower young people with ecological knowledge and practical tools, we nurture
-                lifelong stewards for our planet.
+                At Toronto Community Improvement Program, grassroots participation is at the heart of everything we do.
+                When we equip youth, newcomers, and residents with practical skills and mentorship, we build
+                stronger, more resilient neighborhoods across Toronto.
               </p>
               <p className="text-text-secondary dark:text-dark-text-secondary text-sm sm:text-base leading-relaxed">
-                Whether you join us for a single afternoon cleanup or support our programs regularly,
+                Whether you mentor at a workshop, partner with our team, or support our programs,
                 your involvement creates tangible, positive change.
               </p>
             </div>
@@ -154,18 +145,18 @@ export default function GetInvolvedPage() {
             <div className="lg:col-span-7 space-y-4">
               {[
                 {
-                  icon: '🌱',
-                  title: 'Hands-On Nature Education',
-                  desc: 'Children and young people learn through direct exploration in parks, ravines, and community gardens.',
-                },
-                {
-                  icon: '🌳',
-                  title: 'Native Habitat Restoration',
-                  desc: 'Tree planting and stewardship efforts directly strengthen urban biodiversity and canopy cover.',
+                  icon: '🚀',
+                  title: 'Hands-On Skills Workshops',
+                  desc: 'Residents and youth develop practical digital tools, resume building, and career readiness skills.',
                 },
                 {
                   icon: '🤝',
-                  title: 'Youth Leadership & Teamwork',
+                  title: 'Newcomer & Family Settlement',
+                  desc: 'Inclusive community navigation, language support, and neighbourhood connection programs.',
+                },
+                {
+                  icon: '✨',
+                  title: 'Youth Leadership & Mentorship',
                   desc: 'Participants gain confidence, problem-solving abilities, and collaborative leadership skills.',
                 },
               ].map((item) => (

@@ -159,7 +159,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
     const link = document.createElement('a')
     const dateStr = new Date().toISOString().split('T')[0]
     link.setAttribute('href', url)
-    link.setAttribute('download', `boc-newsletter-subscribers-${statusFilter.toLowerCase()}-${dateStr}.csv`)
+    link.setAttribute('download', `tcip-newsletter-subscribers-${statusFilter.toLowerCase()}-${dateStr}.csv`)
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
