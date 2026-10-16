@@ -1,22 +1,24 @@
 export default function Testimonials() {
-  const testimonials = [
+  const placeholderCards = [
     {
       id: 1,
-      quote:
-        '“TCIP provided me with the mentorship and resume guidance I needed to land my first role in tech after immigrating to Toronto. Having someone who understood my journey made all the difference.”',
-      author: 'Kofi A.',
-      role: 'Newcomer Career Program Graduate • Junior Cloud Analyst',
-      initials: 'K.A.',
+      badge: 'COMMUNITY VOICE',
+      placeholderText:
+        '“Community testimonial will appear here once verified participant stories are published.”',
+      author: 'Community Participant',
+      role: 'Program Member (Story pending verification)',
+      initials: 'TC',
       topBorder: 'border-t-4 border-primary',
       avatarBg: 'bg-secondary-container text-on-secondary-container',
     },
     {
       id: 2,
-      quote:
-        '“The dental access day and youth summer camp gave our family resources we simply could not afford. TCIP is a true anchor in our neighborhood—they don’t just talk, they show up.”',
-      author: 'Mariam T.',
-      role: 'Scarborough Resident & Mother of Three',
-      initials: 'M.T.',
+      badge: 'COMMUNITY VOICE',
+      placeholderText:
+        '“Community testimonial will appear here once verified participant stories are published.”',
+      author: 'Community Member',
+      role: 'Participant Feedback (Pending verification)',
+      initials: 'TC',
       topBorder: 'border-t-4 border-secondary',
       avatarBg: 'bg-primary-fixed text-on-primary-fixed',
     },
@@ -34,35 +36,33 @@ export default function Testimonials() {
           <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
             What People Say
           </h2>
+          <p className="font-body-sm text-body-sm text-on-surface-variant mt-2">
+            Authentic participant reflections and feedback from our community programs.
+          </p>
         </div>
 
-        {/* 2 Wide Testimonial Panels */}
+        {/* 2 Wide Testimonial Panels (Placeholder format per client policy) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-gutter-desktop">
-          {testimonials.map((t) => (
+          {placeholderCards.map((t) => (
             <div
               key={t.id}
               className={`bg-surface-container-lowest rounded-3xl p-8 md:p-10 shadow-sm flex flex-col justify-between ${t.topBorder} border border-outline-variant/30`}
             >
               <div>
-                <div className="flex items-center gap-1 text-tertiary mb-6">
-                  {[...Array(5)].map((_, i) => (
-                    <span
-                      key={i}
-                      className="material-symbols-outlined text-xl"
-                      style={{ fontVariationSettings: "'FILL' 1" }}
-                    >
-                      star
-                    </span>
-                  ))}
+                <div className="flex items-center gap-2 text-primary mb-6">
+                  <span className="material-symbols-outlined text-2xl">format_quote</span>
+                  <span className="font-eyebrow-bold text-eyebrow-bold uppercase tracking-wider text-on-surface-variant">
+                    {t.badge}
+                  </span>
                 </div>
-                <p className="font-headline-sm text-headline-sm text-on-surface italic leading-relaxed">
-                  {t.quote}
+                <p className="font-headline-sm text-headline-sm text-on-surface/80 italic leading-relaxed">
+                  {t.placeholderText}
                 </p>
               </div>
 
               <div className="pt-8 mt-8 border-t border-outline-variant/30 flex items-center gap-4">
                 <div
-                  className={`w-12 h-12 rounded-full ${t.avatarBg} flex items-center justify-center font-title-md text-title-md shrink-0 shadow-xs`}
+                  className={`w-12 h-12 rounded-full ${t.avatarBg} flex items-center justify-center font-title-md text-title-md shrink-0 shadow-xs font-bold`}
                 >
                   {t.initials}
                 </div>

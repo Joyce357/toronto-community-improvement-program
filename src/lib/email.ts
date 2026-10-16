@@ -1,8 +1,8 @@
 // ─── Email Service Abstraction ────────────────────────────────────────────
-// All email sending goes through this module.
-// Currently: logs to console in development, stubs in production.
-// To connect Resend: install `resend`, add RESEND_API_KEY to .env.local,
-// and implement the sendEmail function below.
+// NOTE / TODO: EMAIL PROVIDER REQUIRES CONFIGURATION BEFORE PRODUCTION EMAIL DELIVERY.
+// Production email provider (e.g. Resend via RESEND_API_KEY) and verified
+// domain (EMAIL_FROM) must be provisioned in deployment settings before live launch.
+// In development without an API key, email payloads are logged to the console.
 //
 // Integration point:
 //   import { Resend } from 'resend'

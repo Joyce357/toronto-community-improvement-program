@@ -241,7 +241,7 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
           aria-live="polite"
           className={`fixed bottom-6 right-6 z-50 px-5 py-3 rounded-xl shadow-lg text-sm font-medium transition-all ${
             feedback.type === 'success'
-              ? 'bg-brand-navy text-brand-warm-white border border-brand-cyan/30'
+              ? 'bg-gray-900 text-white border border-gray-700'
               : 'bg-red-600 text-white'
           }`}
         >
@@ -250,19 +250,19 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
       )}
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border-soft">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-gray-200">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-brand-navy tracking-tight">
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
             Contact Inquiries
           </h1>
-          <p className="text-text-secondary text-sm mt-1">
+          <p className="text-gray-600 text-sm mt-1">
             Review, reply to, and manage incoming contact messages ({submissions.length} total)
           </p>
         </div>
       </div>
 
       {/* Controls Bar */}
-      <div className="bg-brand-warm-white rounded-2xl p-4 sm:p-5 shadow-card border border-border-soft space-y-4">
+      <div className="bg-white rounded-xl p-4 sm:p-5 shadow-xs border border-gray-200 space-y-4">
         <div className="flex flex-col md:flex-row gap-4 justify-between items-stretch md:items-center">
           {/* Search */}
           <div className="relative flex-1 max-w-md">
@@ -272,13 +272,13 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
               aria-label="Search contact submissions"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full bg-white border border-border-soft rounded-xl px-4 py-2.5 text-sm text-text-primary placeholder:text-text-secondary/60 focus:outline-none focus:ring-2 focus:ring-brand-cyan"
+              className="w-full bg-gray-50/50 border border-gray-300 rounded-lg px-4 py-2 text-xs sm:text-sm text-gray-900 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A]"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                className="absolute right-3 top-2.5 text-xs text-text-secondary hover:text-brand-navy"
+                className="absolute right-3 top-2 text-xs text-gray-400 hover:text-gray-700"
                 aria-label="Clear search"
               >
                 ✕
@@ -286,13 +286,13 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
             )}
           </div>
 
-          <div className="text-xs text-text-secondary flex items-center gap-2 self-end md:self-center">
-            <span>Showing <strong className="text-brand-navy">{filtered.length}</strong> of {submissions.length}</span>
+          <div className="text-xs text-gray-500 flex items-center gap-2 self-end md:self-center">
+            <span>Showing <strong className="text-gray-900">{filtered.length}</strong> of {submissions.length}</span>
           </div>
         </div>
 
         {/* Status Tabs */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs sm:text-sm font-medium border-t border-border-soft/60 pt-3">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 text-xs sm:text-sm font-medium border-t border-gray-100 pt-3">
           {STATUS_TABS.map((tab) => {
             const count = counts[tab.value]
             const active = statusFilter === tab.value
@@ -301,16 +301,16 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                 key={tab.value}
                 type="button"
                 onClick={() => setStatusFilter(tab.value)}
-                className={`px-3 py-1.5 rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 ${
+                className={`px-3 py-1.5 rounded-lg transition-all whitespace-nowrap flex items-center gap-1.5 cursor-pointer ${
                   active
-                    ? 'bg-brand-green text-brand-warm-white font-semibold shadow-xs'
-                    : 'bg-brand-cream/50 text-text-secondary hover:bg-brand-cream hover:text-brand-navy'
+                    ? 'bg-[#16A34A] text-white font-semibold shadow-xs'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200 hover:text-gray-900'
                 }`}
               >
                 <span>{tab.label}</span>
                 <span
                   className={`text-[11px] px-1.5 py-0.5 rounded-full font-bold ${
-                    active ? 'bg-white/20 text-white' : 'bg-black/5 text-text-secondary'
+                    active ? 'bg-white/20 text-white' : 'bg-black/5 text-gray-500'
                   }`}
                 >
                   {count}
@@ -322,7 +322,7 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
       </div>
 
       {/* Submissions Table */}
-      <div className="bg-brand-warm-white rounded-2xl shadow-card border border-border-soft overflow-hidden">
+      <div className="bg-white rounded-xl shadow-xs border border-gray-200 overflow-hidden">
         {filtered.length === 0 ? (
           <div className="py-12">
             <EmptyState
@@ -342,7 +342,7 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-[#F8FAF6] text-text-secondary text-xs uppercase font-semibold border-b border-border-soft">
+              <thead className="bg-gray-50 text-gray-700 text-xs uppercase font-semibold border-b border-gray-200">
                 <tr>
                   <th className="px-5 py-3.5">Sender</th>
                   <th className="px-5 py-3.5">Subject & Preview</th>
@@ -351,21 +351,21 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                   <th className="px-5 py-3.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border-soft/60">
+              <tbody className="divide-y divide-gray-100">
                 {filtered.map((s) => (
-                  <tr key={s.id} className="hover:bg-brand-cream/30 transition-colors group">
+                  <tr key={s.id} className="hover:bg-gray-50/70 transition-colors group">
                     {/* Sender */}
                     <td className="px-5 py-4">
-                      <div className="font-semibold text-brand-navy">{s.name}</div>
+                      <div className="font-semibold text-gray-900">{s.name}</div>
                       <a
                         href={`mailto:${s.email}`}
-                        className="text-xs text-text-secondary hover:text-brand-green truncate block max-w-[180px]"
+                        className="text-xs text-gray-500 hover:text-[#16A34A] truncate block max-w-[180px]"
                         title={s.email}
                       >
                         {s.email}
                       </a>
                       {s.communications && s.communications.length > 0 && (
-                        <div className="text-[11px] text-brand-green bg-brand-green/10 border border-brand-green/20 rounded px-1.5 py-0.5 inline-flex items-center gap-1 mt-1">
+                        <div className="text-[11px] text-emerald-800 bg-emerald-50 border border-emerald-200 rounded px-1.5 py-0.5 inline-flex items-center gap-1 mt-1">
                           <span>✉️</span> {s.communications.length} {s.communications.length === 1 ? 'reply' : 'replies'}
                         </div>
                       )}
@@ -373,12 +373,12 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
 
                     {/* Subject & Preview */}
                     <td className="px-5 py-4 max-w-xs">
-                      <div className="font-medium text-brand-navy truncate">{s.subject}</div>
-                      <div className="text-xs text-text-secondary/80 truncate mt-0.5 max-w-[240px]">
+                      <div className="font-medium text-gray-900 truncate">{s.subject}</div>
+                      <div className="text-xs text-gray-500 truncate mt-0.5 max-w-[240px]">
                         {s.message}
                       </div>
                       {s.adminNotes && (
-                        <div className="text-[11px] text-amber-700 bg-amber-50 border border-amber-200/60 rounded px-1.5 py-0.5 inline-flex items-center gap-1 mt-1 max-w-[200px] truncate">
+                        <div className="text-[11px] text-amber-800 bg-amber-50 border border-amber-200 rounded px-1.5 py-0.5 inline-flex items-center gap-1 mt-1 max-w-[200px] truncate">
                           <span>📝</span> {s.adminNotes}
                         </div>
                       )}
@@ -389,13 +389,13 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                       <div className="flex items-center gap-2">
                         <StatusBadge status={s.status} />
                         {updatingId === s.id && (
-                          <span className="text-xs text-text-secondary animate-pulse">…</span>
+                          <span className="text-xs text-gray-400 animate-pulse">…</span>
                         )}
                       </div>
                     </td>
 
                     {/* Date */}
-                    <td className="px-5 py-4 text-xs text-text-secondary whitespace-nowrap">
+                    <td className="px-5 py-4 text-xs text-gray-500 whitespace-nowrap">
                       {new Date(s.createdAt).toLocaleDateString('en-CA', {
                         year: 'numeric', month: 'short', day: 'numeric',
                       })}
@@ -407,14 +407,14 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                         <button
                           type="button"
                           onClick={() => setSelected(s)}
-                          className="px-3 py-1.5 rounded-lg bg-brand-sky text-brand-navy hover:bg-brand-sky/80 text-xs font-semibold transition-all border border-brand-cyan/20 cursor-pointer"
+                          className="px-3 py-1.5 rounded-lg bg-gray-100 text-gray-800 hover:bg-gray-200 text-xs font-semibold transition-all border border-gray-200 cursor-pointer"
                         >
                           View & Reply
                         </button>
                         <button
                           type="button"
                           onClick={() => setDeleteTarget(s)}
-                          className="p-1.5 rounded-lg text-text-secondary hover:text-red-600 hover:bg-red-50 transition-all text-xs cursor-pointer"
+                          className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-all text-xs cursor-pointer"
                           title="Delete submission"
                           aria-label={`Delete submission from ${s.name}`}
                         >
@@ -433,19 +433,19 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
       {/* Detail Modal */}
       {selected && (
         <div
-          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+          className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
           role="dialog"
           aria-modal="true"
           aria-labelledby="contact-detail-title"
         >
-          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full border border-border-soft max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full border border-gray-200 max-h-[92vh] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
             {/* Modal Header */}
-            <div className="px-6 py-4 border-b border-border-soft flex items-center justify-between bg-[#F8FAF6]">
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between bg-gray-50">
               <div>
-                <h2 id="contact-detail-title" className="text-lg font-bold text-brand-navy">
+                <h2 id="contact-detail-title" className="text-lg font-bold text-gray-900">
                   Inquiry Details
                 </h2>
-                <p className="text-xs text-text-secondary">
+                <p className="text-xs text-gray-500">
                   Submitted on{' '}
                   {new Date(selected.createdAt).toLocaleDateString('en-CA', {
                     year: 'numeric', month: 'long', day: 'numeric',
@@ -456,7 +456,7 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
               <button
                 type="button"
                 onClick={() => setSelected(null)}
-                className="w-8 h-8 rounded-lg border border-border-soft flex items-center justify-center text-text-secondary hover:text-brand-navy hover:bg-white transition-all cursor-pointer"
+                className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center text-gray-400 hover:text-gray-700 hover:bg-white transition-all cursor-pointer"
                 aria-label="Close details"
               >
                 ✕
@@ -466,21 +466,21 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
             {/* Modal Body */}
             <div className="p-6 overflow-y-auto space-y-6 flex-1 text-sm">
               {/* Sender Info & Status */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-brand-cream/30 p-4 rounded-xl border border-border-soft/70">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
                 <div>
-                  <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider block mb-1">
+                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1">
                     Sender
                   </label>
-                  <p className="font-bold text-brand-navy text-base">{selected.name}</p>
+                  <p className="font-bold text-gray-900 text-base">{selected.name}</p>
                   <a
                     href={`mailto:${selected.email}`}
-                    className="text-xs text-brand-green hover:underline break-all"
+                    className="text-xs text-[#16A34A] hover:underline break-all"
                   >
                     {selected.email}
                   </a>
                   {selected.phone && (
-                    <p className="text-xs text-text-secondary mt-0.5">
-                      <a href={`tel:${selected.phone}`} className="hover:text-brand-navy">
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      <a href={`tel:${selected.phone}`} className="hover:text-gray-900">
                         {selected.phone}
                       </a>
                     </p>
@@ -488,7 +488,7 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold text-text-secondary uppercase tracking-wider block mb-1">
+                  <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider block mb-1">
                     Status
                   </label>
                   <div className="flex items-center gap-2">
@@ -497,7 +497,7 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                       onChange={(e) =>
                         handleUpdateStatus(selected.id, e.target.value as ContactSubmission['status'])
                       }
-                      className="bg-white border border-border-soft rounded-lg px-3 py-1.5 text-xs font-semibold text-brand-navy focus:ring-2 focus:ring-brand-cyan focus:outline-none cursor-pointer"
+                      className="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-xs font-semibold text-gray-900 focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A] focus:outline-none cursor-pointer"
                     >
                       <option value="NEW">New</option>
                       <option value="READ">Read</option>
@@ -506,7 +506,7 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                     </select>
                     <StatusBadge status={selected.status} />
                   </div>
-                  <p className="text-[11px] text-text-secondary/70 mt-1.5">
+                  <p className="text-[11px] text-gray-400 mt-1.5">
                     Archive = close · Set to Read to reopen
                   </p>
                 </div>
@@ -514,26 +514,26 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
 
               {/* Subject */}
               <div>
-                <h3 className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                   Subject
                 </h3>
-                <p className="font-semibold text-brand-navy">{selected.subject}</p>
+                <p className="font-semibold text-gray-900">{selected.subject}</p>
               </div>
 
               {/* Original Message */}
               <div>
-                <h3 className="text-xs font-bold text-text-secondary uppercase tracking-wider mb-2">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
                   Original Message
                 </h3>
-                <div className="p-4 bg-brand-warm-white/70 border border-border-soft rounded-xl text-text-primary whitespace-pre-wrap leading-relaxed">
+                <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl text-gray-800 whitespace-pre-wrap leading-relaxed">
                   {selected.message}
                 </div>
               </div>
 
               {/* ─── Communication History ─────────────────────────────── */}
-              <div className="border-t border-border-soft pt-4 space-y-3">
+              <div className="border-t border-gray-100 pt-4 space-y-3">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold text-brand-navy uppercase tracking-wider flex items-center gap-1.5">
+                  <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
                     <span>📬</span> Reply History ({selected.communications?.length || 0})
                   </h3>
                 </div>
@@ -543,19 +543,19 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                     {selected.communications.map((comm) => (
                       <div
                         key={comm.id}
-                        className="bg-brand-warm-white border border-border-soft rounded-xl p-3.5 space-y-2 text-xs"
+                        className="bg-gray-50 border border-gray-200 rounded-xl p-3.5 space-y-2 text-xs"
                       >
-                        <div className="flex items-center justify-between gap-2 border-b border-border-soft/60 pb-2">
-                          <span className="font-bold text-brand-navy truncate">{comm.subject}</span>
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-50 text-brand-green border border-brand-green/20">
+                        <div className="flex items-center justify-between gap-2 border-b border-gray-200 pb-2">
+                          <span className="font-bold text-gray-900 truncate">{comm.subject}</span>
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
                             Sent
                           </span>
                         </div>
-                        <p className="text-text-primary whitespace-pre-wrap leading-relaxed">
+                        <p className="text-gray-800 whitespace-pre-wrap leading-relaxed">
                           {comm.message}
                         </p>
-                        <div className="flex items-center justify-between text-[11px] text-text-secondary pt-1">
-                          <span>To: <strong className="text-brand-navy">{comm.recipientEmail}</strong></span>
+                        <div className="flex items-center justify-between text-[11px] text-gray-500 pt-1">
+                          <span>To: <strong className="text-gray-900">{comm.recipientEmail}</strong></span>
                           <span>
                             {new Date(comm.sentAt).toLocaleDateString('en-CA', {
                               year: 'numeric', month: 'short', day: 'numeric',
@@ -564,7 +564,7 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                           </span>
                         </div>
                         {comm.sentByName && (
-                          <div className="text-[11px] text-text-secondary/70">
+                          <div className="text-[11px] text-gray-400">
                             Sent by: {comm.sentByName}
                           </div>
                         )}
@@ -572,15 +572,15 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                     ))}
                   </div>
                 ) : (
-                  <div className="p-4 bg-gray-50 border border-border-soft/60 rounded-xl text-center text-xs text-text-secondary">
+                  <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl text-center text-xs text-gray-500">
                     No email replies sent to this contact yet.
                   </div>
                 )}
               </div>
 
               {/* ─── Reply by Email ───────────────────────────────────── */}
-              <div className="border-t border-border-soft pt-4 space-y-3">
-                <h3 className="text-xs font-bold text-brand-navy uppercase tracking-wider flex items-center gap-1.5">
+              <div className="border-t border-gray-100 pt-4 space-y-3">
+                <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5">
                   <span>✉️</span> Reply by Email
                 </h3>
 
@@ -593,20 +593,20 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
 
                   {/* To (Read-only) */}
                   <div>
-                    <label className="text-xs text-text-secondary block mb-1">
-                      To <span className="text-[11px] text-text-secondary/70">(Contact Email — from record)</span>
+                    <label className="text-xs text-gray-500 block mb-1">
+                      To <span className="text-[11px] text-gray-400">(Contact Email — from record)</span>
                     </label>
                     <input
                       type="email"
                       readOnly
                       value={selected.email}
-                      className="w-full bg-gray-100/80 border border-border-soft rounded-xl px-3.5 py-2 text-xs text-text-secondary cursor-not-allowed select-none"
+                      className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3.5 py-2 text-xs text-gray-500 cursor-not-allowed select-none"
                     />
                   </div>
 
                   {/* Subject */}
                   <div>
-                    <label htmlFor="contact-reply-subject" className="text-xs text-brand-navy font-semibold block mb-1">
+                    <label htmlFor="contact-reply-subject" className="text-xs text-gray-900 font-semibold block mb-1">
                       Subject <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -616,13 +616,13 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                       onChange={(e) => setReplySubject(e.target.value)}
                       placeholder="Subject line"
                       required
-                      className="w-full bg-white border border-border-soft rounded-xl px-3.5 py-2 text-xs text-text-primary focus:ring-2 focus:ring-brand-cyan focus:outline-none"
+                      className="w-full bg-white border border-gray-300 rounded-xl px-3.5 py-2 text-xs text-gray-900 focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A] focus:outline-none"
                     />
                   </div>
 
                   {/* Message */}
                   <div>
-                    <label htmlFor="contact-reply-message" className="text-xs text-brand-navy font-semibold block mb-1">
+                    <label htmlFor="contact-reply-message" className="text-xs text-gray-900 font-semibold block mb-1">
                       Message <span className="text-red-500">*</span>
                     </label>
                     <textarea
@@ -632,18 +632,18 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                       onChange={(e) => setReplyMessage(e.target.value)}
                       placeholder="Write your response to the inquiry…"
                       required
-                      className="w-full bg-white border border-border-soft rounded-xl p-3 text-xs text-text-primary placeholder:text-text-secondary/50 focus:ring-2 focus:ring-brand-cyan focus:outline-none resize-y"
+                      className="w-full bg-white border border-gray-300 rounded-xl p-3 text-xs text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A] focus:outline-none resize-y"
                     />
                   </div>
 
                   <div className="flex items-center justify-between pt-1">
-                    <p className="text-[11px] text-text-secondary">
-                      ℹ️ Replies update status to <strong className="text-brand-navy">Replied</strong> automatically.
+                    <p className="text-[11px] text-gray-500">
+                      ℹ️ Replies update status to <strong className="text-gray-900">Replied</strong> automatically.
                     </p>
                     <button
                       type="submit"
                       disabled={sendingReply}
-                      className="px-4 py-2 rounded-xl bg-brand-green text-brand-warm-white text-xs font-semibold hover:bg-brand-green/90 transition-all disabled:opacity-60 cursor-pointer inline-flex items-center gap-1.5"
+                      className="px-4 py-2 rounded-xl bg-[#16A34A] text-white text-xs font-semibold hover:bg-[#15803D] transition-all disabled:opacity-60 cursor-pointer inline-flex items-center gap-1.5"
                     >
                       {sendingReply ? (
                         <>
@@ -662,15 +662,15 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
               </div>
 
               {/* ─── Internal Admin Notes ─────────────────────────────── */}
-              <div className="border-t border-border-soft pt-4">
+              <div className="border-t border-gray-100 pt-4">
                 <div className="flex items-center justify-between mb-2">
                   <label
                     htmlFor="contact-admin-notes"
-                    className="text-xs font-bold text-brand-navy uppercase tracking-wider flex items-center gap-1.5"
+                    className="text-xs font-bold text-gray-900 uppercase tracking-wider flex items-center gap-1.5"
                   >
                     <span>📝</span> Internal Admin Notes
                   </label>
-                  <span className="text-[11px] text-text-secondary italic">(Not visible to sender)</span>
+                  <span className="text-[11px] text-gray-400 italic">(Not visible to sender)</span>
                 </div>
                 <textarea
                   id="contact-admin-notes"
@@ -678,14 +678,14 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                   value={notesInput}
                   onChange={(e) => setNotesInput(e.target.value)}
                   placeholder="Record follow-up actions, context, escalation notes…"
-                  className="w-full bg-white border border-border-soft rounded-xl p-3 text-xs text-text-primary placeholder:text-text-secondary/50 focus:ring-2 focus:ring-brand-cyan focus:outline-none"
+                  className="w-full bg-white border border-gray-300 rounded-xl p-3 text-xs text-gray-900 placeholder:text-gray-400 focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A] focus:outline-none"
                 />
                 <div className="flex justify-end mt-2">
                   <button
                     type="button"
                     onClick={handleSaveNotes}
                     disabled={savingNotes}
-                    className="px-3.5 py-1.5 rounded-xl border border-border-soft bg-white text-brand-navy text-xs font-semibold hover:bg-gray-50 transition-all disabled:opacity-60 cursor-pointer"
+                    className="px-3.5 py-1.5 rounded-xl border border-gray-300 bg-white text-gray-800 text-xs font-semibold hover:bg-gray-50 transition-all disabled:opacity-60 cursor-pointer"
                   >
                     {savingNotes ? 'Saving…' : 'Save Notes'}
                   </button>
@@ -694,7 +694,7 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
             </div>
 
             {/* Modal Footer */}
-            <div className="px-6 py-3.5 border-t border-border-soft bg-gray-50/70 flex items-center justify-between">
+            <div className="px-6 py-3.5 border-t border-gray-100 bg-gray-50 flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => {
@@ -709,7 +709,7 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
               <button
                 type="button"
                 onClick={() => setSelected(null)}
-                className="px-4 py-2 rounded-xl border border-border-soft bg-white text-brand-navy font-semibold text-xs hover:bg-gray-100 transition-all cursor-pointer"
+                className="px-4 py-2 rounded-xl border border-gray-300 bg-white text-gray-800 font-semibold text-xs hover:bg-gray-100 transition-all cursor-pointer"
               >
                 Close
               </button>
@@ -721,22 +721,22 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
       {/* Delete Confirmation Modal */}
       {deleteTarget && (
         <div
-          className="fixed inset-0 z-60 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4"
+          className="fixed inset-0 z-60 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4"
           role="dialog"
           aria-modal="true"
           aria-labelledby="contact-delete-confirm-title"
         >
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-border-soft space-y-4 animate-in fade-in zoom-in-95 duration-150">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 border border-gray-200 space-y-4 animate-in fade-in zoom-in-95 duration-150">
             <div className="w-12 h-12 rounded-2xl bg-red-100 text-red-600 flex items-center justify-center text-2xl mx-auto">
               ⚠️
             </div>
             <div className="text-center">
-              <h3 id="contact-delete-confirm-title" className="text-lg font-bold text-brand-navy">
+              <h3 id="contact-delete-confirm-title" className="text-lg font-bold text-gray-900">
                 Delete Contact Submission?
               </h3>
-              <p className="text-xs text-text-secondary mt-1">
+              <p className="text-xs text-gray-600 mt-1">
                 Are you sure you want to permanently delete the submission from{' '}
-                <strong className="text-brand-navy">{deleteTarget.name}</strong>? This will also
+                <strong className="text-gray-900">{deleteTarget.name}</strong>? This will also
                 delete all reply history. This action cannot be undone.
               </p>
             </div>
@@ -745,7 +745,7 @@ export default function ContactsManager({ initialSubmissions }: ContactsManagerP
                 type="button"
                 onClick={() => setDeleteTarget(null)}
                 disabled={isDeleting}
-                className="flex-1 py-2.5 rounded-xl border border-border-soft font-semibold text-xs text-text-secondary hover:bg-gray-50 transition-all cursor-pointer"
+                className="flex-1 py-2.5 rounded-xl border border-gray-300 font-semibold text-xs text-gray-600 hover:bg-gray-50 transition-all cursor-pointer"
               >
                 Cancel
               </button>

@@ -1,7 +1,7 @@
 'use client'
 // ─── Admin Site Settings Manager Component ──────────────────────────────────
 // Manages organization profile, public contact, social links, donation defaults,
-// and SEO defaults with live save feedback.
+// and SEO defaults with live save feedback. Pure light UI adhering to TCIP branding.
 
 import { useState, FormEvent, ChangeEvent } from 'react'
 import type { SiteSettingsRecord } from '@/types'
@@ -121,19 +121,27 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
     }
   }
 
-  const inputClass = (fieldName?: string) => `w-full px-4 py-2.5 border rounded-xl text-text-primary dark:text-dark-text-primary text-sm bg-white dark:bg-dark-surface
-    focus:outline-none focus:ring-2 focus:ring-brand-green/40 dark:focus:ring-brand-cyan/40 focus:border-brand-green dark:focus:border-brand-cyan transition-all shadow-2xs
-    ${fieldName && fieldErrors[fieldName] ? 'border-red-400 bg-red-50/20 dark:bg-red-950/20' : 'border-border-soft dark:border-dark-border'}`
+  const inputClass = (fieldName?: string) => `w-full px-3.5 py-2.5 border rounded-xl text-gray-900 text-sm bg-white
+    focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A] transition-all
+    ${fieldName && fieldErrors[fieldName] ? 'border-red-400 bg-red-50/20' : 'border-gray-300'}`
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Page Title */}
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Site Settings</h1>
+        <p className="text-sm text-gray-600 mt-1">
+          Manage global organization details, contact points, social links, and SEO defaults.
+        </p>
+      </div>
+
       {/* Status banner */}
       {statusMsg && (
         <div
-          className={`text-sm px-5 py-3.5 rounded-xl font-medium border flex items-center justify-between animate-fadeIn ${
+          className={`text-sm px-4 py-3 rounded-xl font-medium border flex items-center justify-between ${
             statusMsg.type === 'success'
-              ? 'bg-green-50 dark:bg-emerald-950/40 border-green-200 dark:border-emerald-800 text-green-800 dark:text-emerald-300'
-              : 'bg-red-50 dark:bg-red-950/40 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300'
+              ? 'bg-green-50 border-green-200 text-green-800'
+              : 'bg-red-50 border-red-200 text-red-700'
           }`}
         >
           <span>{statusMsg.text}</span>
@@ -148,19 +156,19 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
       )}
 
       {/* ── 1. Organization Information ────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-dark-card rounded-2xl border border-border-soft dark:border-dark-border shadow-xs p-6 sm:p-7 space-y-5 transition-colors duration-200">
-        <div className="border-b border-border-soft/60 dark:border-dark-border pb-4">
-          <h2 className="text-lg font-bold text-brand-navy dark:text-dark-text-primary flex items-center gap-2">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-xs p-6 space-y-4">
+        <div className="border-b border-gray-100 pb-3">
+          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
             <span>🏛️</span> Organization Profile
           </h2>
-          <p className="text-xs text-text-secondary dark:text-dark-text-secondary mt-0.5">
+          <p className="text-xs text-gray-500 mt-0.5">
             Public organization branding displayed across navigation, footer, and receipts.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
               Organization Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -172,12 +180,12 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               required
             />
             {fieldErrors.organizationName && (
-              <p className="text-xs text-red-600 dark:text-red-400 mt-1">{fieldErrors.organizationName}</p>
+              <p className="text-xs text-red-600 mt-1">{fieldErrors.organizationName}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
               Public Location Display
             </label>
             <input
@@ -188,30 +196,30 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               placeholder="e.g. Toronto, Ontario"
               className={inputClass('publicLocationLabel')}
             />
-            <p className="text-[11px] text-text-secondary dark:text-dark-text-secondary mt-1">Displayed in public header/footer contact badges.</p>
+            <p className="text-[11px] text-gray-500 mt-1">Displayed in public header and contact badges.</p>
           </div>
         </div>
       </div>
 
       {/* ── 2. Contact Information ────────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-dark-card rounded-2xl border border-border-soft dark:border-dark-border shadow-xs p-6 sm:p-7 space-y-5 transition-colors duration-200">
-        <div className="border-b border-border-soft/60 dark:border-dark-border pb-4">
-          <h2 className="text-lg font-bold text-brand-navy dark:text-dark-text-primary flex items-center gap-2">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-xs p-6 space-y-4">
+        <div className="border-b border-gray-100 pb-3">
+          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
             <span>📫</span> Public Contact Information
           </h2>
-          <p className="text-xs text-text-secondary dark:text-dark-text-secondary mt-0.5">
-            Inquiry destinations and office mailing address.
+          <p className="text-xs text-gray-500 mt-0.5">
+            Inquiry destinations and official community contact channels.
           </p>
         </div>
 
-        <div className="bg-brand-sky/20 dark:bg-dark-surface border border-brand-cyan/20 dark:border-dark-border rounded-xl p-3.5 text-xs text-brand-navy dark:text-dark-text-primary leading-relaxed">
-          💡 <strong>Note on Email:</strong> The <em>Public Contact Email</em> below is where donor receipts and public contact inquiries are directed. It is managed independently from your admin account login email.
+        <div className="bg-emerald-50/50 border border-emerald-200 rounded-lg p-3 text-xs text-emerald-900 leading-relaxed">
+          💡 <strong>Public Contact Email:</strong> General inquiries and contact submissions are addressed here. This operates independently of individual administrator logins.
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5">
-              Public Contact / Reply Email <span className="text-red-500">*</span>
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
+              Public Contact Email <span className="text-red-500">*</span>
             </label>
             <input
               type="email"
@@ -222,13 +230,13 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               required
             />
             {fieldErrors.publicEmail && (
-              <p className="text-xs text-red-600 dark:text-red-400 mt-1">{fieldErrors.publicEmail}</p>
+              <p className="text-xs text-red-600 mt-1">{fieldErrors.publicEmail}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5">
-              Public Phone Number
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
+              Public Phone Number (Optional)
             </label>
             <input
               type="text"
@@ -238,29 +246,29 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               placeholder="e.g. +1 (416) 555-0199 (leave blank if pending)"
               className={inputClass('phone')}
             />
-            <p className="text-[11px] text-text-secondary dark:text-dark-text-secondary mt-1">Leave blank until officially confirmed by the client.</p>
+            <p className="text-[11px] text-gray-500 mt-1">Leave blank if pending client phone line confirmation.</p>
           </div>
         </div>
 
         {/* Physical Address */}
-        <div className="pt-2 border-t border-border-soft/60 dark:border-dark-border space-y-4">
-          <h3 className="text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider text-text-secondary dark:text-dark-text-secondary">
-            Mailing / Office Address (Optional)
+        <div className="pt-3 border-t border-gray-100 space-y-4">
+          <h3 className="text-xs font-bold text-gray-600 uppercase tracking-wider">
+            Office / Mailing Address (Optional)
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="sm:col-span-2">
-              <label className="block text-xs font-semibold text-text-secondary dark:text-dark-text-secondary mb-1">Address Line 1</label>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Address Line 1</label>
               <input
                 type="text"
                 name="addressLine1"
                 value={formData.addressLine1}
                 onChange={handleChange}
-                placeholder="Street address or P.O. Box"
+                placeholder="Street address or office suite"
                 className={inputClass('addressLine1')}
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-text-secondary dark:text-dark-text-secondary mb-1">City</label>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">City</label>
               <input
                 type="text"
                 name="city"
@@ -270,7 +278,7 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-text-secondary dark:text-dark-text-secondary mb-1">Province / State</label>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Province</label>
               <input
                 type="text"
                 name="province"
@@ -280,7 +288,7 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-text-secondary dark:text-dark-text-secondary mb-1">Postal / ZIP Code</label>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Postal Code</label>
               <input
                 type="text"
                 name="postalCode"
@@ -290,7 +298,7 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               />
             </div>
             <div>
-              <label className="block text-xs font-semibold text-text-secondary dark:text-dark-text-secondary mb-1">Country</label>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Country</label>
               <input
                 type="text"
                 name="country"
@@ -304,21 +312,21 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
       </div>
 
       {/* ── 3. Social Media Links ──────────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-dark-card rounded-2xl border border-border-soft dark:border-dark-border shadow-xs p-6 sm:p-7 space-y-5 transition-colors duration-200">
-        <div className="border-b border-border-soft/60 dark:border-dark-border pb-4">
-          <h2 className="text-lg font-bold text-brand-navy dark:text-dark-text-primary flex items-center gap-2">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-xs p-6 space-y-4">
+        <div className="border-b border-gray-100 pb-3">
+          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
             <span>🌐</span> Social Media Accounts
           </h2>
-          <p className="text-xs text-text-secondary dark:text-dark-text-secondary mt-0.5">
-            Links to official social channels. Leave blank to automatically hide that network from the public footer.
+          <p className="text-xs text-gray-500 mt-0.5">
+            Links to official social channels. Empty fields are automatically hidden from the public footer.
           </p>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5 flex items-center justify-between">
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5 flex items-center justify-between">
               <span>Facebook Page URL</span>
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${formData.facebookUrl.trim() ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300' : 'bg-gray-100 dark:bg-dark-surface text-gray-500 dark:text-gray-400'}`}>
+              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${formData.facebookUrl.trim() ? 'bg-emerald-50 text-emerald-800' : 'bg-gray-100 text-gray-500'}`}>
                 {formData.facebookUrl.trim() ? '✓ Active in Footer' : 'Hidden'}
               </span>
             </label>
@@ -331,14 +339,14 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               className={inputClass('facebookUrl')}
             />
             {fieldErrors.facebookUrl && (
-              <p className="text-xs text-red-600 dark:text-red-400 mt-1">{fieldErrors.facebookUrl}</p>
+              <p className="text-xs text-red-600 mt-1">{fieldErrors.facebookUrl}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5 flex items-center justify-between">
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5 flex items-center justify-between">
               <span>Instagram Profile URL</span>
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${formData.instagramUrl.trim() ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300' : 'bg-gray-100 dark:bg-dark-surface text-gray-500 dark:text-gray-400'}`}>
+              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${formData.instagramUrl.trim() ? 'bg-emerald-50 text-emerald-800' : 'bg-gray-100 text-gray-500'}`}>
                 {formData.instagramUrl.trim() ? '✓ Active in Footer' : 'Hidden'}
               </span>
             </label>
@@ -351,14 +359,14 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               className={inputClass('instagramUrl')}
             />
             {fieldErrors.instagramUrl && (
-              <p className="text-xs text-red-600 dark:text-red-400 mt-1">{fieldErrors.instagramUrl}</p>
+              <p className="text-xs text-red-600 mt-1">{fieldErrors.instagramUrl}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5 flex items-center justify-between">
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5 flex items-center justify-between">
               <span>LinkedIn Page URL</span>
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${formData.linkedinUrl.trim() ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300' : 'bg-gray-100 dark:bg-dark-surface text-gray-500 dark:text-gray-400'}`}>
+              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${formData.linkedinUrl.trim() ? 'bg-emerald-50 text-emerald-800' : 'bg-gray-100 text-gray-500'}`}>
                 {formData.linkedinUrl.trim() ? '✓ Active in Footer' : 'Hidden'}
               </span>
             </label>
@@ -371,14 +379,14 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               className={inputClass('linkedinUrl')}
             />
             {fieldErrors.linkedinUrl && (
-              <p className="text-xs text-red-600 dark:text-red-400 mt-1">{fieldErrors.linkedinUrl}</p>
+              <p className="text-xs text-red-600 mt-1">{fieldErrors.linkedinUrl}</p>
             )}
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5 flex items-center justify-between">
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5 flex items-center justify-between">
               <span>YouTube Channel URL</span>
-              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${formData.youtubeUrl.trim() ? 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300' : 'bg-gray-100 dark:bg-dark-surface text-gray-500 dark:text-gray-400'}`}>
+              <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${formData.youtubeUrl.trim() ? 'bg-emerald-50 text-emerald-800' : 'bg-gray-100 text-gray-500'}`}>
                 {formData.youtubeUrl.trim() ? '✓ Active in Footer' : 'Hidden'}
               </span>
             </label>
@@ -391,26 +399,26 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               className={inputClass('youtubeUrl')}
             />
             {fieldErrors.youtubeUrl && (
-              <p className="text-xs text-red-600 dark:text-red-400 mt-1">{fieldErrors.youtubeUrl}</p>
+              <p className="text-xs text-red-600 mt-1">{fieldErrors.youtubeUrl}</p>
             )}
           </div>
         </div>
       </div>
 
       {/* ── 4. Donation Defaults ──────────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-dark-card rounded-2xl border border-border-soft dark:border-dark-border shadow-xs p-6 sm:p-7 space-y-5 transition-colors duration-200">
-        <div className="border-b border-border-soft/60 dark:border-dark-border pb-4">
-          <h2 className="text-lg font-bold text-brand-navy dark:text-dark-text-primary flex items-center gap-2">
-            <span>🌱</span> Donation Defaults
+      <div className="bg-white rounded-xl border border-gray-200 shadow-xs p-6 space-y-4">
+        <div className="border-b border-gray-100 pb-3">
+          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
+            <span>🌱</span> Safe Donation Settings
           </h2>
-          <p className="text-xs text-text-secondary dark:text-dark-text-secondary mt-0.5">
-            Default payment currency and quick-select donation amount buttons.
+          <p className="text-xs text-gray-500 mt-0.5">
+            Default currency and preset buttons for the public donation form.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
               Default Currency
             </label>
             <select
@@ -425,7 +433,7 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
               Preset Amounts (Comma Separated)
             </label>
             <input
@@ -437,27 +445,27 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
               className={inputClass('presetAmountsStr')}
             />
             {fieldErrors.presetAmountsStr && (
-              <p className="text-xs text-red-600 dark:text-red-400 mt-1">{fieldErrors.presetAmountsStr}</p>
+              <p className="text-xs text-red-600 mt-1">{fieldErrors.presetAmountsStr}</p>
             )}
-            <p className="text-[11px] text-text-secondary dark:text-dark-text-secondary mt-1">Preset buttons presented on the public /donate form.</p>
+            <p className="text-[11px] text-gray-500 mt-1">Preset buttons presented on the public /donate form.</p>
           </div>
         </div>
       </div>
 
       {/* ── 5. SEO & Footer Defaults ──────────────────────────────────────────── */}
-      <div className="bg-white dark:bg-dark-card rounded-2xl border border-border-soft dark:border-dark-border shadow-xs p-6 sm:p-7 space-y-5 transition-colors duration-200">
-        <div className="border-b border-border-soft/60 dark:border-dark-border pb-4">
-          <h2 className="text-lg font-bold text-brand-navy dark:text-dark-text-primary flex items-center gap-2">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-xs p-6 space-y-4">
+        <div className="border-b border-gray-100 pb-3">
+          <h2 className="text-base font-bold text-gray-900 flex items-center gap-2">
             <span>🔍</span> SEO &amp; Brand Content Defaults
           </h2>
-          <p className="text-xs text-text-secondary dark:text-dark-text-secondary mt-0.5">
-            Default site meta tags and global footer tagline.
+          <p className="text-xs text-gray-500 mt-0.5">
+            Default site meta tags and public footer brand message.
           </p>
         </div>
 
         <div className="space-y-4">
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
               Footer Brand Tagline
             </label>
             <textarea
@@ -470,7 +478,7 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
               Default SEO Title
             </label>
             <input
@@ -483,7 +491,7 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-brand-navy dark:text-dark-text-primary uppercase tracking-wider mb-1.5">
+            <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
               Default SEO Description
             </label>
             <textarea
@@ -497,15 +505,12 @@ export default function SiteSettingsManager({ initialSettings }: SiteSettingsMan
         </div>
       </div>
 
-      {/* Sticky / Floating Save Bar */}
-      <div className="sticky bottom-4 z-20 bg-brand-navy-dark dark:bg-dark-surface text-white rounded-2xl p-4 shadow-xl border border-white/10 dark:border-dark-border flex items-center justify-between transition-colors duration-200">
-        <div className="text-xs text-brand-warm-white/80 dark:text-dark-text-secondary hidden sm:block">
-          Click below to save global site settings.
-        </div>
+      {/* Save Button */}
+      <div className="flex items-center justify-end pt-2 pb-8">
         <button
           type="submit"
           disabled={saving}
-          className="w-full sm:w-auto px-6 py-2.5 rounded-xl text-xs font-bold text-white dark:text-brand-navy-dark bg-brand-green dark:bg-brand-cyan hover:bg-brand-green/90 dark:hover:bg-brand-cyan/90 transition-all shadow-md cursor-pointer disabled:opacity-50"
+          className="px-6 py-2.5 rounded-xl text-xs font-bold text-white bg-[#16A34A] hover:bg-[#15803D] transition-all shadow-xs cursor-pointer disabled:opacity-50"
         >
           {saving ? 'Saving Changes…' : 'Save Site Settings'}
         </button>

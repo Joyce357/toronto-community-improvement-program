@@ -1,4 +1,4 @@
-// ─── News & Stories Manager (Admin) ─────────────────────────────────────────
+// ─── Community Stories & News Manager (Admin) ─────────────────────────────────────────
 'use client'
 
 import { useState, useTransition, useRef, ChangeEvent } from 'react'
@@ -30,14 +30,14 @@ interface FormState {
 const defaultFormState: FormState = {
   title: '',
   slug: '',
-  category: 'Community',
+  category: 'Community Impact',
   excerpt: '',
   content: '',
   author: 'TCIP Team',
   featuredImage: '',
   imagePublicId: '',
   featured: false,
-  published: false,
+  published: true,
   publishedAt: '',
 }
 
@@ -94,10 +94,10 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
     setFormData({
       title: post.title,
       slug: post.slug,
-      category: post.category || 'Environmental',
+      category: post.category || 'Community Impact',
       excerpt: post.excerpt || '',
       content: post.content,
-      author: post.author || '',
+      author: post.author || 'TCIP Team',
       featuredImage: post.featuredImage || '',
       imagePublicId: post.imagePublicId || '',
       featured: post.featured,
@@ -129,8 +129,8 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
       return
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      setErrors((prev) => ({ ...prev, image: 'Image size exceeds 5 MB limit.' }))
+    if (file.size > 8 * 1024 * 1024) {
+      setErrors((prev) => ({ ...prev, image: 'Image size exceeds 8 MB limit.' }))
       return
     }
 
@@ -145,7 +145,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
       const uploadFormData = new FormData()
       uploadFormData.append('file', file)
 
-      const res = await fetch('/api/admin/news/image', {
+      const res = await fetch('/api/admin/gallery/image', {
         method: 'POST',
         body: uploadFormData,
       })
@@ -158,7 +158,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
         setFormData((prev) => ({
           ...prev,
           featuredImage: data.imageUrl,
-          imagePublicId: data.imagePublicId,
+          imagePublicId: data.imagePublicId || '',
         }))
       }
     } catch {
@@ -169,7 +169,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
     }
   }
 
-  // Remove uploaded image
+  // Remove image from form
   const handleRemoveImage = () => {
     setFormData((prev) => ({
       ...prev,
@@ -184,11 +184,6 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
     setErrors({})
     setIsSaving(true)
 
-    const payload = {
-      ...formData,
-      publishedAt: formData.published && formData.publishedAt ? new Date(formData.publishedAt).toISOString() : null,
-    }
-
     try {
       const url = editingPost ? `/api/admin/news/${editingPost.id}` : '/api/admin/news'
       const method = editingPost ? 'PATCH' : 'POST'
@@ -196,7 +191,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(formData),
       })
 
       const data = await res.json()
@@ -210,7 +205,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
         const savedPost: NewsPost = data.post
         setBannerMsg({
           type: 'success',
-          text: editingPost ? 'Story updated successfully!' : 'Story created successfully!',
+          text: editingPost ? 'Story updated successfully!' : 'Community story published successfully!',
         })
 
         startTransition(() => {
@@ -245,7 +240,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
         setPosts((prev) => prev.map((p) => (p.id === post.id ? data.post : p)))
         setBannerMsg({
           type: 'success',
-          text: `Story "${post.title}" is now ${nextPublished ? 'Published' : 'Draft'}.`,
+          text: `Story status updated to ${nextPublished ? 'Published' : 'Draft'}.`,
         })
       }
     } catch {
@@ -268,7 +263,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
         setPosts((prev) => prev.map((p) => (p.id === post.id ? data.post : p)))
         setBannerMsg({
           type: 'success',
-          text: `Story "${post.title}" ${nextFeatured ? 'is now Featured' : 'removed from Featured'}.`,
+          text: `Story ${nextFeatured ? 'is now Featured' : 'removed from Featured'}.`,
         })
       }
     } catch {
@@ -298,44 +293,45 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
   }
 
   // Filtered list
-  const filteredPosts = posts.filter((p) => {
+  const filteredPosts = posts.filter((post) => {
     const matchSearch =
       search === '' ||
-      p.title.toLowerCase().includes(search.toLowerCase()) ||
-      (p.author && p.author.toLowerCase().includes(search.toLowerCase())) ||
-      (p.category && p.category.toLowerCase().includes(search.toLowerCase()))
+      post.title.toLowerCase().includes(search.toLowerCase()) ||
+      (post.author && post.author.toLowerCase().includes(search.toLowerCase())) ||
+      (post.category && post.category.toLowerCase().includes(search.toLowerCase())) ||
+      (post.excerpt && post.excerpt.toLowerCase().includes(search.toLowerCase()))
 
     const matchStatus =
       statusFilter === 'ALL'
         ? true
         : statusFilter === 'PUBLISHED'
-        ? p.published
+        ? post.published
         : statusFilter === 'DRAFT'
-        ? !p.published
-        : p.featured
+        ? !post.published
+        : post.featured
 
     const matchCategory =
-      categoryFilter === 'ALL' || p.category === categoryFilter
+      categoryFilter === 'ALL' || post.category === categoryFilter
 
     return matchSearch && matchStatus && matchCategory
   })
 
-  const inputClass = `w-full px-3.5 py-2.5 rounded-xl border border-border-soft text-sm text-brand-navy
-    bg-white focus:outline-none focus:ring-2 focus:ring-brand-green/40 focus:border-brand-green transition-all shadow-2xs`
+  const inputClass = `w-full px-3.5 py-2.5 rounded-xl border border-gray-300 text-sm text-gray-900
+    bg-white focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A] transition-all`
 
   return (
     <div className="space-y-6">
       {/* Top action bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-brand-navy tracking-tight">News &amp; Stories</h1>
-          <p className="text-sm text-text-secondary mt-0.5">
-            Manage published news posts, community stories, and updates. ({total} total)
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Community Stories & News</h1>
+          <p className="text-sm text-gray-600 mt-1">
+            Manage published news, impact stories, and community updates ({total} total).
           </p>
         </div>
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold text-white bg-brand-green hover:bg-brand-green/90 transition-colors shadow-xs shrink-0 cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-semibold text-white bg-[#16A34A] hover:bg-[#15803D] transition-colors shadow-xs shrink-0 cursor-pointer"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -356,7 +352,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
           <span>{bannerMsg.text}</span>
           <button
             onClick={() => setBannerMsg(null)}
-            className="text-xs font-bold underline opacity-80 hover:opacity-100"
+            className="text-xs font-bold underline opacity-80 hover:opacity-100 cursor-pointer"
           >
             Dismiss
           </button>
@@ -364,17 +360,17 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
       )}
 
       {/* Filters & Search */}
-      <div className="bg-white p-4 rounded-2xl border border-border-soft shadow-xs flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+      <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
         <div className="relative flex-1">
           <input
             type="text"
             placeholder="Search stories by title, author, or category…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 rounded-xl border border-border-soft text-xs text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-green/40 bg-brand-warm-white/40"
+            className="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-300 text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A] bg-gray-50/50"
           />
           <svg
-            className="w-4 h-4 absolute left-3 top-2.5 text-text-secondary"
+            className="w-4 h-4 absolute left-3 top-2.5 text-gray-400"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -383,11 +379,11 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
           </svg>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="px-3 py-2 rounded-xl border border-border-soft text-xs text-brand-navy bg-brand-warm-white/40 focus:outline-none focus:ring-2 focus:ring-brand-green/40"
+            className="px-3 py-2 rounded-lg border border-gray-300 text-xs text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30"
           >
             <option value="ALL">All Categories</option>
             {NEWS_CATEGORIES.map((cat) => (
@@ -397,15 +393,15 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
             ))}
           </select>
 
-          <div className="flex bg-brand-cream/60 p-1 rounded-xl border border-border-soft text-xs font-bold text-brand-navy">
+          <div className="flex bg-gray-100 p-1 rounded-lg border border-gray-200 text-xs font-semibold text-gray-700">
             {(['ALL', 'PUBLISHED', 'DRAFT', 'FEATURED'] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setStatusFilter(tab)}
-                className={`px-3 py-1 rounded-lg transition-all cursor-pointer ${
+                className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
                   statusFilter === tab
-                    ? 'bg-white shadow-xs text-brand-navy'
-                    : 'text-text-secondary hover:text-brand-navy'
+                    ? 'bg-white shadow-xs text-gray-900 font-bold'
+                    : 'text-gray-600 hover:text-gray-900'
                 }`}
               >
                 {tab === 'ALL' ? 'All' : tab.charAt(0) + tab.slice(1).toLowerCase()}
@@ -416,21 +412,23 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-border-soft shadow-xs overflow-hidden">
+      <div className="bg-white rounded-xl border border-gray-200 shadow-xs overflow-hidden">
         {filteredPosts.length === 0 ? (
-          <EmptyState
-            icon="📰"
-            title="No news posts found"
-            message={
-              search || statusFilter !== 'ALL' || categoryFilter !== 'ALL'
-                ? 'Try adjusting your filters or search term.'
-                : 'Get started by creating your first news post or impact story.'
-            }
-          />
+          <div className="p-8">
+            <EmptyState
+              icon="📰"
+              title="No news posts found"
+              message={
+                search || statusFilter !== 'ALL' || categoryFilter !== 'ALL'
+                  ? 'Try adjusting your filters or search term.'
+                  : 'Get started by creating your first community story.'
+              }
+            />
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-brand-cream/60 border-b border-border-soft text-brand-navy font-bold text-xs uppercase tracking-wider">
+              <thead className="bg-gray-50 border-b border-gray-200 text-gray-700 font-semibold text-xs uppercase tracking-wider">
                 <tr>
                   <th className="px-5 py-3.5">Story</th>
                   <th className="px-4 py-3.5">Category</th>
@@ -441,31 +439,32 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
                   <th className="px-5 py-3.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border-soft/60">
+              <tbody className="divide-y divide-gray-100">
                 {filteredPosts.map((post) => {
                   const catStyle = getNewsCategoryStyle(post.category)
                   return (
-                    <tr key={post.id} className="hover:bg-brand-warm-white/50 transition-colors">
+                    <tr key={post.id} className="hover:bg-gray-50/70 transition-colors">
                       {/* Story title & image */}
                       <td className="px-5 py-4">
                         <div className="flex items-center gap-3">
                           {post.featuredImage ? (
-                            <div className="relative w-12 h-12 rounded-lg overflow-hidden shrink-0 border border-border-soft bg-brand-cream/30">
+                            <div className="relative w-12 h-12 rounded-lg overflow-hidden shrink-0 border border-gray-200 bg-gray-50">
                               <Image
                                 src={post.featuredImage}
                                 alt={post.title}
                                 fill
+                                sizes="48px"
                                 className="object-cover"
                               />
                             </div>
                           ) : (
-                            <div className="w-12 h-12 rounded-lg bg-brand-sage/30 flex items-center justify-center text-xl shrink-0">
+                            <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center text-xl shrink-0">
                               📰
                             </div>
                           )}
                           <div className="min-w-0 max-w-xs sm:max-w-md">
-                            <p className="font-bold text-brand-navy truncate">{post.title}</p>
-                            <p className="text-xs text-text-secondary font-mono truncate">/news/{post.slug}</p>
+                            <p className="font-bold text-gray-900 truncate">{post.title}</p>
+                            <p className="text-xs text-gray-500 font-mono truncate">/news/{post.slug}</p>
                           </div>
                         </div>
                       </td>
@@ -475,13 +474,13 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
                         <span
                           className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border ${catStyle.bg} ${catStyle.text} ${catStyle.border}`}
                         >
-                          {post.category || 'General'}
+                          {post.category || 'Community Impact'}
                         </span>
                       </td>
 
                       {/* Author */}
-                      <td className="px-4 py-4 text-xs text-text-secondary whitespace-nowrap">
-                        {post.author || '—'}
+                      <td className="px-4 py-4 text-xs text-gray-600 whitespace-nowrap">
+                        {post.author || 'TCIP Team'}
                       </td>
 
                       {/* Status */}
@@ -499,7 +498,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
                       <td className="px-4 py-4 whitespace-nowrap">
                         <button
                           onClick={() => handleToggleFeatured(post)}
-                          className={`px-2 py-0.5 rounded-full text-xs font-bold border transition-colors cursor-pointer ${
+                          className={`px-2 py-0.5 rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
                             post.featured
                               ? 'bg-amber-100 text-amber-900 border-amber-300'
                               : 'bg-gray-100 text-gray-400 border-gray-200 hover:text-gray-600'
@@ -510,7 +509,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
                       </td>
 
                       {/* Date */}
-                      <td className="px-4 py-4 text-xs text-text-secondary whitespace-nowrap font-medium">
+                      <td className="px-4 py-4 text-xs text-gray-500 whitespace-nowrap font-medium">
                         {post.publishedAt
                           ? new Date(post.publishedAt).toLocaleDateString('en-CA', {
                               year: 'numeric',
@@ -521,27 +520,21 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
                       </td>
 
                       {/* Actions */}
-                      <td className="px-5 py-4 text-right whitespace-nowrap">
-                        <div className="inline-flex items-center gap-1.5">
-                          <button
-                            onClick={() => openEditModal(post)}
-                            className="p-1.5 rounded-lg text-brand-navy hover:bg-brand-cream transition-colors cursor-pointer"
-                            title="Edit story"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                            </svg>
-                          </button>
-                          <button
-                            onClick={() => setDeleteConfirmId(post.id)}
-                            className="p-1.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
-                            title="Delete story"
-                          >
-                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                          </button>
-                        </div>
+                      <td className="px-5 py-4 text-right whitespace-nowrap space-x-1.5">
+                        <button
+                          onClick={() => openEditModal(post)}
+                          className="px-2.5 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+                          title="Edit story"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => setDeleteConfirmId(post.id)}
+                          className="px-2.5 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
+                          title="Delete story"
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   )
@@ -555,35 +548,35 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
       {/* ── CREATE / EDIT MODAL ── */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-border-soft max-h-[90vh] overflow-y-auto my-8">
-            <div className="flex items-center justify-between border-b border-border-soft/60 pb-4 mb-6">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 sm:p-7 shadow-2xl border border-gray-200 max-h-[90vh] overflow-y-auto my-8">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-6">
               <div>
-                <h2 className="text-xl font-extrabold text-brand-navy">
-                  {editingPost ? 'Edit News Story' : 'Create News Story'}
+                <h2 className="text-xl font-bold text-gray-900">
+                  {editingPost ? 'Edit Story' : 'Create Story'}
                 </h2>
-                <p className="text-xs text-text-secondary mt-0.5">
+                <p className="text-xs text-gray-500 mt-1">
                   Fill in the details for your article or community impact story.
                 </p>
               </div>
               <button
                 onClick={closeModal}
-                className="text-text-secondary hover:text-brand-navy p-1.5 rounded-xl hover:bg-brand-cream/60 transition-colors text-lg"
+                className="text-gray-400 hover:text-gray-700 p-1.5 rounded-lg hover:bg-gray-100 transition-colors text-lg cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleSave} className="space-y-5">
+            <form onSubmit={handleSave} className="space-y-4">
               {/* Title */}
               <div>
-                <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1.5">
-                  Title <span className="text-red-500">*</span>
+                <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
+                  Story Title <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.title}
                   onChange={(e) => handleTitleChange(e.target.value)}
-                  placeholder="e.g. How Community Volunteers Restored a Local Waterway"
+                  placeholder="e.g. TCIP Hosts Annual Youth Leadership Summit"
                   className={inputClass}
                   required
                 />
@@ -592,19 +585,19 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
 
               {/* Slug */}
               <div>
-                <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
                   URL Slug <span className="text-red-500">*</span>
                 </label>
-                <div className="flex items-center rounded-xl border border-border-soft bg-white overflow-hidden shadow-2xs">
-                  <span className="px-3 py-2.5 bg-brand-cream/60 text-xs text-text-secondary font-mono border-r border-border-soft">
+                <div className="flex items-center rounded-xl border border-gray-300 bg-white overflow-hidden">
+                  <span className="px-3 py-2.5 bg-gray-50 text-xs text-gray-500 font-mono border-r border-gray-300">
                     /news/
                   </span>
                   <input
                     type="text"
                     value={formData.slug}
                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                    placeholder="how-community-volunteers-restored-waterway"
-                    className="flex-1 px-3 py-2.5 text-xs font-mono text-brand-navy focus:outline-none"
+                    placeholder="tcip-hosts-annual-youth-leadership-summit"
+                    className="flex-1 px-3 py-2 text-xs font-mono text-gray-900 focus:outline-none"
                     required
                   />
                 </div>
@@ -614,7 +607,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
               {/* Category & Author */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
                     Category
                   </label>
                   <select
@@ -631,7 +624,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1.5">
+                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
                     Author
                   </label>
                   <input
@@ -646,12 +639,12 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
 
               {/* Featured Image (Cloudinary) */}
               <div>
-                <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
                   Story Featured Image
                 </label>
-                <div className="p-4 rounded-xl bg-brand-cream/40 border border-border-soft space-y-3">
+                <div className="p-4 rounded-xl bg-gray-50 border border-gray-200 space-y-3">
                   {formData.featuredImage ? (
-                    <div className="relative aspect-[16/9] w-full rounded-xl overflow-hidden border border-border-soft bg-white">
+                    <div className="relative aspect-[16/9] w-full rounded-lg overflow-hidden border border-gray-200 bg-white">
                       <Image
                         src={formData.featuredImage}
                         alt="Preview"
@@ -661,20 +654,20 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
                       <button
                         type="button"
                         onClick={handleRemoveImage}
-                        className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/70 text-white text-xs font-bold hover:bg-black transition-colors"
+                        className="absolute top-2 right-2 px-3 py-1.5 rounded-lg bg-black/75 text-white text-xs font-semibold hover:bg-black transition-colors cursor-pointer"
                       >
                         Remove Image
                       </button>
                     </div>
                   ) : (
-                    <div className="flex flex-col items-center justify-center py-6 border-2 border-dashed border-border-soft rounded-xl bg-white/60 text-center">
-                      <svg className="w-8 h-8 text-text-secondary mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div className="flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-300 rounded-lg bg-white text-center">
+                      <svg className="w-8 h-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
-                      <p className="text-xs font-bold text-brand-navy mb-1">
+                      <p className="text-xs font-bold text-gray-800 mb-1">
                         {uploadingImage ? 'Uploading to Cloudinary…' : 'Upload story hero photo'}
                       </p>
-                      <p className="text-[11px] text-text-secondary">JPEG, PNG, or WebP. Max 5 MB.</p>
+                      <p className="text-[11px] text-gray-500">JPEG, PNG, or WebP. Max 8 MB.</p>
                       <input
                         ref={fileInputRef}
                         type="file"
@@ -686,7 +679,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
                         disabled={uploadingImage}
-                        className="mt-3 px-3.5 py-1.5 rounded-lg text-xs font-bold text-white bg-brand-navy hover:bg-brand-navy-dark transition-colors disabled:opacity-50 cursor-pointer shadow-2xs"
+                        className="mt-3 px-4 py-2 rounded-lg text-xs font-bold text-white bg-gray-900 hover:bg-black transition-colors disabled:opacity-50 cursor-pointer shadow-xs"
                       >
                         {uploadingImage ? 'Uploading…' : 'Select Photo'}
                       </button>
@@ -698,14 +691,14 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
 
               {/* Excerpt */}
               <div>
-                <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
                   Summary / Excerpt
                 </label>
                 <textarea
                   rows={2}
                   value={formData.excerpt}
                   onChange={(e) => setFormData({ ...formData, excerpt: e.target.value })}
-                  placeholder="Short 1-2 sentence teaser for cards and search results…"
+                  placeholder="Short 1-2 sentence teaser for cards and previews…"
                   className={inputClass}
                 />
                 {errors.excerpt && <p className="text-xs text-red-600 mt-1 font-medium">{errors.excerpt}</p>}
@@ -713,7 +706,7 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
 
               {/* Story Content */}
               <div>
-                <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1.5">
+                <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
                   Story Content <span className="text-red-500">*</span>
                 </label>
                 <textarea
@@ -728,56 +721,56 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
               </div>
 
               {/* Publication Settings */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-xl bg-brand-cream/40 border border-border-soft">
-                <label className="flex items-center gap-2 text-xs font-bold text-brand-navy cursor-pointer">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 p-4 rounded-xl bg-gray-50 border border-gray-200 items-center">
+                <label className="flex items-center gap-2 text-xs font-semibold text-gray-800 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formData.published}
                     onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                    className="rounded text-brand-green focus:ring-brand-green"
+                    className="rounded text-[#16A34A] focus:ring-[#16A34A]"
                   />
-                  Publish Story
+                  Published
                 </label>
 
-                <label className="flex items-center gap-2 text-xs font-bold text-brand-navy cursor-pointer">
+                <label className="flex items-center gap-2 text-xs font-semibold text-gray-800 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formData.featured}
                     onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                    className="rounded text-brand-green focus:ring-brand-green"
+                    className="rounded text-[#16A34A] focus:ring-[#16A34A]"
                   />
-                  Feature on Homepage
+                  Featured Story
                 </label>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-text-secondary uppercase mb-1">
-                    Publish Date
+                  <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">
+                    Publication Date
                   </label>
                   <input
                     type="date"
                     value={formData.publishedAt}
                     onChange={(e) => setFormData({ ...formData, publishedAt: e.target.value })}
-                    className="w-full px-2.5 py-1 text-xs rounded-lg border border-border-soft bg-white"
+                    className="w-full px-2.5 py-1 text-xs rounded-lg border border-gray-300 bg-white"
                   />
                 </div>
               </div>
 
               {/* Form buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-border-soft/60">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
                 <button
                   type="button"
                   onClick={closeModal}
                   disabled={isSaving}
-                  className="px-4 py-2 rounded-xl text-xs font-bold text-text-secondary hover:bg-brand-cream/60 transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  disabled={isSaving}
-                  className="px-5 py-2 rounded-xl text-xs font-bold text-white bg-brand-green hover:bg-brand-green/90 transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
+                  disabled={isSaving || uploadingImage}
+                  className="px-5 py-2 rounded-xl text-xs font-semibold text-white bg-[#16A34A] hover:bg-[#15803D] transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
                 >
-                  {isSaving ? 'Saving…' : editingPost ? 'Update Story' : 'Create Story'}
+                  {isSaving ? 'Saving…' : editingPost ? 'Update Story' : 'Publish Story'}
                 </button>
               </div>
             </form>
@@ -791,27 +784,25 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
           <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-xl border border-red-200 space-y-4">
             <div className="flex items-center gap-3 text-red-600">
               <span className="text-2xl">⚠️</span>
-              <h3 className="text-lg font-bold text-brand-navy">Delete Story</h3>
+              <h3 className="text-lg font-bold text-gray-900">Delete Story</h3>
             </div>
-            <p className="text-sm text-text-secondary leading-relaxed">
-              Are you sure you want to permanently delete this news story? This will also remove any associated images from Cloudinary and cannot be undone.
+            <p className="text-sm text-gray-600 leading-relaxed">
+              Are you sure you want to permanently delete this story? This will remove the article from the public site and cannot be undone.
             </p>
             <div className="flex items-center justify-end gap-3 pt-2">
               <button
-                type="button"
                 onClick={() => setDeleteConfirmId(null)}
                 disabled={isDeleting}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-text-secondary hover:bg-brand-cream/60 transition-colors cursor-pointer"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-gray-600 hover:bg-gray-100 transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
-                type="button"
                 onClick={() => handleDelete(deleteConfirmId)}
                 disabled={isDeleting}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-white bg-red-600 hover:bg-red-700 transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-white bg-red-600 hover:bg-red-700 transition-colors cursor-pointer disabled:opacity-50"
               >
-                {isDeleting ? 'Deleting…' : 'Yes, Delete'}
+                {isDeleting ? 'Deleting…' : 'Yes, Delete Story'}
               </button>
             </div>
           </div>

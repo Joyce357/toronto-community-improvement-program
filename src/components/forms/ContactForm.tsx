@@ -167,7 +167,7 @@ export default function ContactForm() {
           <option value="" disabled className="dark:bg-dark-surface dark:text-dark-text-primary">Select a topic…</option>
           <option value="General Inquiry" className="dark:bg-dark-surface dark:text-dark-text-primary">General Inquiry</option>
           <option value="Volunteer Programs" className="dark:bg-dark-surface dark:text-dark-text-primary">Volunteer Programs</option>
-          <option value="Environmental Programs" className="dark:bg-dark-surface dark:text-dark-text-primary">Environmental Programs &amp; Workshops</option>
+          <option value="Community Programs" className="dark:bg-dark-surface dark:text-dark-text-primary">Community Programs &amp; Workshops</option>
           <option value="Partnership Opportunities" className="dark:bg-dark-surface dark:text-dark-text-primary">Partnership Opportunities</option>
           <option value="Donations &amp; Support" className="dark:bg-dark-surface dark:text-dark-text-primary">Donations &amp; Support</option>
           <option value="Other" className="dark:bg-dark-surface dark:text-dark-text-primary">Other</option>

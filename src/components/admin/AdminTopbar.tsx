@@ -15,15 +15,16 @@ interface AdminTopbarProps {
 
 const pageTitles: Record<string, string> = {
   '/admin': 'Dashboard',
-  '/admin/programs': 'Programs',
-  '/admin/events': 'Events',
-  '/admin/news': 'News & Stories',
-  '/admin/gallery': 'Gallery',
-  '/admin/volunteers': 'Volunteers',
-  '/admin/donations': 'Donations',
-  '/admin/contacts': 'Contacts',
-  '/admin/newsletter': 'Newsletter',
-  '/admin/settings': 'Settings',
+  '/admin/programs': 'Programs Management',
+  '/admin/events': 'Events Management',
+  '/admin/news': 'Community Stories & News',
+  '/admin/gallery': 'Gallery & Media Management',
+  '/admin/partners': 'Partners Management',
+  '/admin/volunteers': 'Volunteer Applications',
+  '/admin/donations': 'Donations Overview',
+  '/admin/contacts': 'Contact Inquiries',
+  '/admin/newsletter': 'Newsletter Subscribers',
+  '/admin/settings': 'Site Settings',
 }
 
 export default function AdminTopbar({ userName, userEmail, userAvatar, onToggleMobileSidebar }: AdminTopbarProps) {
@@ -53,58 +54,56 @@ export default function AdminTopbar({ userName, userEmail, userAvatar, onToggleM
   const initial = (userName ?? userEmail ?? 'A')[0].toUpperCase()
 
   return (
-    <header className="h-14 sm:h-16 bg-[#FCFBF6] dark:bg-dark-surface border-b border-[#DDE3DA] dark:border-dark-border px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shrink-0 shadow-xs transition-colors duration-200">
+    <header className="h-16 bg-white border-b border-[#E5E7EB] px-4 sm:px-6 lg:px-8 flex items-center justify-between sticky top-0 z-30 shrink-0 shadow-2xs">
       {/* Left: Mobile Trigger + Page Title / Breadcrumb */}
       <div className="flex items-center gap-2 sm:gap-3">
         {onToggleMobileSidebar && (
           <button
             onClick={onToggleMobileSidebar}
-            className="lg:hidden p-2 text-brand-navy dark:text-dark-text-primary hover:bg-brand-cream/80 dark:hover:bg-dark-card rounded-lg transition-colors"
+            className="lg:hidden p-2 text-[#4B5563] hover:text-[#111827] hover:bg-[#F3F4F6] rounded-xl transition-colors"
             aria-label="Toggle navigation menu"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
+            <span className="material-symbols-outlined text-2xl">menu</span>
           </button>
         )}
 
-        <div className="flex items-center gap-2 text-brand-navy dark:text-dark-text-primary font-bold text-base sm:text-lg">
-          <span className="text-text-secondary dark:text-dark-text-secondary text-xs sm:text-sm font-medium hidden md:inline">Admin /</span>
-          <h1 className="tracking-tight text-brand-navy dark:text-dark-text-primary font-extrabold">{pageTitle}</h1>
+        <div className="flex items-center gap-2 text-[#111827] font-bold text-base sm:text-lg">
+          <span className="text-[#9CA3AF] text-xs sm:text-sm font-medium hidden md:inline">TCIP Admin /</span>
+          <h1 className="tracking-tight text-[#111827] font-extrabold text-base sm:text-lg">{pageTitle}</h1>
         </div>
       </div>
 
       {/* Right: Actions & User Info */}
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex items-center gap-2.5 sm:gap-3.5">
         {/* View Website Action */}
         <Link
           href="/"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-brand-green dark:text-brand-cyan bg-brand-green/10 dark:bg-brand-cyan/10 hover:bg-brand-green/20 dark:hover:bg-brand-cyan/20 transition-colors border border-brand-green/20 dark:border-brand-cyan/20"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold text-[#15803D] bg-[#16A34A]/10 hover:bg-[#16A34A]/20 transition-colors border border-[#16A34A]/20"
         >
-          <span className="hidden sm:inline">View Website</span>
+          <span className="hidden sm:inline">View Public Website</span>
           <span className="sm:hidden">Site</span>
-          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-          </svg>
+          <span className="material-symbols-outlined text-sm">open_in_new</span>
         </Link>
 
         {/* User Identity */}
-        <div className="hidden sm:flex items-center gap-2.5 px-2.5 py-1 rounded-xl bg-white dark:bg-dark-card border border-[#DDE3DA] dark:border-dark-border">
+        <div className="hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-[#F9FAFB] border border-[#E5E7EB]">
           {userAvatar ? (
-            <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0 border border-[#DDE3DA] dark:border-dark-border">
+            <div className="relative w-7 h-7 rounded-full overflow-hidden shrink-0 border border-[#E5E7EB]">
               <Image src={userAvatar} alt={userName ?? 'Admin'} fill className="object-cover" />
             </div>
           ) : (
-            <div className="w-7 h-7 rounded-full bg-brand-navy dark:bg-brand-cyan dark:text-brand-navy font-bold text-xs flex items-center justify-center shrink-0 text-brand-cyan">
+            <div className="w-7 h-7 rounded-full bg-[#16A34A]/10 text-[#15803D] font-bold text-xs flex items-center justify-center shrink-0 border border-[#16A34A]/20">
               {initial}
             </div>
           )}
-          <div className="text-left max-w-[140px] truncate">
-            <p className="text-xs font-bold text-brand-navy dark:text-dark-text-primary leading-tight truncate">
+          <div className="text-left max-w-[150px] truncate">
+            <p className="text-xs font-bold text-[#111827] leading-tight truncate">
               {userName ?? userEmail ?? 'Admin'}
             </p>
             {userName && userEmail && (
-              <p className="text-[10px] text-text-secondary dark:text-dark-text-secondary truncate leading-tight">
+              <p className="text-[10px] text-[#6B7280] truncate leading-tight mt-0.5">
                 {userEmail}
               </p>
             )}
@@ -115,9 +114,9 @@ export default function AdminTopbar({ userName, userEmail, userAvatar, onToggleM
         <button
           onClick={handleSignOut}
           disabled={signingOut}
-          className="px-3 py-1.5 rounded-lg text-xs font-bold text-red-700 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors border border-red-200 dark:border-red-900/50 disabled:opacity-50 cursor-pointer"
+          className="px-3 py-1.5 rounded-xl text-xs font-semibold text-[#DC2626] hover:bg-red-50 border border-red-200 transition-colors disabled:opacity-50 cursor-pointer"
         >
-          {signingOut ? 'Signing out…' : 'Sign Out'}
+          {signingOut ? 'Signing out…' : 'Log Out'}
         </button>
       </div>
     </header>

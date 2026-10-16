@@ -14,7 +14,7 @@ export default function GetInvolved() {
             Be Part of the Change
           </h2>
           <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-            Whether giving your time, building a civic workplace partnership, or funding vital bursaries, your involvement transforms lives in Toronto.
+            Whether giving your time as a volunteer, exploring community partnerships, or supporting our work through donations, your participation strengthens Toronto communities.
           </p>
         </div>
 
@@ -31,16 +31,16 @@ export default function GetInvolved() {
                 Volunteer Your Skills
               </h3>
               <p className="font-body-md text-body-md text-on-surface-variant mt-3 leading-relaxed">
-                Support secondary school youth tutoring, lead newcomer conversation circles, assist with job fair logistics, or mentor emerging professionals.
+                Support community workshops, assist with event logistics, or share your skills to help youth, newcomers, and neighborhood residents.
               </p>
               <ul className="mt-4 flex flex-col gap-2 font-body-sm text-body-sm text-on-surface">
                 <li className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-base">check_circle</span>
-                  <span>Flexible weekend &amp; evening slots</span>
+                  <span>Community workshops &amp; gathering support</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-base">check_circle</span>
-                  <span>Formal volunteer certificate provided</span>
+                  <span>Youth mentorship &amp; community activities</span>
                 </li>
               </ul>
             </div>
@@ -57,7 +57,7 @@ export default function GetInvolved() {
             </div>
           </div>
 
-          {/* Column 2: Corporate & Civic Partners */}
+          {/* Column 2: Community & Civic Partners */}
           <div className="bg-surface-container rounded-3xl p-8 flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 border border-outline-variant/30">
             <div>
               <div className="w-14 h-14 rounded-2xl bg-primary-fixed flex items-center justify-center text-on-primary-fixed mb-6">
@@ -67,16 +67,16 @@ export default function GetInvolved() {
                 Partner With TCIP
               </h3>
               <p className="font-body-md text-body-md text-on-surface-variant mt-3 leading-relaxed">
-                Co-design internships, sponsor technology workstations, or host workplace job shadowing to unlock untapped talent across Toronto.
+                Collaborate on community initiatives, host educational workshops, or partner with us to expand outreach across Toronto neighborhoods.
               </p>
               <ul className="mt-4 flex flex-col gap-2 font-body-sm text-body-sm text-on-surface">
                 <li className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-base">check_circle</span>
-                  <span>Diversity hiring &amp; career pipelines</span>
+                  <span>Community collaboration &amp; workshop spaces</span>
                 </li>
                 <li className="flex items-center gap-2">
                   <span className="material-symbols-outlined text-primary text-base">check_circle</span>
-                  <span>Community impact recognition</span>
+                  <span>Civic &amp; neighborhood outreach</span>
                 </li>
               </ul>
             </div>
@@ -103,14 +103,14 @@ export default function GetInvolved() {
                 Support Our Work
               </h3>
               <p className="font-body-md text-body-md text-on-primary-container mt-3 leading-relaxed">
-                Your charitable gift directly funds emergency settlement bursaries, laptops for STEM labs, and dental hygiene supplies for vulnerable families.
+                Your financial support directly assists grassroots community programs, youth activities, and family support initiatives across Toronto.
               </p>
               <div className="mt-6 p-4 rounded-2xl bg-surface-container-lowest/10 backdrop-blur-sm">
                 <p className="font-label-sm text-label-sm text-primary-fixed uppercase tracking-wider font-semibold">
-                  Direct Impact
+                  Community Support
                 </p>
                 <p className="font-body-sm text-body-sm text-on-primary mt-1">
-                  $75 provides a newcomer student with school supplies and transit passes for a month.
+                  Contributions directly support grassroots programs and community-centered initiatives.
                 </p>
               </div>
             </div>

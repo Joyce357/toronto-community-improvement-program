@@ -14,31 +14,29 @@ export default async function StoriesPreview() {
   const story = stories?.[0]
   const featuredStory = {
     id: story?.id || 'featured-1',
-    title: story?.title || 'Annual Youth Summer Job Fair: Connecting 200+ Youth with GTA Employers',
+    title: story?.title || 'Youth Summer Job Fair: Creating Employment Pathways for Toronto Youth',
     slug: story?.slug || 'youth-summer-job-fair',
-    category: story?.category || 'Community Impact Report',
-    dateLabel: 'July 2024',
-    readTime: '4 min read',
+    category: story?.category || 'Community Impact',
+    dateLabel: 'Community Initiative',
+    readTime: '3 min read',
     excerpt:
       story?.excerpt ||
-      'How TCIP convened leading municipal employers, tech studios, and healthcare providers to offer on-the-spot interviews, resume critiques, and immediate paid vocational internships to Black and newcomer young adults across the GTA.',
-    image:
-      story?.featuredImage ||
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuD29wMRhc0BpWpmqJass7z3zg943Jq-XyZM9bPKwkMf0nR_Y-DwwD9g94t9op5o8I1yPY3OXauCzuR_DaUFuJtmxXnXY_IHA9ImKnuJIiTPD18_rjOwAOC0y9g4uMPMEUQobt-pcAMOwqedDDgDdQstmpx78wxzdCiCO6F4uf0ip3rgLjP5oTNcQksk0kE0_5wBEtiTvEGrSepIs3caBNKjMQW0QWEZjOBpiHRERZpzyjLRcfYVVxFb',
+      'How TCIP brought together employers, community mentors, and job seekers for resume reviews, networking, and employment pathway opportunities for Black and newcomer youth across the GTA.',
+    image: story?.featuredImage || '/images/tcip-hero-community.jpg',
     fallback: '/images/tcip-hero-community.jpg',
-    location: 'Metro Hall, Toronto',
+    location: 'Toronto, ON',
   }
 
   const upcomingEvents = [
     {
       id: 'event-1',
-      month: 'OCT',
-      day: '24',
-      badge: 'WORKSHOP LAB',
-      title: 'Newcomer Career Readiness & Portfolio Review',
-      location: 'Metro Hall, 55 John St • 6:00 PM – 8:30 PM EST',
+      month: 'UPCOMING',
+      day: '01',
+      badge: 'CAREER WORKSHOP',
+      title: 'Youth & Newcomer Career Readiness Workshop',
+      location: 'Community Hub, Toronto • Details by RSVP',
       tag: 'Free Registration',
-      btnText: 'Register Free',
+      btnText: 'Learn More',
       href: '/events',
       accentBorder: 'border-primary',
       tagColor: 'text-primary',
@@ -46,13 +44,13 @@ export default async function StoriesPreview() {
     },
     {
       id: 'event-2',
-      month: 'NOV',
-      day: '08',
-      badge: 'COMMUNITY HEALTH',
-      title: 'Scarborough Health & Dental Screening Clinic',
-      location: 'Cedar Ridge Creative Centre • 10:00 AM – 3:00 PM EST',
-      tag: 'Walk-ins Welcome',
-      btnText: 'Book Time',
+      month: 'UPCOMING',
+      day: '02',
+      badge: 'HEALTH & WELLNESS',
+      title: 'Community Health & Dental Care Awareness',
+      location: 'Community Partner Location, Toronto',
+      tag: 'Community Access',
+      btnText: 'Contact Us',
       href: '/contact',
       accentBorder: 'border-tertiary',
       tagColor: 'text-tertiary',

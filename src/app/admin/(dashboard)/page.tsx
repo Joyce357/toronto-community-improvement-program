@@ -18,15 +18,17 @@ async function getStats() {
       newVolunteers,
       activeSubscribers,
       totalSubscribers,
+      totalPrograms,
       publishedPrograms,
+      totalEvents,
       publishedEvents,
+      totalPosts,
       publishedPosts,
       totalPhotos,
       completedDonations,
       completedDonationAgg,
       recentContacts,
       recentVolunteers,
-      recentDonations,
     ] = await Promise.all([
       prisma.contactSubmission.count(),
       prisma.contactSubmission.count({ where: { status: 'NEW' } }),
@@ -34,8 +36,11 @@ async function getStats() {
       prisma.volunteerApplication.count({ where: { status: { in: ['NEW', 'REVIEWING'] } } }),
       prisma.newsletterSubscriber.count({ where: { status: 'ACTIVE' } }),
       prisma.newsletterSubscriber.count(),
+      prisma.program.count(),
       prisma.program.count({ where: { status: 'PUBLISHED' } }),
+      prisma.event.count(),
       prisma.event.count({ where: { published: true } }),
+      prisma.newsPost.count(),
       prisma.newsPost.count({ where: { published: true } }),
       prisma.galleryItem.count(),
       prisma.donation.count({ where: { status: 'COMPLETED' } }),
@@ -51,10 +56,6 @@ async function getStats() {
         take: 5,
         orderBy: { createdAt: 'desc' },
       }),
-      prisma.donation.findMany({
-        take: 5,
-        orderBy: { createdAt: 'desc' },
-      }),
     ])
 
     return {
@@ -64,15 +65,17 @@ async function getStats() {
       newVolunteers,
       activeSubscribers,
       totalSubscribers,
+      totalPrograms,
       publishedPrograms,
+      totalEvents,
       publishedEvents,
+      totalPosts,
       publishedPosts,
       totalPhotos,
       completedDonations,
       totalRaised: Number(completedDonationAgg._sum.amount || 0),
       recentContacts,
       recentVolunteers,
-      recentDonations,
     }
   } catch (err) {
     console.error('[Admin Dashboard] DB stats query failed:', (err as Error)?.message)
@@ -83,15 +86,17 @@ async function getStats() {
       newVolunteers:      0,
       activeSubscribers:  0,
       totalSubscribers:   0,
+      totalPrograms:      0,
       publishedPrograms:  0,
+      totalEvents:        0,
       publishedEvents:    0,
+      totalPosts:         0,
       publishedPosts:     0,
       totalPhotos:        0,
       completedDonations: 0,
       totalRaised:        0,
       recentContacts:     [],
       recentVolunteers:   [],
-      recentDonations:    [],
     }
   }
 }
@@ -104,307 +109,244 @@ export default async function AdminDashboardPage() {
     newVolunteers,
     activeSubscribers,
     totalSubscribers,
+    totalPrograms,
     publishedPrograms,
+    totalEvents,
     publishedEvents,
+    totalPosts,
     publishedPosts,
+    totalPhotos,
     completedDonations,
     totalRaised,
     recentContacts,
     recentVolunteers,
-    recentDonations,
   } = await getStats()
 
   return (
     <div className="space-y-8">
-      {/* Top Banner / Welcome */}
-      <div className="bg-gradient-to-r from-brand-navy via-brand-navy-mid to-brand-green/80 dark:from-dark-card dark:via-dark-surface dark:to-dark-card rounded-3xl p-6 sm:p-8 text-brand-warm-white relative overflow-hidden shadow-card border border-transparent dark:border-dark-border">
-        <div className="absolute -right-8 -bottom-8 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none" />
-        <div className="relative z-10 max-w-xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 dark:bg-white/5 text-brand-cyan text-xs font-semibold uppercase tracking-wider mb-3">
-            <span>🌱</span> Live Platform Overview
+      {/* Welcome Banner */}
+      <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#E5E7EB] shadow-xs relative overflow-hidden flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#16A34A]/10 text-[#15803D] text-xs font-bold mb-3">
+            <span className="w-2 h-2 rounded-full bg-[#16A34A]" />
+            <span>TCIP Management System</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white mb-2">
-            Welcome to TCIP Mission Hub
-          </h1>
-          <p className="text-brand-warm-white/80 text-sm sm:text-base leading-relaxed">
-            Monitor community outreach, donations, volunteer applications, and program impact for Toronto Community Improvement Program.
+          <h2 className="text-2xl sm:text-3xl font-extrabold text-[#111827] tracking-tight">
+            Welcome to TCIP Administration
+          </h2>
+          <p className="text-[#4B5563] text-sm mt-1.5 max-w-2xl leading-relaxed">
+            Manage public programs, community stories, media gallery, upcoming gatherings, volunteer applications, and organization settings.
           </p>
+        </div>
+
+        {/* Quick Action Buttons */}
+        <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+          <Link
+            href="/admin/gallery"
+            className="inline-flex items-center gap-2 bg-[#16A34A] hover:bg-[#15803D] text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-xs transition-colors"
+          >
+            <span className="material-symbols-outlined text-base">upload</span>
+            <span>Upload Photos</span>
+          </Link>
+          <Link
+            href="/admin/programs"
+            className="inline-flex items-center gap-2 bg-white hover:bg-[#F9FAFB] text-[#111827] font-semibold text-xs px-4 py-2.5 rounded-xl border border-[#E5E7EB] shadow-2xs transition-colors"
+          >
+            <span className="material-symbols-outlined text-base text-[#16A34A]">add_circle</span>
+            <span>Add Program</span>
+          </Link>
+          <Link
+            href="/admin/events"
+            className="inline-flex items-center gap-2 bg-white hover:bg-[#F9FAFB] text-[#111827] font-semibold text-xs px-4 py-2.5 rounded-xl border border-[#E5E7EB] shadow-2xs transition-colors"
+          >
+            <span className="material-symbols-outlined text-base text-[#0284C7]">event</span>
+            <span>Add Event</span>
+          </Link>
+          <Link
+            href="/admin/news"
+            className="inline-flex items-center gap-2 bg-white hover:bg-[#F9FAFB] text-[#111827] font-semibold text-xs px-4 py-2.5 rounded-xl border border-[#E5E7EB] shadow-2xs transition-colors"
+          >
+            <span className="material-symbols-outlined text-base text-[#D97706]">post_add</span>
+            <span>Add Story</span>
+          </Link>
+          <Link
+            href="/admin/settings"
+            className="inline-flex items-center gap-1.5 bg-white hover:bg-[#F9FAFB] text-[#4B5563] font-medium text-xs px-3 py-2.5 rounded-xl border border-[#E5E7EB] shadow-2xs transition-colors"
+            title="Update Site Settings"
+          >
+            <span className="material-symbols-outlined text-base">settings</span>
+          </Link>
         </div>
       </div>
 
-      {/* 6-Card Stat Grid (Including Real Donation KPIs) */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-5">
-        <StatCard
-          label="Total Raised"
-          value={`$${totalRaised.toFixed(2)}`}
-          icon="💰"
-          subLabel="CAD (completed)"
-          subValue={`${completedDonations} gifts`}
-          color="green"
-        />
-        <StatCard
-          label="Active Programs"
-          value={publishedPrograms}
-          icon="🌱"
-          color="cyan"
-        />
-        <StatCard
-          label="Upcoming Events"
-          value={publishedEvents}
-          icon="📅"
-          color="green"
-        />
-        <StatCard
-          label="Volunteers"
-          value={totalVolunteers}
-          icon="🤝"
-          subLabel="in review"
-          subValue={newVolunteers}
-          color="orange"
-        />
-        <StatCard
-          label="Contact Inquiries"
-          value={totalContacts}
-          icon="✉️"
-          subLabel="new"
-          subValue={newContacts}
-          color="pink"
-        />
-        <StatCard
-          label="Newsletter Subs"
-          value={activeSubscribers}
-          icon="📬"
-          subLabel="total"
-          subValue={totalSubscribers}
-          color="purple"
-        />
+      {/* Primary Real Metric Cards Grid */}
+      <div>
+        <h3 className="text-sm font-bold text-[#6B7280] uppercase tracking-wider mb-3">
+          Overview &amp; Real Data Counts
+        </h3>
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          <StatCard
+            label="Gallery Photos"
+            value={totalPhotos}
+            icon="photo_library"
+            subLabel="total media assets"
+            subValue=""
+            color="green"
+          />
+          <StatCard
+            label="Programs"
+            value={totalPrograms}
+            icon="school"
+            subLabel="published"
+            subValue={`${publishedPrograms} of ${totalPrograms}`}
+            color="blue"
+          />
+          <StatCard
+            label="Events"
+            value={totalEvents}
+            icon="event"
+            subLabel="published"
+            subValue={`${publishedEvents} of ${totalEvents}`}
+            color="purple"
+          />
+          <StatCard
+            label="Stories &amp; News"
+            value={totalPosts}
+            icon="article"
+            subLabel="published"
+            subValue={`${publishedPosts} of ${totalPosts}`}
+            color="amber"
+          />
+          <StatCard
+            label="Contacts"
+            value={totalContacts}
+            icon="mail"
+            subLabel="new inquiry"
+            subValue={newContacts > 0 ? `${newContacts} new` : '0 new'}
+            color={newContacts > 0 ? 'red' : 'green'}
+          />
+          <StatCard
+            label="Volunteer Inquiries"
+            value={totalVolunteers}
+            icon="group"
+            subLabel="pending review"
+            subValue={newVolunteers > 0 ? `${newVolunteers} pending` : '0 pending'}
+            color="blue"
+          />
+          <StatCard
+            label="Newsletter Members"
+            value={totalSubscribers}
+            icon="mark_email_read"
+            subLabel="active"
+            subValue={`${activeSubscribers} active`}
+            color="green"
+          />
+          <StatCard
+            label="Donations Recorded"
+            value={completedDonations}
+            icon="volunteer_activism"
+            subLabel="total verified"
+            subValue={`$${totalRaised.toLocaleString('en-CA', { minimumFractionDigits: 0 })}`}
+            color="purple"
+          />
+        </div>
       </div>
 
-      {/* Main Grid: Left (Recent Activity) & Right (Quick Actions & Overview) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-        {/* Left 2 Columns: Recent Submissions / Table */}
-        <div className="lg:col-span-2 space-y-6">
-
-          {/* Recent Donations */}
-          <div className="bg-brand-warm-white dark:bg-dark-card rounded-2xl shadow-card border border-border-soft dark:border-dark-border overflow-hidden">
-            <div className="px-6 py-4 border-b border-border-soft dark:border-dark-border flex items-center justify-between">
+      {/* Two-Column Recent Submissions Panels */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Contact Inquiries */}
+        <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB] shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between pb-4 border-b border-[#E5E7EB]">
               <div>
-                <h2 className="font-bold text-brand-navy dark:text-dark-text-primary text-base">Recent Donations</h2>
-                <p className="text-xs text-text-secondary dark:text-dark-text-secondary mt-0.5">Real-time payment ledger & donor gifts</p>
+                <h4 className="font-bold text-[#111827] text-base">Recent Contact Inquiries</h4>
+                <p className="text-xs text-[#6B7280] mt-0.5">Latest community submissions</p>
               </div>
-              <Link href="/admin/donations" className="text-xs text-brand-green dark:text-brand-cyan hover:text-brand-navy dark:hover:text-dark-text-primary font-semibold transition-colors">
-                View all donations →
-              </Link>
-            </div>
-
-            {recentDonations.length === 0 ? (
-              <div className="px-6 py-10 text-center">
-                <p className="text-text-secondary dark:text-dark-text-secondary text-sm">No donations recorded yet.</p>
-                <p className="text-xs text-text-secondary/70 dark:text-dark-text-secondary/70 mt-1">Confirmed PayPal donations will show here.</p>
-              </div>
-            ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-[#F8FAF6] dark:bg-dark-surface text-text-secondary dark:text-dark-text-secondary text-xs uppercase font-semibold border-b border-border-soft dark:border-dark-border">
-                    <tr>
-                      <th className="px-6 py-3">Donor</th>
-                      <th className="px-6 py-3">Amount</th>
-                      <th className="px-6 py-3">Date</th>
-                      <th className="px-6 py-3 text-right">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border-soft/60 dark:divide-dark-border">
-                    {recentDonations.map((d) => (
-                      <tr key={d.id} className="hover:bg-brand-cream/30 dark:hover:bg-dark-card-hover transition-colors">
-                        <td className="px-6 py-3.5 font-medium text-brand-navy dark:text-dark-text-primary truncate max-w-[140px]">
-                          {d.isAnonymous ? 'Anonymous' : (d.donorName || 'Supporter')}
-                        </td>
-                        <td className="px-6 py-3.5 font-bold text-brand-navy dark:text-dark-text-primary">
-                          {d.currency} ${Number(d.amount).toFixed(2)}
-                        </td>
-                        <td className="px-6 py-3.5 text-text-secondary dark:text-dark-text-secondary text-xs">{formatDate(d.createdAt)}</td>
-                        <td className="px-6 py-3.5 text-right">
-                          <StatusBadge status={d.status} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </div>
-
-          {/* Recent Contact Submissions */}
-          <div className="bg-brand-warm-white dark:bg-dark-card rounded-2xl shadow-card border border-border-soft dark:border-dark-border overflow-hidden">
-            <div className="px-6 py-4 border-b border-border-soft dark:border-dark-border flex items-center justify-between">
-              <div>
-                <h2 className="font-bold text-brand-navy dark:text-dark-text-primary text-base">Recent Inquiries</h2>
-                <p className="text-xs text-text-secondary dark:text-dark-text-secondary mt-0.5">Direct messages and general questions</p>
-              </div>
-              <Link href="/admin/contacts" className="text-xs text-brand-green dark:text-brand-cyan hover:text-brand-navy dark:hover:text-dark-text-primary font-semibold transition-colors">
-                View all inquiries →
+              <Link
+                href="/admin/contacts"
+                className="text-xs font-semibold text-[#15803D] hover:underline"
+              >
+                View all ({totalContacts}) →
               </Link>
             </div>
 
             {recentContacts.length === 0 ? (
-              <div className="px-6 py-10 text-center">
-                <p className="text-text-secondary dark:text-dark-text-secondary text-sm">No inquiries yet.</p>
-                <p className="text-xs text-text-secondary/70 dark:text-dark-text-secondary/70 mt-1">New contact form messages will appear here.</p>
+              <div className="py-12 text-center text-[#9CA3AF] text-sm">
+                No contact inquiries received yet.
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-[#F8FAF6] dark:bg-dark-surface text-text-secondary dark:text-dark-text-secondary text-xs uppercase font-semibold border-b border-border-soft dark:border-dark-border">
-                    <tr>
-                      <th className="px-6 py-3">Name</th>
-                      <th className="px-6 py-3">Subject</th>
-                      <th className="px-6 py-3">Date</th>
-                      <th className="px-6 py-3 text-right">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border-soft/60 dark:divide-dark-border">
-                    {recentContacts.map((c) => (
-                      <tr key={c.id} className="hover:bg-brand-cream/30 dark:hover:bg-dark-card-hover transition-colors">
-                        <td className="px-6 py-3.5 font-medium text-brand-navy dark:text-dark-text-primary truncate max-w-[140px]">{c.name}</td>
-                        <td className="px-6 py-3.5 text-text-secondary dark:text-dark-text-secondary truncate max-w-[180px]">{c.subject}</td>
-                        <td className="px-6 py-3.5 text-text-secondary dark:text-dark-text-secondary text-xs">{formatDate(c.createdAt)}</td>
-                        <td className="px-6 py-3.5 text-right">
-                          <StatusBadge status={c.status} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="divide-y divide-[#E5E7EB]">
+                {recentContacts.map((c) => (
+                  <div key={c.id} className="py-3.5 flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="font-bold text-xs text-[#111827] truncate">{c.name}</p>
+                        <StatusBadge status={c.status} />
+                      </div>
+                      <p className="text-xs text-[#4B5563] truncate mt-0.5">{c.subject}</p>
+                      <p className="text-[11px] text-[#9CA3AF] mt-0.5">{formatDate(c.createdAt)}</p>
+                    </div>
+                    <Link
+                      href="/admin/contacts"
+                      className="px-2.5 py-1 rounded-lg text-xs font-medium text-[#4B5563] bg-[#F3F4F6] hover:bg-[#E5E7EB] shrink-0"
+                    >
+                      View
+                    </Link>
+                  </div>
+                ))}
               </div>
             )}
           </div>
+        </div>
 
-          {/* Recent Volunteer Applications */}
-          <div className="bg-brand-warm-white dark:bg-dark-card rounded-2xl shadow-card border border-border-soft dark:border-dark-border overflow-hidden">
-            <div className="px-6 py-4 border-b border-border-soft dark:border-dark-border flex items-center justify-between">
+        {/* Recent Volunteer Applications */}
+        <div className="bg-white rounded-2xl p-6 border border-[#E5E7EB] shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between pb-4 border-b border-[#E5E7EB]">
               <div>
-                <h2 className="font-bold text-brand-navy dark:text-dark-text-primary text-base">Volunteer Applications</h2>
-                <p className="text-xs text-text-secondary dark:text-dark-text-secondary mt-0.5">Community members eager to participate</p>
+                <h4 className="font-bold text-[#111827] text-base">Recent Volunteer Applications</h4>
+                <p className="text-xs text-[#6B7280] mt-0.5">Latest volunteer sign-ups</p>
               </div>
-              <Link href="/admin/volunteers" className="text-xs text-brand-green dark:text-brand-cyan hover:text-brand-navy dark:hover:text-dark-text-primary font-semibold transition-colors">
-                View all volunteers →
+              <Link
+                href="/admin/volunteers"
+                className="text-xs font-semibold text-[#15803D] hover:underline"
+              >
+                View all ({totalVolunteers}) →
               </Link>
             </div>
 
             {recentVolunteers.length === 0 ? (
-              <div className="px-6 py-10 text-center">
-                <p className="text-text-secondary dark:text-dark-text-secondary text-sm">No volunteer applications yet.</p>
-                <p className="text-xs text-text-secondary/70 dark:text-dark-text-secondary/70 mt-1">Applications from the volunteer page will show here.</p>
+              <div className="py-12 text-center text-[#9CA3AF] text-sm">
+                No volunteer applications received yet.
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-[#F8FAF6] dark:bg-dark-surface text-text-secondary dark:text-dark-text-secondary text-xs uppercase font-semibold border-b border-border-soft dark:border-dark-border">
-                    <tr>
-                      <th className="px-6 py-3">Applicant</th>
-                      <th className="px-6 py-3">Interests</th>
-                      <th className="px-6 py-3">Date</th>
-                      <th className="px-6 py-3 text-right">Status</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-border-soft/60 dark:divide-dark-border">
-                    {recentVolunteers.map((v) => (
-                      <tr key={v.id} className="hover:bg-brand-cream/30 dark:hover:bg-dark-card-hover transition-colors">
-                        <td className="px-6 py-3.5 font-medium text-brand-navy dark:text-dark-text-primary truncate max-w-[140px]">
+              <div className="divide-y divide-[#E5E7EB]">
+                {recentVolunteers.map((v) => (
+                  <div key={v.id} className="py-3.5 flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <p className="font-bold text-xs text-[#111827] truncate">
                           {v.firstName} {v.lastName}
-                        </td>
-                        <td className="px-6 py-3.5 text-text-secondary dark:text-dark-text-secondary truncate max-w-[180px]">
-                          {v.interests.join(', ') || 'General'}
-                        </td>
-                        <td className="px-6 py-3.5 text-text-secondary dark:text-dark-text-secondary text-xs">{formatDate(v.createdAt)}</td>
-                        <td className="px-6 py-3.5 text-right">
-                          <StatusBadge status={v.status} />
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+                        </p>
+                        <StatusBadge status={v.status} />
+                      </div>
+                      <p className="text-xs text-[#4B5563] truncate mt-0.5">
+                        {v.interests.length > 0 ? v.interests.join(', ') : 'General Volunteer'}
+                      </p>
+                      <p className="text-[11px] text-[#9CA3AF] mt-0.5">{formatDate(v.createdAt)}</p>
+                    </div>
+                    <Link
+                      href="/admin/volunteers"
+                      className="px-2.5 py-1 rounded-lg text-xs font-medium text-[#4B5563] bg-[#F3F4F6] hover:bg-[#E5E7EB] shrink-0"
+                    >
+                      Review
+                    </Link>
+                  </div>
+                ))}
               </div>
             )}
           </div>
-
         </div>
-
-        {/* Right 1 Column: Quick Actions & Status */}
-        <div className="space-y-6">
-
-          {/* Quick Actions Card */}
-          <div className="bg-brand-warm-white dark:bg-dark-card rounded-2xl p-6 shadow-card border border-border-soft dark:border-dark-border">
-            <h2 className="text-base font-bold text-brand-navy dark:text-dark-text-primary mb-4">Quick Actions</h2>
-            <div className="space-y-3">
-              <Link
-                href="/admin/donations"
-                className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-brand-green dark:bg-brand-cyan text-brand-warm-white dark:text-brand-navy-dark font-semibold text-sm hover:bg-brand-green/90 dark:hover:bg-brand-cyan/90 shadow-sm transition-all"
-              >
-                <span>Manage Donations</span>
-                <span className="text-xs opacity-75">💰</span>
-              </Link>
-              <Link
-                href="/admin/events"
-                className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-brand-warm-white dark:bg-dark-surface text-brand-navy dark:text-dark-text-primary font-medium text-sm border border-border-soft dark:border-dark-border hover:border-brand-green/40 dark:hover:border-brand-cyan/40 hover:bg-[#F8FAF6] dark:hover:bg-dark-card transition-all"
-              >
-                <span>Manage & Create Events</span>
-                <span className="text-xs opacity-75">📅</span>
-              </Link>
-              <Link
-                href="/admin/news/new"
-                className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-brand-sky dark:bg-dark-surface text-brand-navy dark:text-dark-text-primary font-semibold text-sm hover:bg-brand-sky/80 dark:hover:bg-dark-card transition-all border border-brand-cyan/20 dark:border-dark-border"
-              >
-                <span>+ Post Story / News</span>
-                <span className="text-xs opacity-75">📰</span>
-              </Link>
-              <Link
-                href="/admin/volunteers"
-                className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-brand-warm-white dark:bg-dark-surface text-brand-navy dark:text-dark-text-primary font-medium text-sm border border-border-soft dark:border-dark-border hover:border-brand-green/40 dark:hover:border-brand-cyan/40 hover:bg-[#F8FAF6] dark:hover:bg-dark-card transition-all"
-              >
-                <span>Review Volunteers</span>
-                <span className="text-xs opacity-75">🤝</span>
-              </Link>
-              <Link
-                href="/admin/contacts"
-                className="flex items-center justify-between w-full px-4 py-3 rounded-xl bg-brand-warm-white dark:bg-dark-surface text-brand-navy dark:text-dark-text-primary font-medium text-sm border border-border-soft dark:border-dark-border hover:border-brand-green/40 dark:hover:border-brand-cyan/40 hover:bg-[#F8FAF6] dark:hover:bg-dark-card transition-all"
-              >
-                <span>View All Inquiries</span>
-                <span className="text-xs opacity-75">✉️</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Content Overview Card */}
-          <div className="bg-brand-warm-white dark:bg-dark-card rounded-2xl p-6 shadow-card border border-border-soft dark:border-dark-border">
-            <h2 className="text-base font-bold text-brand-navy dark:text-dark-text-primary mb-4">Content Summary</h2>
-            <div className="space-y-3.5">
-              <div className="flex items-center justify-between py-2 border-b border-border-soft/60 dark:border-dark-border text-sm">
-                <span className="text-text-secondary dark:text-dark-text-secondary">Completed Donations</span>
-                <span className="font-bold text-brand-green dark:text-brand-cyan">{completedDonations}</span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-border-soft/60 dark:border-dark-border text-sm">
-                <span className="text-text-secondary dark:text-dark-text-secondary">Published Events</span>
-                <span className="font-bold text-brand-navy dark:text-dark-text-primary">{publishedEvents}</span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-border-soft/60 dark:border-dark-border text-sm">
-                <span className="text-text-secondary dark:text-dark-text-secondary">Published Stories</span>
-                <span className="font-bold text-brand-navy dark:text-dark-text-primary">{publishedPosts}</span>
-              </div>
-              <div className="flex items-center justify-between py-2 border-b border-border-soft/60 dark:border-dark-border text-sm">
-                <span className="text-text-secondary dark:text-dark-text-secondary">Pending Inquiries</span>
-                <span className="font-bold text-brand-green dark:text-brand-cyan">{newContacts}</span>
-              </div>
-              <div className="flex items-center justify-between py-2 text-sm">
-                <span className="text-text-secondary dark:text-dark-text-secondary">Pending Volunteers</span>
-                <span className="font-bold text-accent-orange">{newVolunteers}</span>
-              </div>
-            </div>
-          </div>
-
-        </div>
-
       </div>
     </div>
   )

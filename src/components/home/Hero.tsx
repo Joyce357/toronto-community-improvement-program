@@ -6,27 +6,27 @@ import Link from 'next/link'
 const heroSlides = [
   {
     id: 1,
-    tag: 'Annual Summit • Metro Hall',
-    caption: 'Connecting over 250 youth and newcomer families with civic mentors.',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuASqdh2rs6BjmuyesbYaP9KfZ1bd-ZJcTgW6FO4ZWX3EfmgZkrnPjqPmnaVy_qBFIIT2hzx_mq02JneXSIxAErOcosJUwgZOjRehYGSnFf9REJUVencQgAGgubqvD7MJbLVo1xpIjAArEEsV25pY0736UGvSc83DQTTlPs4KP5FIXDotXXX-A-jltAT1E0BEp5P2ppS4M7kD35TpQx9tGSBRrYrBYNSpcfb-TIPJObRXrSGcpOTopQN',
+    tag: 'Community Empowerment',
+    caption: 'Bringing together community members, youth, and families across Greater Toronto.',
+    image: '/images/tcip-hero-community.jpg',
     fallback: '/images/tcip-hero-community.jpg',
-    alt: 'Annual TCIP Community Empowerment Summit with youth and newcomer families',
+    alt: 'TCIP Community Empowerment gathering with youth and families in Toronto',
   },
   {
     id: 2,
-    tag: 'Youth Tech Academy',
-    caption: 'Equipping the next generation with digital skills, coding, and design tools.',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC0aMuenKxslGYotluscZ7gqpBJCWld1KfgEJDlN2LSpW6S5FlWIyO3RYLd_RAnFQx2oRAE2ColFA0RQE1TZyPVUXtzCvtGNcFr5sCJt4iIcx_ML4LzNeUqpquua9w5UEI7SEUw4N4mU-cuqjYEHTEl-a2wFRL9tE-zLHekPzKuCYgmO-cVsASpYJ4swNDpfNlWuiZ4cl2ZyypMS9HRIKmdFPKFXrmngDsaw_XkofNw4CrhImvQTPzX',
+    tag: 'Youth Development',
+    caption: 'Empowering youth through leadership programs, summer camps, and community mentorship.',
+    image: '/images/tcip-youth-leadership.jpg',
     fallback: '/images/tcip-youth-leadership.jpg',
-    alt: 'TCIP STEM Lab and tech mentorship session in Toronto',
+    alt: 'TCIP youth development and community leadership activity in Toronto',
   },
   {
     id: 3,
-    tag: 'Community Health & Wellness',
-    caption: 'Free preventative dental screenings, maternal support, and health clinics.',
-    image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDxTSzwBjl6CixYFSTKn8uLGxvA0S9uxm6F2kA0Shxl3wsT8nkc_lVcJheTkKeJFDLxW1PLCTr4qyIMgNb7BjLQB8G9Y8lLKdFmohs_HYjSoYoT2JGPCgCpV_6otIfZeWFF8sJZEDvIOwVZweQHgKZQkqu-5DyK_Fnha0Uu4mHMkCRQTyGbIm84d3cLvzLidA2goYeBrX6_w87S5xNaRkE3DupvOcH_irLS4kfIn4_K_pCtTbxGChJB',
+    tag: 'Health & Wellness',
+    caption: 'Facilitating dental care access initiatives and preventative health awareness.',
+    image: '/images/tcip-community-workshop.jpg',
     fallback: '/images/tcip-community-workshop.jpg',
-    alt: 'Free Community Health Consultation Hub in Scarborough',
+    alt: 'TCIP community health and wellness initiative in Greater Toronto',
   },
 ]
 
@@ -99,14 +99,14 @@ export default function Hero() {
             <div className="pt-space-md flex items-center gap-space-md text-on-surface-variant">
               <div className="flex -space-x-2 shrink-0">
                 <span className="w-9 h-9 rounded-full bg-primary-fixed flex items-center justify-center text-on-primary-fixed font-title-md text-label-sm shadow-xs">
-                  400+
+                  TCIP
                 </span>
                 <span className="w-9 h-9 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-title-md text-label-sm shadow-xs">
                   GTA
                 </span>
               </div>
               <p className="font-label-md text-label-md">
-                Serving Hundreds of Individuals Each Year Across the Greater Toronto Area.
+                Supporting individuals and families across the Greater Toronto Area.
               </p>
             </div>
 

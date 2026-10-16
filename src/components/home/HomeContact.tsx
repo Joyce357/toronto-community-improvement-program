@@ -19,12 +19,14 @@ export default function HomeContact() {
     setErrorMessage('')
 
     const interestLabels: Record<string, string> = {
-      settlement: 'Newcomer Settlement & Housing Guidance',
-      employment: 'Job Readiness & Career Mentorship',
-      youth: 'Youth STEM & Creative Media Academy',
-      health: 'Community Dental & Health Screenings',
+      employment: 'Employment & Economic Empowerment',
+      settlement: 'Newcomer & Community Support',
+      youth: 'Youth Development',
+      women: 'Women & Family Empowerment',
+      health: 'Health & Wellness',
+      advocacy: 'Advocacy, Culture & Community Development',
       volunteer: 'Volunteering Opportunities',
-      partnership: 'Corporate / Institutional Partnership',
+      partnership: 'Partnership & Collaboration Inquiry',
     }
 
     const subject = `${interestLabels[formData.interest] || 'Community Inquiry'}${
@@ -80,7 +82,7 @@ export default function HomeContact() {
                 Contact Us &amp; Operating Hours
               </h2>
               <p className="font-body-md text-body-md text-on-surface-variant mt-3 leading-relaxed">
-                We love our contacts, so feel free to visit during normal business hours or drop us an email anytime.
+                We love connecting with community members, so feel free to connect during business hours or send us a message below.
               </p>
 
               {/* Hours Card */}
@@ -92,13 +94,9 @@ export default function HomeContact() {
                   </h4>
                 </div>
                 <div className="space-y-1.5 font-body-sm text-body-sm text-on-surface-variant">
-                  <div className="flex justify-between py-1 border-b border-outline-variant/20">
-                    <span className="font-semibold text-on-surface">Monday – Friday</span>
-                    <span>09:00 – 17:00 EST</span>
-                  </div>
                   <div className="flex justify-between py-1">
-                    <span className="font-semibold text-on-surface">Saturday – Sunday</span>
-                    <span className="text-tertiary font-semibold">Closed (Community Events by RSVP)</span>
+                    <span className="font-semibold text-on-surface">Hours</span>
+                    <span>09:00 – 17:00</span>
                   </div>
                 </div>
               </div>
@@ -110,28 +108,16 @@ export default function HomeContact() {
                   <div>
                     <p className="font-title-md text-label-md text-on-surface font-bold">Serving Greater Toronto</p>
                     <p className="font-body-sm text-body-sm text-on-surface-variant">
-                      Scarborough • North York • Rexdale • Downtown Hubs
+                      Serving communities across Toronto.
                     </p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <span className="material-symbols-outlined text-primary text-xl mt-0.5">mail</span>
+                  <span className="material-symbols-outlined text-primary text-xl mt-0.5">diversity_3</span>
                   <div>
-                    <p className="font-title-md text-label-md text-on-surface font-bold">Direct Email</p>
-                    <a
-                      className="font-body-sm text-body-sm text-primary hover:underline"
-                      href="mailto:contact@torontocip.com"
-                    >
-                      contact@torontocip.com
-                    </a>
-                  </div>
-                </div>
-                <div className="flex items-start gap-3">
-                  <span className="material-symbols-outlined text-primary text-xl mt-0.5">verified_user</span>
-                  <div>
-                    <p className="font-title-md text-label-md text-on-surface font-bold">Non-Profit Status</p>
+                    <p className="font-title-md text-label-md text-on-surface font-bold">Community Focus</p>
                     <p className="font-body-sm text-body-sm text-on-surface-variant">
-                      Registered Canadian Non-Profit Entity • Ontario, Canada
+                      Dedicated to empowering Black immigrants, youth, and families across Greater Toronto.
                     </p>
                   </div>
                 </div>
@@ -141,19 +127,13 @@ export default function HomeContact() {
             {/* Small Vignette Photo */}
             <div className="mt-8 rounded-2xl overflow-hidden h-36 relative shadow-sm border border-outline-variant/30 bg-surface-container">
               <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKZlbHdWez1duqIwaJCN2S-TnfclQAuRqC7bNuJneWPCZ3V1oTiZMtQKhg1UGWAf9uyu4SfxMzMFOSpJqeUPIV8NfiNT4jxjcGl_SOZ5FMwJcq-AIqt9sWAtnY3_Pf1IzzenlTE_j0jYLCZYVGO0BLLA2-WxQiWfkiGDAO76S4rN3EuFAF2fqDi2xjuT_lSkYftxbEKvNjCaqzHpJnII-j8c0iwkBT87GhJEzkBUq2IRlVWTkSAnzN"
-                alt="TCIP Office Welcome Desk in Toronto"
+                src="/images/tcip-community-workshop.jpg"
+                alt="TCIP Community Workshop in Toronto"
                 className="w-full h-full object-cover"
-                onError={(e) => {
-                  const target = e.currentTarget as HTMLImageElement
-                  if (target.src !== '/images/tcip-community-workshop.jpg') {
-                    target.src = '/images/tcip-community-workshop.jpg'
-                  }
-                }}
               />
               <div className="absolute inset-0 bg-inverse-surface/20" />
               <div className="absolute bottom-3 left-4 text-surface-container-lowest font-label-sm text-label-sm font-semibold">
-                Community Welcome Centre • Toronto, ON
+                Community Gathering • Toronto, ON
               </div>
             </div>
           </div>
@@ -235,12 +215,14 @@ export default function HomeContact() {
                   onChange={(e) => setFormData({ ...formData, interest: e.target.value })}
                   className="w-full h-12 px-4 rounded-xl bg-surface-container-lowest text-on-surface font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary shadow-xs border border-outline-variant/30"
                 >
-                  <option value="settlement">Newcomer Settlement &amp; Housing Guidance</option>
-                  <option value="employment">Job Readiness &amp; Career Mentorship</option>
-                  <option value="youth">Youth STEM &amp; Creative Media Academy</option>
-                  <option value="health">Community Dental &amp; Health Screenings</option>
+                  <option value="employment">Employment &amp; Economic Empowerment</option>
+                  <option value="settlement">Newcomer &amp; Community Support</option>
+                  <option value="youth">Youth Development</option>
+                  <option value="women">Women &amp; Family Empowerment</option>
+                  <option value="health">Health &amp; Wellness</option>
+                  <option value="advocacy">Advocacy, Culture &amp; Community Development</option>
                   <option value="volunteer">Volunteering Opportunities</option>
-                  <option value="partnership">Corporate / Institutional Partnership</option>
+                  <option value="partnership">Partnership &amp; Collaboration</option>
                 </select>
               </div>
 
@@ -255,7 +237,7 @@ export default function HomeContact() {
                   rows={4}
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                  placeholder="Tell us about yourself or your family's needs..."
+                  placeholder="Tell us about yourself or your inquiry..."
                   className="w-full p-4 rounded-xl bg-surface-container-lowest text-on-surface font-body-md text-body-md focus:outline-none focus:ring-2 focus:ring-primary shadow-xs resize-none border border-outline-variant/30"
                 />
               </div>
@@ -271,14 +253,14 @@ export default function HomeContact() {
                   <span className="material-symbols-outlined text-lg">send</span>
                 </button>
                 <span className="font-label-sm text-label-sm text-on-surface-variant">
-                  Confidentiality guaranteed under Canadian PIPEDA standards.
+                  Your information is kept strictly confidential.
                 </span>
               </div>
 
               {status === 'success' && (
                 <div className="mt-4 p-4 rounded-xl bg-secondary-container text-on-secondary-container font-title-md text-label-md flex items-center gap-2">
                   <span className="material-symbols-outlined">check_circle</span>
-                  <span>Thank you! Your inquiry has been sent to our community intake coordinator.</span>
+                  <span>Thank you! Your inquiry has been received. We will be in touch soon.</span>
                 </div>
               )}
 

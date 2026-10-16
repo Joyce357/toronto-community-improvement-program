@@ -62,7 +62,7 @@ export default function Header() {
         <div className="bg-surface-container-low border-b border-outline-variant/30 py-1.5 px-4 md:px-margin-desktop hidden lg:block">
           <div className="max-w-7xl mx-auto flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
             <span>Toronto Community Improvement Program • Serving Greater Toronto Area Communities</span>
-            <span>Mon - Fri: 09:00 - 17:00 EST • Registered Canadian Non-Profit</span>
+            <span>09:00 – 17:00 • Toronto, Ontario</span>
           </div>
         </div>
 

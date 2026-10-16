@@ -40,8 +40,8 @@ export default function GetInvolvedPage() {
             </h2>
             <div className="divider-green mx-auto mb-3" />
             <p className="text-text-secondary dark:text-dark-text-secondary text-sm sm:text-base leading-relaxed">
-              Every action counts. Explore the different ways you can support youth leadership
-              and ecological stewardship in our community.
+              Every action counts. Explore the different ways you can support community empowerment,
+              youth development, and newcomer support in our community.
             </p>
           </div>
 
@@ -55,8 +55,8 @@ export default function GetInvolvedPage() {
                 </div>
                 <h3 className="text-xl font-bold text-brand-navy dark:text-dark-text-primary mb-2">Volunteer With Us</h3>
                 <p className="text-text-secondary dark:text-dark-text-secondary text-xs sm:text-sm leading-relaxed mb-6">
-                  Join our hands-on volunteer days including native tree planting, park and ravine
-                  cleanups, and youth outdoor learning workshops. Open to youth and adults.
+                  Join our community initiatives including youth mentorship sessions, career readiness
+                  workshops, community gatherings, and event coordination. Open to youth and adults.
                 </p>
               </div>
 
@@ -65,7 +65,7 @@ export default function GetInvolvedPage() {
                   Apply to Volunteer
                 </Button>
                 <p className="text-[11px] text-center text-text-secondary dark:text-dark-text-secondary">
-                  Flexible hours: weekdays, weekends, and events
+                  Flexible hours: weekdays, weekends, and community events
                 </p>
               </div>
             </div>
@@ -78,8 +78,8 @@ export default function GetInvolvedPage() {
                 </div>
                 <h3 className="text-xl font-bold text-brand-navy dark:text-dark-text-primary mb-2">Make a Donation</h3>
                 <p className="text-text-secondary dark:text-dark-text-secondary text-xs sm:text-sm leading-relaxed mb-6">
-                  Your financial gift directly funds student workshop materials, native seedlings,
-                  field equipment, and accessible outdoor education programs for youth.
+                  Your financial gift directly supports community workshops, educational resources,
+                  youth camp activities, and newcomer integration programs.
                 </p>
               </div>
 
@@ -97,12 +97,12 @@ export default function GetInvolvedPage() {
             <div id="partner" className="card flex flex-col p-6 sm:p-7 justify-between border-border-soft dark:border-dark-border hover:border-brand-cyan/40 scroll-mt-24">
               <div>
                 <div className="w-12 h-12 rounded-xl bg-brand-sky dark:bg-dark-surface text-brand-cyan flex items-center justify-center text-2xl mb-4 shadow-2xs">
-                  🌿
+                  👥
                 </div>
                 <h3 className="text-xl font-bold text-brand-navy dark:text-dark-text-primary mb-2">Partner With Us</h3>
                 <p className="text-text-secondary dark:text-dark-text-secondary text-xs sm:text-sm leading-relaxed mb-6">
-                  We collaborate with local schools, community organizations, and environmental groups
-                  to co-create impactful workshops, cleanup days, and youth leadership initiatives.
+                  We collaborate with local community organizations, employers, and civic groups
+                  to co-create impactful workshops, job fairs, and youth mentorship initiatives.
                 </p>
               </div>
 

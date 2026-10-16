@@ -48,19 +48,20 @@ export default async function ContactPage() {
               <div className="bg-brand-warm-white dark:bg-dark-card rounded-2xl shadow-card border border-border-soft dark:border-dark-border p-6">
                 <h3 className="font-bold text-brand-navy dark:text-dark-text-primary mb-4 text-lg">Other Ways to Reach Us</h3>
                 <ul className="space-y-4 text-sm">
-                  {settings.publicEmail && (
-                    <li className="flex items-start gap-3">
-                      <span className="text-lg mt-0.5">📧</span>
-                      <div>
-                        <p className="font-bold text-brand-navy dark:text-dark-text-primary">Email</p>
-                        <p className="text-text-secondary dark:text-dark-text-secondary">
-                          <a href={`mailto:${settings.publicEmail}`} className="hover:text-brand-green dark:hover:text-brand-cyan transition-colors">
-                            {settings.publicEmail}
-                          </a>
-                        </p>
-                      </div>
-                    </li>
-                  )}
+                  <li className="flex items-start gap-3">
+                    <span className="text-lg mt-0.5">📍</span>
+                    <div>
+                      <p className="font-bold text-brand-navy dark:text-dark-text-primary">Location</p>
+                      <p className="text-text-secondary dark:text-dark-text-secondary">{settings.publicLocationLabel || 'Toronto, Ontario'}</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <span className="text-lg mt-0.5">🕒</span>
+                    <div>
+                      <p className="font-bold text-brand-navy dark:text-dark-text-primary">Business Hours</p>
+                      <p className="text-text-secondary dark:text-dark-text-secondary">09:00 – 17:00</p>
+                    </div>
+                  </li>
                   {settings.phone && (
                     <li className="flex items-start gap-3">
                       <span className="text-lg mt-0.5">📞</span>
@@ -71,15 +72,6 @@ export default async function ContactPage() {
                             {settings.phone}
                           </a>
                         </p>
-                      </div>
-                    </li>
-                  )}
-                  {settings.publicLocationLabel && (
-                    <li className="flex items-start gap-3">
-                      <span className="text-lg mt-0.5">📍</span>
-                      <div>
-                        <p className="font-bold text-brand-navy dark:text-dark-text-primary">Location</p>
-                        <p className="text-text-secondary dark:text-dark-text-secondary">{settings.publicLocationLabel}</p>
                       </div>
                     </li>
                   )}

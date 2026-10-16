@@ -10,8 +10,8 @@ export default function WhoWeAre() {
           <div className="lg:col-span-6 relative">
             <div className="relative w-full h-[460px] rounded-3xl overflow-hidden shadow-md bg-surface-container">
               <img
-                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXp5nRqA8TdcGyS9n81UGkkWFHIQx7Pc8WxLLANLYH_vac1lmwVTyBt4pUpDVoNNCqj-MLQI8HE4_fWmvEfllb-GFW-rM9az0hphUuXV_GD4lH7CDuayo3IO0hmbBAdXE9x9-LDYvbcwZTx0RcVqT6HXdVpPQxUiyj4bZhzjHkcOh8PfvABi8Xwo4T9UQ-X06UdY-USDaSudOZDhWDfhaZ-cVKvtA05IlwTJQczx8lHVsHMwAM-w9n"
-                alt="Adaikpoh Dumebi, Founder & Executive Director of TCIP"
+                src="/images/tcip-youth-leadership.jpg"
+                alt="Adaikpoh Dumebi, Founder of TCIP"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/60 via-transparent to-transparent" />
@@ -31,12 +31,12 @@ export default function WhoWeAre() {
                     Adaikpoh Dumebi
                   </p>
                   <span className="font-label-sm text-label-sm text-primary font-semibold">
-                    Founder &amp; Executive Director
+                    Founder
                   </span>
                 </div>
               </div>
               <p className="font-body-sm text-body-sm text-on-surface-variant mt-3 italic leading-relaxed">
-                &ldquo;When one newcomer finds steady ground, an entire neighbourhood rises with them.&rdquo;
+                &ldquo;Advocating for a world where Black immigrants belong, thrive, and are empowered to succeed.&rdquo;
               </p>
             </div>
           </div>
@@ -55,7 +55,7 @@ export default function WhoWeAre() {
             </h2>
 
             <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-              Founded in 2020 by Adaikpoh Dumebi, who recognized the critical need for an organization dedicated to helping immigrants of Black descent navigate systemic barriers. Since then, TCIP has grown into a thriving non-profit serving hundreds of individuals and families across the Greater Toronto Area each year.
+              Founded in 2020 by Adaikpoh Dumebi, who recognized the critical need for an organization dedicated to helping immigrants of Black descent navigate systemic barriers. Since then, TCIP has worked to empower individuals and families across the Greater Toronto Area through dedicated community programs and advocacy.
             </p>
 
             {/* Large Editorial Pull-Quote Module */}

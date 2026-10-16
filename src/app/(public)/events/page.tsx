@@ -118,7 +118,7 @@ export default async function EventsPage() {
                             <span
                               className={`inline-block px-2.5 py-0.5 rounded-full text-xs font-bold ${accent.badgeBg} ${accent.badgeText} border ${accent.badgeBorder}`}
                             >
-                              {evt.category || 'Environmental'}
+                              {evt.category || 'Community Event'}
                             </span>
                             <p className="text-xs text-text-secondary dark:text-dark-text-secondary mt-1 font-semibold">
                               {formatDateLong(evt.date)}

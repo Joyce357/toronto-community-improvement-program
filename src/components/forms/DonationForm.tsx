@@ -305,15 +305,16 @@ export default function DonationForm() {
 
   return (
     <div className="space-y-6">
-      {/* Sandbox / Configuration Notice if credentials are not configured */}
-      {!clientId && (
-        <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-xl p-4 text-xs sm:text-sm text-amber-800 dark:text-amber-300" role="status">
-          <p className="font-semibold mb-1">🌱 PayPal Sandbox Development Setup</p>
-          <p className="text-amber-700 dark:text-amber-400">
-            Payment gateway configuration is in progress. To enable live PayPal Sandbox buttons in development, set <code className="bg-amber-100 dark:bg-amber-900/60 px-1 py-0.5 rounded font-mono">NEXT_PUBLIC_PAYPAL_CLIENT_ID</code> and server secrets in <code className="bg-amber-100 dark:bg-amber-900/60 px-1 py-0.5 rounded font-mono">.env.local</code>.
+      {/* Sandbox Testing Environment Indication */}
+      <div className="bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-900/50 rounded-xl p-4 text-xs sm:text-sm text-amber-900 dark:text-amber-200 flex items-start gap-3">
+        <span className="text-xl shrink-0">🧪</span>
+        <div>
+          <p className="font-bold text-amber-900 dark:text-amber-100">Sandbox Testing Environment</p>
+          <p className="text-amber-800/90 dark:text-amber-300/90 mt-0.5 leading-relaxed">
+            Online donations are currently configured in PayPal Sandbox mode for verification. Live production payment processing is disabled until official organization payment gateway launch.
           </p>
         </div>
-      )}
+      </div>
 
       {/* Frequency Header — One-Time Only */}
       <div>

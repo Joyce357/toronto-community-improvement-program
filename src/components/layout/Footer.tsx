@@ -40,7 +40,7 @@ export default async function Footer() {
               {tagline}
             </p>
             <span className="font-label-sm text-label-sm text-surface-variant mt-space-xs">
-              Registered Non-Profit Entity • Ontario, Canada
+              Community Organization • Toronto, Ontario
             </span>
           </div>
 
@@ -77,10 +77,12 @@ export default async function Footer() {
               Focus Areas
             </h4>
             <ul className="flex flex-col gap-space-xs font-body-sm text-body-sm text-outline-variant">
-              <li>Employment &amp; Economic Mobility</li>
-              <li>Youth Tech &amp; Leadership</li>
-              <li>Newcomer Settlement</li>
-              <li>Community Health &amp; Wellbeing</li>
+              <li>Employment &amp; Economic Empowerment</li>
+              <li>Newcomer &amp; Community Support</li>
+              <li>Youth Development</li>
+              <li>Women &amp; Family Empowerment</li>
+              <li>Health &amp; Wellness</li>
+              <li>Advocacy, Culture &amp; Community</li>
             </ul>
           </div>
 
@@ -94,7 +96,7 @@ export default async function Footer() {
                 Volunteer
               </Link>
               <Link href="/get-involved" className="font-body-sm text-body-sm text-outline-variant hover:text-inverse-on-surface transition-colors">
-                Corporate Partnership
+                Partnerships &amp; Collaboration
               </Link>
               <Link href="/contact" className="font-body-sm text-body-sm text-outline-variant hover:text-inverse-on-surface transition-colors">
                 Host a Gathering
@@ -114,7 +116,7 @@ export default async function Footer() {
               {settings.city || 'Toronto'}, {settings.province || 'Ontario'}, Canada
             </p>
             <p className="font-body-sm text-body-sm text-outline-variant">
-              Hours: Mon - Fri, 09:00 - 17:00 EST
+              Hours: 09:00 – 17:00
             </p>
             <div className="mt-space-sm">
               <span className="font-label-sm text-label-sm text-inverse-on-surface block mb-space-xs font-semibold">

@@ -18,6 +18,9 @@ export function getBaseUrl(): string {
     // Strip trailing slash for consistent URL building
     return siteUrl.replace(/\/$/, '')
   }
+  if (process.env.NODE_ENV === 'production') {
+    return 'https://torontocip.com'
+  }
   // Development fallback only
   return 'http://localhost:3000'
 }

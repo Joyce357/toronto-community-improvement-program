@@ -149,7 +149,7 @@ export default async function EventDetailPage({ params }: Props) {
               <span
                 className={`inline-block px-3 py-1 rounded-full text-xs font-bold ${accent.badgeBg} ${accent.badgeText} border ${accent.badgeBorder}`}
               >
-                {event.category || 'Environmental'}
+                {event.category || 'Community Event'}
               </span>
               {event.featured && (
                 <span className="px-2.5 py-1 bg-amber-50 dark:bg-amber-950/40 text-amber-800 dark:text-amber-300 border border-amber-200 dark:border-amber-800 text-xs font-bold rounded-full">

@@ -21,38 +21,36 @@ const galleryItems: GalleryItem[] = [
     category: 'employment',
     badge: 'EMPLOYMENT',
     badgeColor: 'bg-primary text-on-primary',
-    title: 'Annual Youth Job Fair • Metro Hall',
-    subtitle: 'Over 200 youth interviewed by leading GTA technology and healthcare employers.',
+    title: 'Youth Summer Job Fair',
+    subtitle: 'Connecting youth and job seekers with community and employment opportunities.',
     gridClass: 'md:col-span-8 md:row-span-2',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuCRLzOlogDBeH6J1vjudoAfnbFxNgPmcDLBYOsII2l5OMEdGplhTpSVak_KGri6Ab2aXHtB15pBjKjX8GDgzI41EPzH2G8fgwKIAxGh1gVLy23KoyDhhp-USuz2zzpHMN1jIAkThS-BejIKO_A_uCpGFlsHQavxFoe-43z8dQVahoK8YXH1P1BMwR6zD-1GEeVFMeZC9O5-le1cTCGqjd-RhvbfpPcPfLgv4qtlQcwYzlV9bffTqSgq',
+    image: '/images/tcip-hero-community.jpg',
     fallback: '/images/tcip-hero-community.jpg',
-    alt: 'Annual TCIP Youth Job Fair at Metro Hall Toronto',
+    alt: 'TCIP Youth Summer Job Fair in Toronto',
   },
   {
     id: 'g-2',
     category: 'youth',
-    badge: 'YOUTH & STEM',
+    badge: 'YOUTH DEVELOPMENT',
     badgeColor: 'bg-secondary text-on-secondary',
-    title: 'Creative Digital Media Lab',
-    subtitle: 'One-on-one mentorship fostering storytelling and audio engineering.',
+    title: 'Youth Mentorship & Leadership',
+    subtitle: 'Fostering leadership skills, confidence, and community connection for young people.',
     gridClass: 'md:col-span-4 md:row-span-2',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDvqbZU-fPuiDC9S5hg8Y_BV75Onxnw9ljkQI26kDRILoXi9ssEIY27mUTuhB8twxCnEnvWWo3jfpi0rHqgJHsvBCPLLFXJKPTfe83SNT-U3GVm1x5-4LJplWSdWqPvjwf9DDB275E1RSYfR3BIpdoa1uCgxwlNlDtwECDedFIbu3YeTNph6vmjAPLFHpbaqd58-qbmnHiTT_f4ymVAHcvusU6QL6u7JHF-XU8NTwjeYuKikXlplQAO',
+    image: '/images/tcip-youth-leadership.jpg',
     fallback: '/images/tcip-youth-leadership.jpg',
-    alt: 'Youth Media Mentorship in Scarborough',
+    alt: 'TCIP Youth Mentorship in Toronto',
   },
   {
     id: 'g-3',
     category: 'health',
     badge: 'HEALTH',
     badgeColor: 'bg-tertiary-container text-on-tertiary-container',
-    title: 'Free Mobile Dental Clinic',
+    title: 'Dental Care Access Initiative',
+    subtitle: 'Facilitating access to preventative oral healthcare services and awareness.',
     gridClass: 'md:col-span-4 md:row-span-1',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDTCgywLocbxDtP3QMmiVSYZvDRD0Y3CCBtckdzvoDWAflKu-xG8WC15Q2eFcilfFJ7K_qI6-ljMwRu-6Xc0nAFdF2ovc59s4lmaD1MUcAW9DQpZIhU7IqMM5YRIYjMpiihZu88tWkSTuyqpF72_KnTM1v21YRwKqNRyYnv7Urr0laR5IVJCaYSAZflt3G44BMS5Pe6-_lT6xAAikNN_8YahYFCx3THZ8dp-zK2hS-bkUfbrkmwUDAj',
+    image: '/images/tcip-community-workshop.jpg',
     fallback: '/images/tcip-community-workshop.jpg',
-    alt: 'Mobile Dental Screening Day in Scarborough',
+    alt: 'TCIP Dental Care Access Initiative in Toronto',
   },
   {
     id: 'g-4',
@@ -60,23 +58,23 @@ const galleryItems: GalleryItem[] = [
     badge: 'COMMUNITY',
     badgeColor: 'bg-primary text-on-primary',
     title: "Women's Empowerment Circles",
+    subtitle: 'Creating supportive spaces for women to connect, share knowledge, and grow.',
     gridClass: 'md:col-span-4 md:row-span-1',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBL--ochQmMlhTHLWHmxgKAgrJGaBoEB_LcBBC8nuyAYmcKqEKVmL_geHiDLlesgRekVsi0v59fW63DO3e82l7Tc95ex9k6WOSP9I40DkmhexHyiOjK6TlFJTjaqlTh_2dX0wnwV5-BJbL070eG3ik84tWTQWSzFzpvX2K-vpfiInNlFxRKY30tc3ukCH7pPzUFL8ixcs74XSul1Kh90vr3FF02PSBNmzbvQhm5wfoOzjeCUtBF4n-U',
+    image: '/images/tcip-hero-community.jpg',
     fallback: '/images/tcip-hero-community.jpg',
-    alt: "Women's Entrepreneurship Circle in Toronto",
+    alt: "Women's Empowerment Initiative in Toronto",
   },
   {
     id: 'g-5',
     category: 'youth',
-    badge: 'GRADUATION',
+    badge: 'YOUTH & TEENS',
     badgeColor: 'bg-secondary text-on-secondary',
-    title: 'Bootcamp Graduation Celebration',
+    title: 'Kids & Teenagers Summer Camp',
+    subtitle: 'Community learning, recreational activities, and youth skill-building.',
     gridClass: 'md:col-span-4 md:row-span-1',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuBCIpvRJ9Om8yLRbUmcUJlyO5z8TKs45HehnixwTv2sBvktPvJapK_9zNEct35-0EPpItgZhIeZVSgWVT43VD78g57i6eXTBo9E3Q3QgwjwJWEKEb908Z7LUUsqq7J2RRorhRgeRV5Wy8pyWIIO4T5S4cFqCnIrRjPKTvdSVE9-LeDsUIWcOgPuFu2G3S4L5C7N2lXFmZNqns3qAQApwe9CJDsK8pOYAnJ03srW6muBkSYmwgCBYfSe',
-    fallback: '/images/hero-youth-nature.jpg',
-    alt: 'Youth Bootcamp Graduation Celebration in Toronto',
+    image: '/images/tcip-youth-leadership.jpg',
+    fallback: '/images/tcip-youth-leadership.jpg',
+    alt: 'Kids and Teenagers Summer Camp in Toronto',
   },
 ]
 
@@ -90,10 +88,10 @@ export default function HomeGallery() {
 
   const filterButtons: { label: string; value: 'all' | 'youth' | 'employment' | 'health' | 'events' }[] = [
     { label: 'All Photos', value: 'all' },
-    { label: 'Youth & STEM', value: 'youth' },
+    { label: 'Youth', value: 'youth' },
     { label: 'Employment', value: 'employment' },
-    { label: 'Community Health', value: 'health' },
-    { label: 'Cultural Gatherings', value: 'events' },
+    { label: 'Health & Wellness', value: 'health' },
+    { label: 'Community Circles', value: 'events' },
   ]
 
   return (

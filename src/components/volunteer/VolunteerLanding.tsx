@@ -58,24 +58,24 @@ export default function VolunteerLanding() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               {
-                icon: '🌱',
-                title: 'Practical Conservation',
-                desc: 'Lead tree planting initiatives, wetland restorations, and cleanup days across local urban and park spaces.',
+                icon: '👥',
+                title: 'Community Events & Outreach',
+                desc: 'Support local community gatherings, resource fairs, awareness workshops, and neighborhood outreach initiatives.',
               },
               {
                 icon: '🤝',
-                title: 'Youth Mentorship',
-                desc: 'Guide young people through experiential outdoor workshops and hands-on environmental leadership programs.',
+                title: 'Youth Programs & Mentorship',
+                desc: 'Guide young people through educational workshops, career readiness clinics, and positive peer leadership activities.',
               },
               {
-                icon: '✨',
-                title: 'Community Connection',
-                desc: 'Collaborate with passionate educators, ecologists, and neighbours who care about social and ecological health.',
+                icon: '💼',
+                title: 'Employment & Skill Building',
+                desc: 'Assist with resume clinics, interview prep workshops, and job seeker support initiatives across Toronto.',
               },
               {
-                icon: '📚',
-                title: 'Skill Development',
-                desc: 'Gain real-world experience in project coordination, community outreach, workshop facilitation, and event planning.',
+                icon: '🌸',
+                title: 'Women & Family Initiatives',
+                desc: 'Facilitate supportive spaces, community wellness circles, and family empowerment programs.',
               },
               {
                 icon: '⏱️',

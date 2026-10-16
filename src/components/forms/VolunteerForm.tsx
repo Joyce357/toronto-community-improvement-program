@@ -5,7 +5,7 @@ import { useState, FormEvent } from 'react'
 
 const INTERESTS = [
   'Community Development',
-  'Environmental Stewardship',
+  'Community Outreach',
   'Youth Programs',
   'Event Support',
   'Fundraising',

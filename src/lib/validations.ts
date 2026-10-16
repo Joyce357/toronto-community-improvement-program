@@ -73,7 +73,7 @@ export type ContactReplyInput = z.infer<typeof contactReplySchema>
 
 export const VOLUNTEER_INTERESTS = [
   'Community Development',
-  'Environmental Stewardship',
+  'Community Outreach',
   'Youth Programs',
   'Event Support',
   'Fundraising',
@@ -233,16 +233,12 @@ export type CancelDonationOrderInput = z.infer<typeof cancelDonationOrderSchema>
 // ─── Programs ─────────────────────────────────────────────────────────────────
 
 export const PROGRAM_CATEGORIES = [
-  'Environmental Education',
-  'Outdoor Learning',
-  'Youth Leadership',
-  'Community Action',
-  'Water & Climate',
-  'Sustainability',
-  'Conservation',
-  'Tree Planting',
-  'Community Cleanups',
-  'Biodiversity',
+  'Employment & Economic Empowerment',
+  'Newcomer & Community Support',
+  'Youth Development',
+  'Women & Family Empowerment',
+  'Health & Wellness',
+  'Advocacy, Culture & Community Development',
 ] as const
 
 export const programSchema = z.object({
@@ -287,13 +283,13 @@ export type ProgramInput = z.infer<typeof programSchema>
 // ─── Events ───────────────────────────────────────────────────────────────────
 
 export const EVENT_CATEGORIES = [
-  'Environmental',
+  'Community Gathering',
+  'Job Fair & Employment',
+  'Youth Development',
+  'Workshop & Training',
+  'Health & Wellness',
+  'Culture & Celebration',
   'Volunteer',
-  'Fundraiser',
-  'Youth',
-  'Community',
-  'Workshop',
-  'Education',
 ] as const
 
 export const eventSchema = z.object({
@@ -302,7 +298,7 @@ export const eventSchema = z.object({
     .min(2, 'Title must be at least 2 characters.')
     .max(150, 'Title is too long.')
     .trim(),
-  category: z.string().min(1, 'Category is required.').default('Environmental'),
+  category: z.string().min(1, 'Category is required.').default('Community Gathering'),
   shortDescription: z
     .string()
     .max(400, 'Short description is too long.')
@@ -341,13 +337,13 @@ export type EventInput = z.infer<typeof eventSchema>
 // ─── News & Stories ─────────────────────────────────────────────────────────
 
 export const NEWS_CATEGORIES = [
-  'Environmental',
-  'Youth',
-  'Community',
-  'Conservation',
-  'Education',
-  'Impact',
-  'Announcement',
+  'Community Impact',
+  'Employment & Careers',
+  'Youth Leadership',
+  'Newcomer Stories',
+  'Health & Wellness',
+  'Community Updates',
+  'Advocacy',
 ] as const
 
 export type NewsCategory = (typeof NEWS_CATEGORIES)[number]
@@ -357,17 +353,17 @@ export type NewsCategory = (typeof NEWS_CATEGORIES)[number]
  */
 export function getNewsCategoryStyle(category?: string | null): { bg: string; text: string; border: string } {
   switch (category?.toLowerCase()) {
-    case 'environmental':
-    case 'conservation':
-      return { bg: 'bg-brand-green/10', text: 'text-brand-green', border: 'border-brand-green/20' }
-    case 'youth':
-    case 'education':
-      return { bg: 'bg-accent-blue/10', text: 'text-accent-blue', border: 'border-accent-blue/20' }
-    case 'community':
-    case 'impact':
-      return { bg: 'bg-brand-navy/10', text: 'text-brand-navy', border: 'border-brand-navy/20' }
+    case 'employment & careers':
+      return { bg: 'bg-emerald-50', text: 'text-[#2D6A4F]', border: 'border-[#2D6A4F]/20' }
+    case 'youth leadership':
+      return { bg: 'bg-pink-50', text: 'text-[#BE185D]', border: 'border-[#BE185D]/20' }
+    case 'newcomer stories':
+      return { bg: 'bg-sky-50', text: 'text-[#0284C7]', border: 'border-[#0284C7]/20' }
+    case 'health & wellness':
+      return { bg: 'bg-teal-50', text: 'text-[#0F766E]', border: 'border-[#0F766E]/20' }
+    case 'community impact':
     default:
-      return { bg: 'bg-brand-leaf/10', text: 'text-brand-leaf', border: 'border-brand-leaf/20' }
+      return { bg: 'bg-amber-50', text: 'text-[#C2410C]', border: 'border-[#C2410C]/20' }
   }
 }
 
@@ -429,11 +425,13 @@ export type NewsInput = z.infer<typeof newsSchema>
 
 export const GALLERY_CATEGORIES = [
   'Community',
-  'Conservation',
   'Youth',
+  'Employment',
   'Events',
-  'Education',
-  'Restoration',
+  'Women & Families',
+  'Health & Wellness',
+  'Culture',
+  'Partnerships',
 ] as const
 
 export type GalleryCategory = (typeof GALLERY_CATEGORIES)[number]
@@ -443,17 +441,19 @@ export type GalleryCategory = (typeof GALLERY_CATEGORIES)[number]
  */
 export function getGalleryCategoryStyle(category?: string | null): { bg: string; text: string; border: string } {
   switch (category?.toLowerCase()) {
-    case 'conservation':
-    case 'restoration':
-      return { bg: 'bg-brand-green/10', text: 'text-brand-green', border: 'border-brand-green/20' }
     case 'youth':
-    case 'education':
-      return { bg: 'bg-accent-blue/10', text: 'text-accent-blue', border: 'border-accent-blue/20' }
+      return { bg: 'bg-pink-50', text: 'text-[#BE185D]', border: 'border-[#BE185D]/20' }
+    case 'employment':
+      return { bg: 'bg-emerald-50', text: 'text-[#2D6A4F]', border: 'border-[#2D6A4F]/20' }
     case 'events':
-      return { bg: 'bg-amber-500/10', text: 'text-amber-700', border: 'border-amber-500/20' }
+      return { bg: 'bg-amber-50', text: 'text-[#C2410C]', border: 'border-[#C2410C]/20' }
+    case 'health & wellness':
+      return { bg: 'bg-teal-50', text: 'text-[#0F766E]', border: 'border-[#0F766E]/20' }
+    case 'women & families':
+      return { bg: 'bg-purple-50', text: 'text-[#7E22CE]', border: 'border-[#7E22CE]/20' }
     case 'community':
     default:
-      return { bg: 'bg-brand-navy/10', text: 'text-brand-navy', border: 'border-brand-navy/20' }
+      return { bg: 'bg-sky-50', text: 'text-[#0284C7]', border: 'border-[#0284C7]/20' }
   }
 }
 
@@ -470,6 +470,26 @@ export const gallerySchema = z.object({
 })
 
 export type GalleryInput = z.infer<typeof gallerySchema>
+
+// ─── Partners ─────────────────────────────────────────────────────────────────
+
+export const partnerSchema = z.object({
+  name: z.string().min(2, 'Partner name is required.').max(150, 'Name is too long.').trim(),
+  logoUrl: z.string().max(1000).optional().nullable().or(z.literal('')),
+  websiteUrl: z
+    .string()
+    .refine((val) => !val || /^https?:\/\/.+/.test(val), {
+      message: 'Website URL must be valid and start with http:// or https://',
+    })
+    .optional()
+    .nullable()
+    .or(z.literal('')),
+  description: z.string().max(500, 'Description must be under 500 characters.').optional().nullable().or(z.literal('')),
+  displayOrder: z.coerce.number().int().min(0).default(0),
+  published: z.boolean().default(true),
+})
+
+export type PartnerInput = z.infer<typeof partnerSchema>
 
 // ─── Admin: Change Password ───────────────────────────────────────────────────
 

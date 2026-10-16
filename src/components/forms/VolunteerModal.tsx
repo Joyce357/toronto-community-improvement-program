@@ -92,7 +92,7 @@ export default function VolunteerModal({ isOpen, onClose }: VolunteerModalProps)
               id="volunteer-modal-description"
               className="text-xs sm:text-sm text-text-secondary dark:text-dark-text-secondary mt-1 leading-relaxed max-w-xl"
             >
-              Join our dedicated team of environmental stewards, mentors, and community advocates.
+              Join our dedicated team of mentors, volunteers, and community advocates.
             </p>
           </div>
 

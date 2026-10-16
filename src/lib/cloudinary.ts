@@ -11,11 +11,11 @@ cloudinary.config({
 })
 
 export const CLOUDINARY_FOLDERS = {
-  adminAvatars: 'bridge-of-compassion/admin-avatars',
-  programs:     'bridge-of-compassion/programs',
-  events:       'bridge-of-compassion/events',
-  news:         'bridge-of-compassion/news',
-  gallery:      'bridge-of-compassion/gallery',
+  adminAvatars: 'tcip/admin-avatars',
+  programs:     'tcip/programs',
+  events:       'tcip/events',
+  news:         'tcip/news',
+  gallery:      'tcip/gallery',
 } as const
 
 /**

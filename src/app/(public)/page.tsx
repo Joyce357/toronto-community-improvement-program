@@ -8,7 +8,7 @@ import HomeGallery       from '@/components/home/HomeGallery'
 import StoriesPreview    from '@/components/home/StoriesPreview'
 import Partnerships      from '@/components/home/Partnerships'
 import GetInvolved       from '@/components/home/GetInvolved'
-import Testimonials      from '@/components/home/Testimonials'
+// import Testimonials      from '@/components/home/Testimonials'
 import HomeContact       from '@/components/home/HomeContact'
 import { getBaseUrl, getCanonicalUrl } from '@/lib/seo'
 import { DEFAULT_SITE_SETTINGS } from '@/lib/settings'
@@ -36,7 +36,6 @@ export default function HomePage() {
     '@type': 'Organization',
     name: DEFAULT_SITE_SETTINGS.organizationName,
     url: baseUrl,
-    email: DEFAULT_SITE_SETTINGS.publicEmail,
     location: {
       '@type': 'Place',
       address: {
@@ -85,8 +84,8 @@ export default function HomePage() {
         {/* SECTION 9: GET INVOLVED (3 Dedicated Action Pathway Columns) */}
         <GetInvolved />
 
-        {/* SECTION 10: WHAT PEOPLE SAY (2-Column Balanced Testimonial Grid) */}
-        <Testimonials />
+        {/* SECTION 10: WHAT PEOPLE SAY (Testimonials hidden until verified participant testimonials are published) */}
+        {/* <Testimonials /> */}
 
         {/* SECTION 11: CONTACT & SEE US IN PERSON (2-Column Practical Layout: 45% Info / 55% Intake Form) */}
         <HomeContact />

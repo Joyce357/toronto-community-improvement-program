@@ -4,7 +4,7 @@ import { useState, Suspense } from 'react'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import Button from '@/components/ui/Button'
+import Image from 'next/image'
 
 function LoginForm() {
   const router = useRouter()
@@ -46,27 +46,29 @@ function LoginForm() {
 
   return (
     <div className="w-full max-w-md relative z-10">
-      {/* Card */}
-      <div className="bg-brand-warm-white dark:bg-dark-card rounded-3xl shadow-2xl overflow-hidden border border-border-soft dark:border-dark-border transition-colors duration-200">
+      <div className="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
         {/* Header */}
-        <div className="bg-brand-navy dark:bg-dark-surface px-8 py-8 text-center border-b border-brand-navy-dark dark:border-dark-border">
-          <div className="inline-flex items-center gap-2.5 mx-auto bg-white/95 rounded-2xl px-4 py-2 shadow-sm mb-4">
-            <div className="w-8 h-8 rounded-xl bg-brand-navy text-white font-extrabold text-xs flex items-center justify-center tracking-wider">
-              <span className="text-brand-gold mr-0.5">T</span>CIP
+        <div className="px-8 pt-8 pb-6 text-center border-b border-gray-100">
+          <div className="flex justify-center mb-3">
+            <div className="relative w-14 h-14 rounded-full overflow-hidden border border-gray-200 shadow-xs">
+              <Image
+                src="/images/tcip-logo.png"
+                alt="Toronto Community Improvement Program"
+                fill
+                className="object-contain p-0.5"
+                priority
+              />
             </div>
-            <span className="font-extrabold text-brand-navy text-base tracking-tight">
-              TCIP Admin
-            </span>
           </div>
-          <h1 className="text-brand-warm-white text-lg font-bold">Admin Portal</h1>
-          <p className="text-brand-gold text-xs mt-0.5 font-semibold tracking-wider uppercase">Toronto Community Improvement Program</p>
+          <h1 className="text-xl font-bold text-gray-900 tracking-tight">Admin Portal</h1>
+          <p className="text-xs text-gray-500 mt-1">Toronto Community Improvement Program (TCIP)</p>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="px-8 py-8 space-y-5" noValidate>
+        <form onSubmit={handleSubmit} className="px-8 py-6 space-y-4" noValidate>
           {error && (
             <div
-              className="bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 text-sm px-4 py-3 rounded-xl"
+              className="bg-red-50 border border-red-200 text-red-700 text-xs px-4 py-3 rounded-xl font-medium"
               role="alert"
             >
               {error}
@@ -74,7 +76,7 @@ function LoginForm() {
           )}
 
           <div>
-            <label htmlFor="email" className="block text-sm font-bold text-brand-navy dark:text-dark-text-primary mb-2">
+            <label htmlFor="email" className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
               Email Address
             </label>
             <input
@@ -84,15 +86,13 @@ function LoginForm() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="w-full px-4 py-3 border border-border-soft dark:border-dark-border rounded-xl text-text-primary dark:text-dark-text-primary text-sm
-                         focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-transparent
-                         transition-all duration-200 placeholder:text-text-secondary/60 dark:placeholder:text-dark-text-secondary/50 bg-white dark:bg-dark-surface"
+              className="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A] transition-all bg-white"
               placeholder="admin@torontocip.com"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-bold text-brand-navy dark:text-dark-text-primary mb-2">
+            <label htmlFor="password" className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
               Password
             </label>
             <input
@@ -102,28 +102,25 @@ function LoginForm() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className="w-full px-4 py-3 border border-border-soft dark:border-dark-border rounded-xl text-text-primary dark:text-dark-text-primary text-sm
-                         focus:outline-none focus:ring-2 focus:ring-brand-cyan focus:border-transparent
-                         transition-all duration-200 placeholder:text-text-secondary/60 dark:placeholder:text-dark-text-secondary/50 bg-white dark:bg-dark-surface"
-              placeholder="Enter your password"
+              className="w-full px-3.5 py-2.5 border border-gray-300 rounded-xl text-gray-900 text-sm focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A] transition-all bg-white"
+              placeholder="••••••••••••"
             />
           </div>
 
-          <Button
+          <button
             type="submit"
-            variant="environmental"
             disabled={loading}
-            className="w-full justify-center shadow-md cursor-pointer"
+            className="w-full mt-2 py-2.5 px-4 rounded-xl text-xs font-bold text-white bg-[#16A34A] hover:bg-[#15803D] transition-colors shadow-xs disabled:opacity-50 cursor-pointer"
           >
-            {loading ? 'Signing in…' : 'Sign In'}
-          </Button>
+            {loading ? 'Signing in…' : 'Sign In to Dashboard'}
+          </button>
         </form>
 
         {/* Footer */}
-        <div className="px-8 pb-8 text-center border-t border-border-soft/60 dark:border-dark-border pt-4">
+        <div className="px-8 pb-6 text-center border-t border-gray-100 pt-4">
           <Link
             href="/"
-            className="text-xs text-brand-green dark:text-brand-cyan hover:text-brand-navy dark:hover:text-dark-text-primary font-semibold transition-colors"
+            className="text-xs text-gray-500 hover:text-[#16A34A] font-semibold transition-colors"
           >
             ← Return to public website
           </Link>
@@ -135,14 +132,10 @@ function LoginForm() {
 
 export default function AdminLoginPage() {
   return (
-    <div className="min-h-screen bg-brand-navy-dark flex items-center justify-center px-4 relative overflow-hidden">
-      {/* Decorative ambient glows */}
-      <div className="absolute -top-24 -right-24 w-96 h-96 bg-brand-cyan/15 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-brand-green/20 rounded-full blur-3xl pointer-events-none" aria-hidden="true" />
-
+    <div className="min-h-screen bg-[#F9FAFB] flex items-center justify-center px-4 relative">
       <Suspense fallback={
-        <div className="w-full max-w-md bg-brand-warm-white dark:bg-dark-card p-8 rounded-3xl text-center">
-          <p className="text-brand-navy dark:text-dark-text-primary font-bold">Loading Admin Portal…</p>
+        <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-md border border-gray-200 text-center">
+          <p className="text-gray-900 font-semibold text-sm">Loading Admin Portal…</p>
         </div>
       }>
         <LoginForm />

@@ -1,85 +1,77 @@
 import Link from 'next/link'
 
-const programs = [
+const featuredPrograms = [
   {
     tag: 'EMPLOYMENT',
     badgeColor: 'bg-primary text-on-primary',
     heightClass: 'h-64',
-    title: 'Economic & Career Empowerment',
+    title: 'Employment & Economic Empowerment',
     description:
-      'Job fairs, resume optimization labs, credential bridging, and vocational career pathways connecting talent directly with GTA employers.',
-    linkText: 'View Job Fairs',
+      'Job readiness workshops, resume coaching, career navigation, and job fairs connecting job seekers with meaningful employment opportunities.',
+    linkText: 'Explore Employment',
     href: '/programs',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuACc7_GpM4qWV-q9cFIMh7Oi-pNqmcJr7Iygh7E5ggfVPNOsyyvzrcW-g3a9WgzJzU5aqP9B_nmIGXXbMynmeqnvCRU7fpXPgDG0le86yB6hCsrpVX0hG3yfwy9gleuOndZyin5oHErg9vpD4MRr-_7RDVu685Yyvj5tDUIo41AM2YCahf_G2DVSLYsmPjWbWuD-eFted3HA6gQweM3sQCreXhCdkh8oTuObU_yr8uniPwlRB0VqKcl',
-    fallback: '/images/tcip-hero-community.jpg',
-    alt: 'Employment & Economic Empowerment Career Coaching in Toronto',
+    image: '/images/tcip-hero-community.jpg',
+    alt: 'Employment and economic empowerment initiatives at TCIP',
   },
   {
-    tag: 'SETTLEMENT',
+    tag: 'NEWCOMERS',
     badgeColor: 'bg-secondary text-on-secondary',
     heightClass: 'h-48',
     title: 'Newcomer & Community Support',
     description:
-      'Language exchange circles, housing stabilization navigation, and culturally informed transition advisory for arriving immigrants.',
+      'Welcoming support, orientation navigation, community resources, and cultural connection programs designed to help arriving individuals and families settle with confidence.',
     linkText: 'Settlement Support',
     href: '/programs',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuA2RrZ7HsX2bPoKAiKGm2VbNyCDh3fYsefPWwftb6SJuWIZ6bQdX4MvoBQPMUW3AGPdtsuPEJsUJFR0RJ5OXdk8RZY6tHGRF2oLQfVnzGYKMI0Zxc1NTgZ_2cxrvaQ-FlICtteO8qgdLqSLGkvCF09WllPjdFg20C5B-9jngM0hfyk-tPlPEzokqzEg_A_rIV4GBBmQwWs0-vta72_iVkWPgy-jqPJY9VA3zXFEQLYLn7tm7zg2C5o4',
-    fallback: '/images/tcip-community-workshop.jpg',
-    alt: 'Newcomer Settlement Advisory session in Toronto',
+    image: '/images/tcip-community-workshop.jpg',
+    alt: 'Newcomer settlement and community support in Toronto',
   },
   {
-    tag: 'YOUTH STEM',
+    tag: 'YOUTH',
     badgeColor: 'bg-primary text-on-primary',
     heightClass: 'h-56',
-    title: 'Youth Development & Tech Academy',
+    title: 'Youth Development',
     description:
-      'Digital media skills, coding workshops, creative production labs, and one-on-one professional mentorship for secondary school youth.',
+      'Positive mentorship, skill building, summer camps, and creative leadership activities that empower young people to discover their strengths and thrive.',
     linkText: 'Youth Programs',
     href: '/programs',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuC_7RVFoi93bMoaJgefaksDMdhPnyYxfzBcL4Zt6oJujq2g5jjOUqv34l85vdGG3ehfaE5VNcwHeJQ5QBEkDVIodyJUlM-7EF-FrTKWgYIFZxRLpjbEFZLuusOZwczoksgMMPlqiSXyO2EXrWH4u41xnkBs62_z3mNfsMjyeMMDilLv3qdIsLXc0MXYIptaazj25zsNZ7tYfwPZG6t2AKsadOx5nHnOPWDrQw_aHix7WaOq07Qsx-w4',
-    fallback: '/images/tcip-youth-leadership.jpg',
-    alt: 'Youth STEM and Leadership coding workshop in Toronto',
+    image: '/images/tcip-youth-leadership.jpg',
+    alt: 'Youth development and leadership activities at TCIP',
   },
   {
     tag: 'HEALTH & CARE',
     badgeColor: 'bg-tertiary-container text-on-tertiary-container',
     heightClass: 'h-48',
-    title: 'Women & Family Health Advocacy',
+    title: 'Health & Wellness',
     description:
-      'Preventative dental screenings, maternal wellness circles, nutrition access, and civic rights advocacy forums for racialized families.',
-    linkText: 'Health Clinics',
+      'Community health awareness, preventative dental care access initiatives, wellness information, and family health education forums.',
+    linkText: 'Health Initiatives',
     href: '/programs',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuDb5iJpKC8QuCoByvRk8jPm5R44Gcxjh1xHXw28Yz9w3p43R-Lc-raS7lgRb_zYf11488Jr0Q05goHrRjevJ4UsxXOAqhuw-ab4SjW1y69hfMU5cWchy8roKYbxLSyngsd8Hz4T78lIR5sOvXmdmFLX3XxeTTUQYUz5Y4zHOq-1qJkd63uE9b3L4nDoSUHoG0hT_7cpos1GKShHt-DihGT9vFbDA1EghKIdZuCPWHR5fs0ZwEdKpYQv',
-    fallback: '/images/tcip-hero-community.jpg',
-    alt: 'Women, Family & Community Health wellness clinic in Scarborough',
+    image: '/images/tcip-community-workshop.jpg',
+    alt: 'Community health and wellness support in Toronto',
   },
 ]
 
 export default function ProgramsPreview() {
   return (
-    <section className="w-full bg-surface-container-low py-space-3xl border-b border-outline-variant/30">
+    <section id="programs" className="w-full bg-surface-container-low py-space-3xl scroll-mt-20 border-b border-outline-variant/30">
       <div className="max-w-7xl mx-auto px-4 md:px-margin-desktop">
         
         {/* Header */}
         <div className="max-w-2xl mb-space-2xl">
           <span className="font-eyebrow-bold text-eyebrow-bold text-primary uppercase tracking-widest block mb-2">
-            AREAS OF IMPACT
+            APPROVED FOCUS AREAS
           </span>
           <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
-            Tailored Programs That Build Self-Sufficiency
+            Community-Centered Programs &amp; Initiatives
           </h2>
           <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-            From first arrival to leadership roles, our programs provide direct pathways to stability, economic power, and long-term security.
+            Supporting Black immigrants, newcomers, youth, women, and families through practical skills, community connection, and responsive advocacy.
           </p>
         </div>
 
         {/* 4 Columns with Visual Hierarchy & Varied Card Heights */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter-desktop">
-          {programs.map((prog) => (
+          {featuredPrograms.map((prog) => (
             <div
               key={prog.title}
               className="bg-surface-container-lowest rounded-3xl p-6 flex flex-col justify-between shadow-sm hover:shadow-lg transition-all duration-300 border border-outline-variant/30"
@@ -108,7 +100,7 @@ export default function ProgramsPreview() {
               <div className="pt-6">
                 <Link
                   href={prog.href}
-                  className="inline-flex items-center text-primary font-label-md text-label-md hover:underline gap-1 group"
+                  className="inline-flex items-center text-primary font-label-md text-label-md hover:underline gap-1 group font-semibold"
                 >
                   <span>{prog.linkText}</span>
                   <span className="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">
@@ -118,6 +110,28 @@ export default function ProgramsPreview() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* Additional Approved Focus Areas Bar */}
+        <div className="mt-space-xl p-6 rounded-2xl bg-surface-container border border-outline-variant/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-label-md text-label-md text-on-surface font-bold">
+              Also Supporting:
+            </span>
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-surface-container-lowest text-primary text-xs font-semibold border border-outline-variant/30">
+              Women &amp; Family Empowerment
+            </span>
+            <span className="inline-flex items-center px-3 py-1 rounded-full bg-surface-container-lowest text-primary text-xs font-semibold border border-outline-variant/30">
+              Advocacy, Culture &amp; Community Development
+            </span>
+          </div>
+          <Link
+            href="/programs"
+            className="text-primary hover:text-primary-container font-label-md text-label-md font-bold whitespace-nowrap inline-flex items-center gap-1"
+          >
+            <span>View All Programs</span>
+            <span className="material-symbols-outlined text-sm">arrow_forward</span>
+          </Link>
         </div>
 
       </div>

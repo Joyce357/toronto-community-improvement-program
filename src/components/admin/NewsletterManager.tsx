@@ -175,10 +175,10 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
         <div
           role="status"
           aria-live="polite"
-          className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-xl border text-sm font-medium transition-all transform animate-slideUp ${
+          className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-xl shadow-xl text-sm font-medium transition-all ${
             feedback.type === 'success'
-              ? 'bg-brand-navy text-brand-warm-white border-brand-green/40 shadow-brand-navy/20'
-              : 'bg-rose-900 text-white border-rose-700 shadow-rose-950/30'
+              ? 'bg-gray-900 text-white'
+              : 'bg-red-600 text-white'
           }`}
         >
           <span>{feedback.type === 'success' ? '✓' : '⚠️'}</span>
@@ -187,11 +187,11 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
       )}
 
       {/* Header with Stats & Export Action */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-2 border-b border-gray-200">
         <div>
-          <h1 className="text-2xl font-bold text-brand-navy">Newsletter Subscribers</h1>
-          <div className="flex items-center gap-3 mt-1 text-sm text-text-secondary">
-            <span className="font-semibold text-brand-green">{counts.ACTIVE} active</span>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Newsletter Subscribers</h1>
+          <div className="flex items-center gap-3 mt-1 text-sm text-gray-500">
+            <span className="font-semibold text-emerald-700">{counts.ACTIVE} active</span>
             <span>·</span>
             <span>{counts.UNSUBSCRIBED} unsubscribed</span>
             <span>·</span>
@@ -204,7 +204,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
             type="button"
             onClick={handleExportCSV}
             disabled={filtered.length === 0}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-warm-white hover:bg-white text-brand-navy border border-border-soft hover:border-brand-green/40 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-xs disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-2 px-4 py-2 bg-white hover:bg-gray-50 text-gray-800 border border-gray-300 rounded-lg text-xs sm:text-sm font-semibold transition-all shadow-xs disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
             aria-label="Export subscribers to CSV"
           >
             <span>📥</span>
@@ -214,11 +214,11 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
       </div>
 
       {/* Search & Tabs Toolbar */}
-      <div className="bg-brand-warm-white rounded-2xl shadow-card border border-border-soft p-4 sm:p-5 space-y-4">
+      <div className="bg-white rounded-xl shadow-xs border border-gray-200 p-4 sm:p-5 space-y-4">
         <div className="flex flex-col md:flex-row gap-4 justify-between md:items-center">
           {/* Status Tabs */}
           <div
-            className="flex p-1 bg-brand-surface rounded-xl border border-border-soft w-full md:w-auto overflow-x-auto"
+            className="flex p-1 bg-gray-100 rounded-lg border border-gray-200 w-full md:w-auto overflow-x-auto"
             role="tablist"
             aria-label="Filter by subscription status"
           >
@@ -230,16 +230,16 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
                   role="tab"
                   aria-selected={active}
                   onClick={() => setStatusFilter(tab.value)}
-                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all whitespace-nowrap ${
+                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-md text-xs sm:text-sm font-medium transition-all whitespace-nowrap cursor-pointer ${
                     active
-                      ? 'bg-brand-warm-white text-brand-navy font-semibold shadow-xs'
-                      : 'text-text-secondary hover:text-brand-navy hover:bg-white/50'
+                      ? 'bg-white text-gray-900 font-semibold shadow-xs'
+                      : 'text-gray-600 hover:text-gray-900 hover:bg-white/50'
                   }`}
                 >
                   <span>{tab.label}</span>
                   <span
-                    className={`text-xs px-1.5 py-0.2 rounded-full ${
-                      active ? 'bg-brand-green/10 text-brand-green font-bold' : 'bg-black/5 text-text-secondary'
+                    className={`text-xs px-1.5 py-0.5 rounded-full ${
+                      active ? 'bg-emerald-50 text-emerald-800 font-bold' : 'bg-black/5 text-gray-500'
                     }`}
                   >
                     {counts[tab.value]}
@@ -251,7 +251,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
 
           {/* Search bar */}
           <div className="relative w-full md:w-72">
-            <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-text-secondary/60 text-sm">
+            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400 text-xs">
               🔍
             </span>
             <input
@@ -259,14 +259,14 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search email or name..."
-              className="w-full pl-9 pr-8 py-2 rounded-xl bg-brand-surface border border-border-soft text-brand-navy placeholder-text-secondary/50 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-brand-green focus:border-transparent transition-all"
+              className="w-full pl-8 pr-8 py-2 rounded-lg bg-gray-50/50 border border-gray-300 text-gray-900 placeholder-gray-400 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A] transition-all"
               aria-label="Search subscribers"
             />
             {search && (
               <button
                 type="button"
                 onClick={() => setSearch('')}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-secondary hover:text-brand-navy text-xs"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-700 text-xs"
                 aria-label="Clear search"
               >
                 ✕
@@ -277,14 +277,14 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
 
         {/* Search summary indicator */}
         {search.trim() && (
-          <div className="text-xs text-text-secondary flex items-center justify-between pt-1 border-t border-border-soft/60">
+          <div className="text-xs text-gray-500 flex items-center justify-between pt-1 border-t border-gray-100">
             <span>
               Showing {filtered.length} match{filtered.length !== 1 ? 'es' : ''} for &ldquo;{search}&rdquo;
             </span>
             <button
               type="button"
               onClick={() => setSearch('')}
-              className="text-brand-green font-medium hover:underline text-xs"
+              className="text-[#16A34A] font-medium hover:underline text-xs cursor-pointer"
             >
               Reset search
             </button>
@@ -293,7 +293,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
       </div>
 
       {/* Subscriber List / Table */}
-      <div className="bg-brand-warm-white rounded-2xl shadow-card border border-border-soft overflow-hidden">
+      <div className="bg-white rounded-xl shadow-xs border border-gray-200 overflow-hidden">
         {filtered.length === 0 ? (
           <EmptyState
             icon="📬"
@@ -311,7 +311,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
             {/* Desktop Table View (Hidden on mobile) */}
             <div className="hidden md:block overflow-x-auto">
               <table className="w-full text-sm text-left">
-                <thead className="bg-brand-surface/70 border-b border-border-soft text-text-secondary text-xs uppercase tracking-wider font-semibold">
+                <thead className="bg-gray-50 border-b border-gray-200 text-gray-700 text-xs uppercase tracking-wider font-semibold">
                   <tr>
                     <th scope="col" className="px-6 py-3.5">Email</th>
                     <th scope="col" className="px-6 py-3.5">Name</th>
@@ -320,24 +320,24 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
                     <th scope="col" className="px-6 py-3.5 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border-soft">
+                <tbody className="divide-y divide-gray-100">
                   {filtered.map((sub) => {
                     const isUpdating = updatingId === sub.id
                     return (
                       <tr
                         key={sub.id}
-                        className="hover:bg-brand-surface/40 transition-colors group"
+                        className="hover:bg-gray-50/70 transition-colors group"
                       >
-                        <td className="px-6 py-4 font-medium text-brand-navy">
+                        <td className="px-6 py-4 font-medium text-gray-900">
                           <span className="font-mono text-xs sm:text-sm">{sub.email}</span>
                         </td>
-                        <td className="px-6 py-4 text-text-secondary text-xs sm:text-sm">
-                          {sub.firstName || <span className="text-text-secondary/40">—</span>}
+                        <td className="px-6 py-4 text-gray-600 text-xs sm:text-sm">
+                          {sub.firstName || <span className="text-gray-400">—</span>}
                         </td>
                         <td className="px-6 py-4">
                           <StatusBadge status={sub.status} />
                         </td>
-                        <td className="px-6 py-4 text-text-secondary text-xs whitespace-nowrap">
+                        <td className="px-6 py-4 text-gray-500 text-xs whitespace-nowrap">
                           <div>
                             {new Date(sub.subscribedAt).toLocaleDateString('en-CA', {
                               year: 'numeric',
@@ -346,7 +346,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
                             })}
                           </div>
                           {sub.unsubscribedAt && sub.status === 'UNSUBSCRIBED' && (
-                            <div className="text-rose-500/80 text-[11px] mt-0.5">
+                            <div className="text-red-500 text-[11px] mt-0.5">
                               Unsub:{' '}
                               {new Date(sub.unsubscribedAt).toLocaleDateString('en-CA', {
                                 month: 'short',
@@ -362,7 +362,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
                                 type="button"
                                 disabled={isUpdating}
                                 onClick={() => handleToggleStatus(sub)}
-                                className="px-2.5 py-1 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-all disabled:opacity-50"
+                                className="px-2.5 py-1 text-xs font-semibold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg transition-all disabled:opacity-50 cursor-pointer"
                                 title="Unsubscribe this email"
                               >
                                 {isUpdating ? 'Updating...' : 'Unsubscribe'}
@@ -372,7 +372,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
                                 type="button"
                                 disabled={isUpdating}
                                 onClick={() => handleToggleStatus(sub)}
-                                className="px-2.5 py-1 text-xs font-semibold text-brand-green bg-brand-green/10 hover:bg-brand-green/20 border border-brand-green/30 rounded-lg transition-all disabled:opacity-50"
+                                className="px-2.5 py-1 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-all disabled:opacity-50 cursor-pointer"
                                 title="Reactivate this subscription"
                               >
                                 {isUpdating ? 'Updating...' : 'Reactivate'}
@@ -382,7 +382,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
                             <button
                               type="button"
                               onClick={() => setDeleteTarget(sub)}
-                              className="p-1.5 text-text-secondary hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all"
+                              className="p-1.5 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all cursor-pointer"
                               aria-label={`Delete subscriber ${sub.email}`}
                               title="Delete subscriber"
                             >
@@ -398,18 +398,18 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
             </div>
 
             {/* Mobile Card List View (Hidden on desktop) */}
-            <div className="block md:hidden divide-y divide-border-soft">
+            <div className="block md:hidden divide-y divide-gray-100">
               {filtered.map((sub) => {
                 const isUpdating = updatingId === sub.id
                 return (
                   <div key={sub.id} className="p-4 space-y-3">
                     <div className="flex items-start justify-between gap-2">
                       <div>
-                        <div className="font-semibold text-brand-navy text-sm break-all font-mono">
+                        <div className="font-semibold text-gray-900 text-sm break-all font-mono">
                           {sub.email}
                         </div>
                         {sub.firstName && (
-                          <div className="text-xs text-text-secondary mt-0.5">
+                          <div className="text-xs text-gray-500 mt-0.5">
                             {sub.firstName}
                           </div>
                         )}
@@ -417,7 +417,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
                       <StatusBadge status={sub.status} />
                     </div>
 
-                    <div className="flex items-center justify-between text-xs text-text-secondary pt-1">
+                    <div className="flex items-center justify-between text-xs text-gray-500 pt-1">
                       <span>
                         Subscribed:{' '}
                         {new Date(sub.subscribedAt).toLocaleDateString('en-CA', {
@@ -433,7 +433,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
                             type="button"
                             disabled={isUpdating}
                             onClick={() => handleToggleStatus(sub)}
-                            className="px-2.5 py-1 text-xs font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-lg transition-all disabled:opacity-50"
+                            className="px-2.5 py-1 text-xs font-semibold text-amber-800 bg-amber-50 hover:bg-amber-100 border border-amber-200 rounded-lg transition-all disabled:opacity-50 cursor-pointer"
                           >
                             {isUpdating ? '...' : 'Unsubscribe'}
                           </button>
@@ -442,7 +442,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
                             type="button"
                             disabled={isUpdating}
                             onClick={() => handleToggleStatus(sub)}
-                            className="px-2.5 py-1 text-xs font-semibold text-brand-green bg-brand-green/10 hover:bg-brand-green/20 border border-brand-green/30 rounded-lg transition-all disabled:opacity-50"
+                            className="px-2.5 py-1 text-xs font-semibold text-emerald-800 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 rounded-lg transition-all disabled:opacity-50 cursor-pointer"
                           >
                             {isUpdating ? '...' : 'Reactivate'}
                           </button>
@@ -451,7 +451,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
                         <button
                           type="button"
                           onClick={() => setDeleteTarget(sub)}
-                          className="p-1 text-text-secondary hover:text-rose-600 rounded-lg"
+                          className="p-1 text-gray-400 hover:text-red-600 rounded-lg cursor-pointer"
                           aria-label={`Delete subscriber ${sub.email}`}
                         >
                           🗑️
@@ -472,23 +472,23 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
           role="dialog"
           aria-modal="true"
           aria-labelledby="delete-subscriber-title"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-brand-navy/60 backdrop-blur-xs animate-fadeIn"
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in zoom-in-95 duration-150"
           onClick={() => !isDeleting && setDeleteTarget(null)}
         >
           <div
-            className="bg-brand-warm-white rounded-2xl shadow-2xl border border-border-soft max-w-md w-full p-6 space-y-4 animate-scaleUp"
+            className="bg-white rounded-xl shadow-2xl border border-gray-200 max-w-md w-full p-6 space-y-4"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-3 text-rose-600">
+            <div className="flex items-center gap-3 text-red-600">
               <span className="text-2xl">⚠️</span>
-              <h3 id="delete-subscriber-title" className="text-lg font-bold text-brand-navy">
+              <h3 id="delete-subscriber-title" className="text-lg font-bold text-gray-900">
                 Delete Subscriber?
               </h3>
             </div>
 
-            <p className="text-sm text-text-secondary leading-relaxed">
+            <p className="text-sm text-gray-600 leading-relaxed">
               Are you sure you want to permanently delete{' '}
-              <strong className="text-brand-navy font-mono">{deleteTarget.email}</strong>?
+              <strong className="text-gray-900 font-mono">{deleteTarget.email}</strong>?
               This action cannot be undone.
             </p>
 
@@ -497,7 +497,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
                 type="button"
                 disabled={isDeleting}
                 onClick={() => setDeleteTarget(null)}
-                className="px-4 py-2 text-xs sm:text-sm font-semibold text-text-secondary hover:text-brand-navy bg-brand-surface hover:bg-white border border-border-soft rounded-xl transition-all disabled:opacity-50"
+                className="px-4 py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 border border-gray-300 rounded-lg transition-all disabled:opacity-50 cursor-pointer shadow-xs"
               >
                 Cancel
               </button>
@@ -505,7 +505,7 @@ export default function NewsletterManager({ initialSubscribers }: NewsletterMana
                 type="button"
                 disabled={isDeleting}
                 onClick={handleDelete}
-                className="px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-xl transition-all shadow-xs disabled:opacity-50 flex items-center gap-2"
+                className="px-4 py-2 text-xs sm:text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-lg transition-all shadow-xs disabled:opacity-50 flex items-center gap-2 cursor-pointer"
               >
                 {isDeleting ? 'Deleting...' : 'Permanently Delete'}
               </button>

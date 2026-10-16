@@ -6,35 +6,50 @@ import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import { useState } from 'react'
 
-const navSections = [
+interface NavSection {
+  label: string
+  items: {
+    href: string
+    label: string
+    icon: string
+  }[]
+}
+
+const navSections: NavSection[] = [
   {
     label: 'Overview',
     items: [
-      { href: '/admin',          label: 'Dashboard',   icon: '📊' },
-    ],
-  },
-  {
-    label: 'Submissions',
-    items: [
-      { href: '/admin/contacts',   label: 'Contacts',   icon: '✉️' },
-      { href: '/admin/volunteers', label: 'Volunteers',  icon: '🤝' },
-      { href: '/admin/newsletter', label: 'Newsletter',  icon: '📬' },
-      { href: '/admin/donations',  label: 'Donations',   icon: '🌱' },
+      { href: '/admin', label: 'Dashboard', icon: 'dashboard' },
     ],
   },
   {
     label: 'Content',
     items: [
-      { href: '/admin/programs', label: 'Programs', icon: '🌿' },
-      { href: '/admin/events',   label: 'Events',   icon: '📅' },
-      { href: '/admin/news',     label: 'News',     icon: '📰' },
-      { href: '/admin/gallery',  label: 'Gallery',  icon: '🖼️' },
+      { href: '/admin/programs', label: 'Programs', icon: 'school' },
+      { href: '/admin/events',   label: 'Events',   icon: 'event' },
+      { href: '/admin/news',     label: 'Stories / News', icon: 'article' },
+      { href: '/admin/gallery',  label: 'Gallery',  icon: 'photo_library' },
+      { href: '/admin/partners', label: 'Partners', icon: 'handshake' },
     ],
   },
   {
-    label: 'Account',
+    label: 'Community',
     items: [
-      { href: '/admin/settings', label: 'Settings', icon: '⚙️' },
+      { href: '/admin/contacts',   label: 'Contacts',   icon: 'mail' },
+      { href: '/admin/volunteers', label: 'Volunteers', icon: 'group' },
+      { href: '/admin/newsletter', label: 'Newsletter', icon: 'mark_email_read' },
+    ],
+  },
+  {
+    label: 'Support',
+    items: [
+      { href: '/admin/donations',  label: 'Donations',  icon: 'volunteer_activism' },
+    ],
+  },
+  {
+    label: 'Configuration',
+    items: [
+      { href: '/admin/settings',   label: 'Site Settings', icon: 'settings' },
     ],
   },
 ]
@@ -47,12 +62,20 @@ interface AdminSidebarProps {
   onCloseMobile?: () => void
 }
 
-export default function AdminSidebar({ userName, userEmail, userAvatar, mobileOpen, onCloseMobile }: AdminSidebarProps) {
+export default function AdminSidebar({
+  userName,
+  userEmail,
+  userAvatar,
+  mobileOpen,
+  onCloseMobile,
+}: AdminSidebarProps) {
   const pathname = usePathname()
   const [signingOut, setSigningOut] = useState(false)
 
-  const isActive = (href: string) =>
-    href === '/admin' ? pathname === '/admin' : pathname.startsWith(href)
+  const isActive = (href: string) => {
+    if (href === '/admin') return pathname === '/admin'
+    return pathname === href || pathname.startsWith(`${href}/`)
+  }
 
   const handleSignOut = async () => {
     setSigningOut(true)
@@ -60,94 +83,119 @@ export default function AdminSidebar({ userName, userEmail, userAvatar, mobileOp
   }
 
   const renderSidebarContent = (isMobile = false) => (
-    <aside className="w-64 h-full min-h-screen bg-brand-navy-dark flex flex-col border-r border-brand-navy shrink-0">
-      {/* Logo / Brand */}
-      <div className="px-5 py-5 border-b border-white/10 flex items-center justify-between">
+    <aside className="w-64 h-full min-h-screen bg-white flex flex-col border-r border-[#E5E7EB] shrink-0 text-[#1F2937]">
+      {/* Brand Header */}
+      <div className="px-5 py-4 border-b border-[#E5E7EB] flex items-center justify-between">
         <Link
           href="/admin"
-          className="block focus-visible:ring-2 focus-visible:ring-brand-gold rounded-xl p-1"
+          className="flex items-center gap-3 focus:outline-none group"
           onClick={isMobile ? onCloseMobile : undefined}
+          aria-label="TCIP Admin Dashboard"
         >
-          <div className="flex items-center gap-2.5 bg-white/95 rounded-xl p-2 shadow-sm mb-1.5">
-            <div className="w-8 h-8 rounded-lg bg-brand-navy text-white font-extrabold text-xs flex items-center justify-center tracking-wider">
-              <span className="text-brand-gold mr-0.5">T</span>CIP
-            </div>
-            <div className="flex flex-col">
-              <span className="font-extrabold text-brand-navy text-sm leading-tight">TCIP Admin</span>
-              <span className="text-[10px] text-text-secondary leading-none">Management</span>
-            </div>
+          {/* TCIP Mark */}
+          <div className="w-9 h-9 rounded-full bg-[#171717] text-white font-extrabold text-xs flex items-center justify-center tracking-tight shadow-xs relative overflow-hidden border border-[#171717] shrink-0 group-hover:scale-105 transition-transform">
+            <span className="relative z-10 flex items-center">
+              <span>T</span>
+              <span className="text-[#16A34A] font-bold">C</span>
+              <span>IP</span>
+            </span>
+            <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-[#D72638]" />
           </div>
-          <span className="block text-brand-gold text-[10px] font-semibold tracking-wider uppercase px-1">Toronto Community Improvement</span>
+          <div className="flex flex-col min-w-0">
+            <span className="font-extrabold text-[#111827] text-sm leading-tight tracking-tight">
+              TCIP Admin
+            </span>
+            <span className="text-[11px] text-[#6B7280] truncate leading-tight">
+              Community Portal
+            </span>
+          </div>
         </Link>
         {isMobile && onCloseMobile && (
-          <button onClick={onCloseMobile} className="lg:hidden p-1 text-white/70 hover:text-white rounded-lg text-sm">
-            ✕
+          <button
+            onClick={onCloseMobile}
+            className="lg:hidden p-1.5 text-[#6B7280] hover:text-[#111827] hover:bg-[#F3F4F6] rounded-lg transition-colors"
+            aria-label="Close navigation"
+          >
+            <span className="material-symbols-outlined text-xl">close</span>
           </button>
         )}
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 px-3 py-4 overflow-y-auto" aria-label="Admin navigation">
+      {/* Navigation Groups */}
+      <nav className="flex-1 px-3 py-4 overflow-y-auto space-y-5" aria-label="Admin Navigation">
         {navSections.map((section) => (
-          <div key={section.label} className="mb-6">
-            <p className="px-3 mb-1.5 text-[10px] font-bold text-brand-sky/60 tracking-widest uppercase">
+          <div key={section.label}>
+            <p className="px-3 mb-1 text-[11px] font-bold text-[#9CA3AF] tracking-wider uppercase">
               {section.label}
             </p>
             <ul className="space-y-0.5">
-              {section.items.map((item) => (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={isMobile ? onCloseMobile : undefined}
-                    className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-150 ${
-                      isActive(item.href)
-                        ? 'bg-brand-cyan/20 text-brand-warm-white font-semibold border-l-2 border-brand-cyan shadow-sm'
-                        : 'text-brand-warm-white/75 hover:bg-brand-navy hover:text-brand-warm-white'
-                    }`}
-                  >
-                    <span className="text-base leading-none">{item.icon}</span>
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
+              {section.items.map((item) => {
+                const active = isActive(item.href)
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={isMobile ? onCloseMobile : undefined}
+                      className={`flex items-center gap-3 px-3 py-2 rounded-xl text-sm transition-all duration-150 ${
+                        active
+                          ? 'bg-[#16A34A]/10 text-[#15803D] font-bold border-l-4 border-[#16A34A] shadow-xs'
+                          : 'text-[#4B5563] hover:text-[#111827] hover:bg-[#F9FAFB] font-medium'
+                      }`}
+                    >
+                      <span
+                        className={`material-symbols-outlined text-lg ${
+                          active ? 'text-[#16A34A]' : 'text-[#6B7280]'
+                        }`}
+                      >
+                        {item.icon}
+                      </span>
+                      <span>{item.label}</span>
+                    </Link>
+                  </li>
+                )
+              })}
             </ul>
           </div>
         ))}
       </nav>
 
-      {/* User + Sign Out */}
-      <div className="px-4 py-4 border-t border-white/10">
-        <div className="flex items-center gap-3 px-3 py-2 mb-2">
+      {/* User & Sign Out Footer */}
+      <div className="p-3.5 border-t border-[#E5E7EB] bg-[#F9FAFB]">
+        <div className="flex items-center gap-2.5 px-2 py-1.5 mb-2 rounded-xl bg-white border border-[#E5E7EB]">
           {userAvatar ? (
-            <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0 border border-brand-cyan/30">
+            <div className="relative w-8 h-8 rounded-full overflow-hidden shrink-0 border border-[#E5E7EB]">
               <Image src={userAvatar} alt={userName ?? 'Admin'} fill className="object-cover" />
             </div>
           ) : (
-            <div className="w-8 h-8 rounded-full bg-brand-navy flex items-center justify-center text-brand-cyan font-bold text-sm shrink-0 border border-brand-cyan/30">
+            <div className="w-8 h-8 rounded-full bg-[#16A34A]/10 text-[#15803D] font-bold text-xs flex items-center justify-center shrink-0 border border-[#16A34A]/20">
               {(userName ?? userEmail ?? 'A')[0].toUpperCase()}
             </div>
           )}
-          <div className="min-w-0">
-            <p className="text-brand-warm-white text-sm font-medium truncate">
-              {userName ?? 'Admin'}
+          <div className="min-w-0 flex-1">
+            <p className="text-xs font-bold text-[#111827] truncate leading-tight">
+              {userName ?? 'Administrator'}
             </p>
-            <p className="text-brand-warm-white/60 text-xs truncate">{userEmail}</p>
+            <p className="text-[10px] text-[#6B7280] truncate leading-tight mt-0.5">
+              {userEmail ?? 'admin@torontocip.com'}
+            </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2 mt-1">
+        <div className="flex items-center gap-2">
           <Link
             href="/"
-            className="flex-1 text-center px-3 py-1.5 rounded-lg text-xs text-brand-sky/80 hover:text-brand-warm-white hover:bg-brand-navy transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 text-center py-1.5 px-2 rounded-lg text-xs font-medium text-[#4B5563] hover:text-[#111827] hover:bg-white border border-transparent hover:border-[#E5E7EB] transition-colors"
           >
             View Site ↗
           </Link>
           <button
             onClick={handleSignOut}
             disabled={signingOut}
-            className="flex-1 px-3 py-1.5 rounded-lg text-xs text-brand-sky/80 hover:text-brand-warm-white hover:bg-brand-navy transition-colors disabled:opacity-50"
+            className="flex-1 py-1.5 px-2 rounded-lg text-xs font-semibold text-[#DC2626] hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors disabled:opacity-50 cursor-pointer"
           >
-            {signingOut ? 'Signing out…' : 'Sign Out'}
+            {signingOut ? 'Signing out…' : 'Log Out'}
           </button>
         </div>
       </div>
@@ -164,8 +212,12 @@ export default function AdminSidebar({ userName, userEmail, userAvatar, mobileOp
       {/* Mobile Drawer (overlay) */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 lg:hidden flex">
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-xs" onClick={onCloseMobile} />
-          <div className="relative z-10">
+          <div
+            className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity"
+            onClick={onCloseMobile}
+            aria-label="Close navigation overlay"
+          />
+          <div className="relative z-10 shadow-2xl h-full animate-in slide-in-from-left duration-200">
             {renderSidebarContent(true)}
           </div>
         </div>

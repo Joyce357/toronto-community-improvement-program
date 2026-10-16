@@ -13,11 +13,11 @@ export interface CategoryAccent {
 
 export function getCategoryAccent(category?: string | null): CategoryAccent {
   const cat = (category || '').toLowerCase()
-  if (cat.includes('environment') || cat.includes('clean') || cat.includes('steward')) {
+  if (cat.includes('employment') || cat.includes('career') || cat.includes('job')) {
     return {
-      badgeBg: 'bg-brand-sage/40',
-      badgeText: 'text-brand-green',
-      badgeBorder: 'border-brand-green/20',
+      badgeBg: 'bg-emerald-50',
+      badgeText: 'text-emerald-800',
+      badgeBorder: 'border-emerald-200',
     }
   }
   if (cat.includes('volunteer')) {

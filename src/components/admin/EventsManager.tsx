@@ -1,8 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, ChangeEvent } from 'react'
+import Image from 'next/image'
 import StatusBadge from '@/components/admin/StatusBadge'
 import EmptyState from '@/components/admin/EmptyState'
+import { EVENT_CATEGORIES } from '@/lib/validations'
 import type { Event } from '@/types'
 
 interface EventsManagerProps {
@@ -20,35 +22,27 @@ interface FormState {
   startTime: string
   endTime: string
   location: string
+  featuredImage: string
   registrationLink: string
   registrationOpen: boolean
   featured: boolean
   published: boolean
 }
 
-const EVENT_CATEGORIES = [
-  'Environmental',
-  'Volunteer',
-  'Fundraiser',
-  'Youth',
-  'Community',
-  'Workshop',
-  'Education',
-]
-
 const emptyForm: FormState = {
   title: '',
-  category: 'Environmental',
+  category: 'Community Gathering',
   shortDescription: '',
   description: '',
   date: new Date().toISOString().split('T')[0],
-  startTime: '09:00 AM',
-  endTime: '01:00 PM',
+  startTime: '10:00 AM',
+  endTime: '02:00 PM',
   location: '',
+  featuredImage: '',
   registrationLink: '',
   registrationOpen: true,
   featured: false,
-  published: false,
+  published: true,
 }
 
 export default function EventsManager({
@@ -58,7 +52,9 @@ export default function EventsManager({
   const [events, setEvents] = useState<Event[]>(initialEvents)
   const [total, setTotal] = useState(totalCount)
   const [search, setSearch] = useState('')
+  const [timeFilter, setTimeFilter] = useState<'UPCOMING' | 'PAST' | 'ALL'>('UPCOMING')
   const [statusFilter, setStatusFilter] = useState<'ALL' | 'PUBLISHED' | 'DRAFT'>('ALL')
+  const [categoryFilter, setCategoryFilter] = useState<string>('ALL')
 
   // Modal states
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -66,6 +62,10 @@ export default function EventsManager({
   const [formData, setFormData] = useState<FormState>(emptyForm)
   const [formErrors, setFormErrors] = useState<Record<string, string>>({})
   const [submitting, setSubmitting] = useState(false)
+
+  // Image upload state
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [uploadingImage, setUploadingImage] = useState(false)
 
   // Delete modal state
   const [deleteTarget, setDeleteTarget] = useState<Event | null>(null)
@@ -97,20 +97,62 @@ export default function EventsManager({
     setFormData({
       id: event.id,
       title: event.title,
-      category: event.category || 'Environmental',
+      category: event.category || 'Community Gathering',
       shortDescription: event.shortDescription || '',
       description: event.description,
       date: formattedDate,
-      startTime: event.startTime || '09:00 AM',
+      startTime: event.startTime || '10:00 AM',
       endTime: event.endTime || '',
       location: event.location,
+      featuredImage: event.featuredImage || '',
       registrationLink: event.registrationLink || '',
       registrationOpen: event.registrationOpen ?? true,
       featured: event.featured ?? false,
-      published: event.published ?? false,
+      published: event.published ?? true,
     })
     setFormErrors({})
     setIsModalOpen(true)
+  }
+
+  // Handle Image Upload
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      setFormErrors((prev) => ({ ...prev, image: 'Please choose a JPEG, PNG, or WebP image.' }))
+      return
+    }
+
+    setUploadingImage(true)
+    setFormErrors((prev) => {
+      const next = { ...prev }
+      delete next.image
+      return next
+    })
+
+    try {
+      const uploadFormData = new FormData()
+      uploadFormData.append('file', file)
+
+      const res = await fetch('/api/admin/gallery/image', {
+        method: 'POST',
+        body: uploadFormData,
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        setFormErrors((prev) => ({ ...prev, image: data.error || 'Failed to upload image.' }))
+      } else {
+        setFormData((prev) => ({ ...prev, featuredImage: data.imageUrl }))
+      }
+    } catch {
+      setFormErrors((prev) => ({ ...prev, image: 'Network error during image upload.' }))
+    } finally {
+      setUploadingImage(false)
+      if (fileInputRef.current) fileInputRef.current.value = ''
+    }
   }
 
   // Form Validation
@@ -118,97 +160,103 @@ export default function EventsManager({
     const errors: Record<string, string> = {}
     if (!formData.title.trim()) errors.title = 'Title is required'
     if (!formData.description.trim()) errors.description = 'Full description is required'
-    if (!formData.date) errors.date = 'Event date is required'
+    if (!formData.date) errors.date = 'Date is required'
     if (!formData.startTime.trim()) errors.startTime = 'Start time is required'
     if (!formData.location.trim()) errors.location = 'Location is required'
-
+    if (
+      formData.registrationLink &&
+      !/^https?:\/\/.+/.test(formData.registrationLink)
+    ) {
+      errors.registrationLink = 'Must be a valid URL starting with http:// or https://'
+    }
     setFormErrors(errors)
     return Object.keys(errors).length === 0
   }
 
-  // Submit Handler (Create & Edit)
+  // Handle Submit (Create or Update)
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!validateForm()) return
 
     setSubmitting(true)
     try {
-      const payload = {
-        title: formData.title.trim(),
-        category: formData.category,
-        shortDescription: formData.shortDescription.trim() || null,
-        description: formData.description.trim(),
-        date: formData.date,
-        startTime: formData.startTime.trim(),
-        endTime: formData.endTime.trim() || null,
-        location: formData.location.trim(),
-        registrationLink: formData.registrationLink.trim() || null,
-        registrationOpen: formData.registrationOpen,
-        featured: formData.featured,
-        published: formData.published,
+      const url = isEditing
+        ? `/api/admin/events/${formData.id}`
+        : '/api/admin/events'
+      const method = isEditing ? 'PATCH' : 'POST'
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error || 'Failed to save event')
       }
 
-      if (isEditing && formData.id) {
-        const res = await fetch(`/api/admin/events/${formData.id}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        })
+      const { event } = await res.json()
 
-        const data = await res.json().catch(() => ({}))
-        if (!res.ok) {
-          const msg = data.error || (data.errors ? Object.values(data.errors).join(', ') : 'Failed to update event')
-          throw new Error(msg)
-        }
-
-        setEvents((prev) =>
-          prev.map((e) => (e.id === formData.id ? (data.event as Event) : e))
-        )
+      if (isEditing) {
+        setEvents((prev) => prev.map((e) => (e.id === event.id ? event : e)))
         showFeedback('Event updated successfully.')
       } else {
-        const res = await fetch('/api/admin/events', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        })
-
-        const data = await res.json().catch(() => ({}))
-        if (!res.ok) {
-          const msg = data.error || (data.errors ? Object.values(data.errors).join(', ') : 'Failed to create event')
-          throw new Error(msg)
-        }
-
-        setEvents((prev) => [data.event as Event, ...prev])
+        setEvents((prev) => [event, ...prev])
         setTotal((prev) => prev + 1)
         showFeedback('Event created successfully.')
       }
 
       setIsModalOpen(false)
-    } catch (err) {
-      showFeedback((err as Error).message || 'An error occurred', 'error')
+    } catch (err: unknown) {
+      showFeedback(
+        err instanceof Error ? err.message : 'An unexpected error occurred.',
+        'error',
+      )
     } finally {
       setSubmitting(false)
     }
   }
 
-  // Quick Toggle Published
-  const handleTogglePublish = async (event: Event) => {
-    const newStatus = !event.published
+  // Toggle Published Status
+  const handleTogglePublished = async (event: Event) => {
     try {
       const res = await fetch(`/api/admin/events/${event.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ published: newStatus }),
+        body: JSON.stringify({ published: !event.published }),
       })
 
-      if (!res.ok) throw new Error('Failed to update status')
+      if (!res.ok) throw new Error('Failed to update event status')
 
-      setEvents((prev) =>
-        prev.map((e) => (e.id === event.id ? { ...e, published: newStatus } : e))
+      const { event: updatedEvent } = await res.json()
+      setEvents((prev) => prev.map((e) => (e.id === updatedEvent.id ? updatedEvent : e)))
+      showFeedback(
+        `Event ${updatedEvent.published ? 'published' : 'moved to drafts'}.`,
       )
-      showFeedback(`Event ${newStatus ? 'published' : 'unpublished'} successfully.`)
     } catch {
       showFeedback('Failed to update event status.', 'error')
+    }
+  }
+
+  // Toggle Featured
+  const handleToggleFeatured = async (event: Event) => {
+    try {
+      const res = await fetch(`/api/admin/events/${event.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ featured: !event.featured }),
+      })
+
+      if (!res.ok) throw new Error('Failed to update featured flag')
+
+      const { event: updatedEvent } = await res.json()
+      setEvents((prev) => prev.map((e) => (e.id === updatedEvent.id ? updatedEvent : e)))
+      showFeedback(
+        `Event ${updatedEvent.featured ? 'marked as featured' : 'removed from featured'}.`,
+      )
+    } catch {
+      showFeedback('Failed to update featured flag.', 'error')
     }
   }
 
@@ -235,28 +283,49 @@ export default function EventsManager({
     }
   }
 
+  // Today boundary for automatic past vs upcoming calculation
+  const startOfToday = new Date()
+  startOfToday.setHours(0, 0, 0, 0)
+
   // Filtered Events
   const filteredEvents = events.filter((e) => {
+    const eventDate = new Date(e.date)
+    const isUpcoming = eventDate >= startOfToday
+
+    const matchesTime =
+      timeFilter === 'ALL' ||
+      (timeFilter === 'UPCOMING' && isUpcoming) ||
+      (timeFilter === 'PAST' && !isUpcoming)
+
     const matchesSearch =
       e.title.toLowerCase().includes(search.toLowerCase()) ||
       e.location.toLowerCase().includes(search.toLowerCase()) ||
       (e.category && e.category.toLowerCase().includes(search.toLowerCase()))
+
     const matchesStatus =
       statusFilter === 'ALL' ||
       (statusFilter === 'PUBLISHED' && e.published) ||
       (statusFilter === 'DRAFT' && !e.published)
-    return matchesSearch && matchesStatus
+
+    const matchesCategory =
+      categoryFilter === 'ALL' || e.category === categoryFilter
+
+    return matchesTime && matchesSearch && matchesStatus && matchesCategory
   })
+
+  // Count upcoming vs past
+  const upcomingCount = events.filter((e) => new Date(e.date) >= startOfToday).length
+  const pastCount = events.filter((e) => new Date(e.date) < startOfToday).length
 
   return (
     <div className="space-y-6">
       {/* Toast Feedback */}
       {feedback && (
         <div
-          className={`fixed top-4 right-4 z-50 px-4 py-3 rounded-xl shadow-lg text-sm font-semibold transition-all duration-300 ${
+          className={`p-4 rounded-xl text-sm font-medium transition-all ${
             feedback.type === 'success'
-              ? 'bg-emerald-800 text-white'
-              : 'bg-red-800 text-white'
+              ? 'bg-green-50 text-green-800 border border-green-200'
+              : 'bg-red-50 text-red-700 border border-red-200'
           }`}
           role="alert"
         >
@@ -267,15 +336,15 @@ export default function EventsManager({
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-brand-navy tracking-tight">Events</h1>
-          <p className="text-sm text-text-secondary mt-0.5">
-            Manage upcoming workshops, cleanups, fundraisers, and community events. ({total} total)
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Events</h1>
+          <p className="text-sm text-gray-600 mt-1">
+            Manage TCIP community gatherings, job fairs, workshops, and youth events ({total} total).
           </p>
         </div>
 
         <button
           onClick={handleOpenCreate}
-          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-green hover:bg-brand-navy text-white text-sm font-bold rounded-xl shadow-xs transition-colors"
+          className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-semibold rounded-xl shadow-xs transition-colors shrink-0 cursor-pointer"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -284,185 +353,301 @@ export default function EventsManager({
         </button>
       </div>
 
-      {/* Filter & Search Toolbar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-4 bg-white rounded-2xl border border-border-soft shadow-xs">
-        <div className="relative flex-1 max-w-md">
+      {/* Primary Timing Tabs: Upcoming vs Past */}
+      <div className="flex items-center gap-2 border-b border-gray-200 pb-2">
+        <button
+          onClick={() => setTimeFilter('UPCOMING')}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            timeFilter === 'UPCOMING'
+              ? 'bg-[#16A34A] text-white shadow-xs'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+          }`}
+        >
+          Upcoming Events ({upcomingCount})
+        </button>
+        <button
+          onClick={() => setTimeFilter('PAST')}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            timeFilter === 'PAST'
+              ? 'bg-[#16A34A] text-white shadow-xs'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+          }`}
+        >
+          Past Events ({pastCount})
+        </button>
+        <button
+          onClick={() => setTimeFilter('ALL')}
+          className={`px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+            timeFilter === 'ALL'
+              ? 'bg-gray-900 text-white shadow-xs'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100'
+          }`}
+        >
+          All ({total})
+        </button>
+      </div>
+
+      {/* Filter & Search Bar */}
+      <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-xs flex flex-col md:flex-row gap-3 items-stretch md:items-center justify-between">
+        <div className="relative flex-1">
           <input
             type="text"
-            placeholder="Search events by title, category, location..."
+            placeholder="Search events by title, location, or category…"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-brand-warm-white border border-border-soft rounded-xl text-sm text-brand-navy focus:outline-none focus:ring-2 focus:ring-brand-cyan"
+            className="w-full pl-9 pr-4 py-2 text-xs text-gray-900 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A] bg-gray-50/50"
           />
-          <svg className="w-4 h-4 text-text-secondary absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg
+            className="w-4 h-4 absolute left-3 top-2.5 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
         </div>
 
-        <div className="flex items-center gap-2">
-          {(['ALL', 'PUBLISHED', 'DRAFT'] as const).map((st) => (
-            <button
-              key={st}
-              onClick={() => setStatusFilter(st)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-colors ${
-                statusFilter === st
-                  ? 'bg-brand-navy text-white'
-                  : 'bg-brand-warm-white text-text-secondary hover:bg-brand-cream border border-border-soft'
-              }`}
-            >
-              {st}
-            </button>
-          ))}
+        <div className="flex flex-wrap items-center gap-2">
+          <select
+            value={categoryFilter}
+            onChange={(e) => setCategoryFilter(e.target.value)}
+            className="px-3 py-2 rounded-lg border border-gray-300 text-xs text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30"
+          >
+            <option value="ALL">All Categories</option>
+            {EVENT_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+
+          <div className="flex bg-gray-100 p-1 rounded-lg border border-gray-200 text-xs font-semibold text-gray-700">
+            {(['ALL', 'PUBLISHED', 'DRAFT'] as const).map((tab) => (
+              <button
+                key={tab}
+                onClick={() => setStatusFilter(tab)}
+                className={`px-3 py-1 rounded-md transition-all cursor-pointer ${
+                  statusFilter === tab
+                    ? 'bg-white shadow-xs text-gray-900 font-bold'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                {tab === 'ALL' ? 'All' : tab.charAt(0) + tab.slice(1).toLowerCase()}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Events Table / List */}
-      <div className="bg-white rounded-2xl border border-border-soft shadow-xs overflow-hidden">
+      {/* Events Table */}
+      <div className="bg-white rounded-xl border border-gray-200 shadow-xs overflow-hidden">
         {filteredEvents.length === 0 ? (
-          <EmptyState
-            icon="📅"
-            title="No events found"
-            message={
-              search || statusFilter !== 'ALL'
-                ? 'No events match your current filter criteria.'
-                : 'No events have been added yet. Click "Add Event" above to create your first event.'
-            }
-          />
+          <div className="p-8">
+            <EmptyState
+              icon="📅"
+              title={timeFilter === 'UPCOMING' ? 'No upcoming events found' : 'No events found'}
+              message={
+                search || statusFilter !== 'ALL' || categoryFilter !== 'ALL'
+                  ? 'Try adjusting your search criteria or category filter.'
+                  : timeFilter === 'UPCOMING'
+                  ? 'No upcoming events are currently scheduled. Click "Add Event" to create one.'
+                  : 'No past events match the current criteria.'
+              }
+            />
+          </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
-              <thead className="bg-brand-cream/60 border-b border-border-soft text-brand-navy font-bold text-xs uppercase tracking-wider">
+              <thead className="bg-gray-50 border-b border-gray-200 text-gray-700 font-semibold text-xs uppercase tracking-wider">
                 <tr>
                   <th className="px-5 py-3.5">Event</th>
-                  <th className="px-4 py-3.5">Category</th>
                   <th className="px-4 py-3.5">Date & Time</th>
-                  <th className="px-4 py-3.5">Location</th>
+                  <th className="px-4 py-3.5">Timeline</th>
+                  <th className="px-4 py-3.5">Category</th>
+                  <th className="px-4 py-3.5">Featured</th>
                   <th className="px-4 py-3.5">Status</th>
-                  <th className="px-4 py-3.5 text-right">Actions</th>
+                  <th className="px-5 py-3.5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-border-soft/60">
-                {filteredEvents.map((evt) => (
-                  <tr key={evt.id} className="hover:bg-brand-warm-white/50 transition-colors">
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-brand-navy text-sm leading-tight block">
-                          {evt.title}
-                        </span>
-                        {evt.featured && (
-                          <span className="px-1.5 py-0.5 bg-amber-100 text-amber-800 text-[10px] font-bold rounded">
-                            ★ Featured
+              <tbody className="divide-y divide-gray-100">
+                {filteredEvents.map((event) => {
+                  const eventDate = new Date(event.date)
+                  const isUpcoming = eventDate >= startOfToday
+
+                  return (
+                    <tr key={event.id} className="hover:bg-gray-50/70 transition-colors">
+                      {/* Title & Location */}
+                      <td className="px-5 py-4 max-w-sm">
+                        <div className="flex items-start gap-3">
+                          {event.featuredImage && (
+                            <div className="relative w-12 h-12 rounded-lg overflow-hidden shrink-0 border border-gray-200 bg-gray-50">
+                              <Image
+                                src={event.featuredImage}
+                                alt={event.title}
+                                fill
+                                sizes="48px"
+                                className="object-cover"
+                              />
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <p className="font-bold text-gray-900 truncate">{event.title}</p>
+                            <p className="text-xs text-gray-500 line-clamp-1 mt-0.5">
+                              📍 {event.location}
+                            </p>
+                            {event.registrationLink && (
+                              <a
+                                href={event.registrationLink}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="text-[11px] text-[#16A34A] hover:underline block mt-0.5"
+                              >
+                                Registration Link ↗
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+
+                      {/* Date & Time */}
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <div className="text-xs font-semibold text-gray-800">
+                          {eventDate.toLocaleDateString('en-CA', {
+                            weekday: 'short',
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                          })}
+                        </div>
+                        <div className="text-[11px] text-gray-500 mt-0.5">
+                          {event.startTime}
+                          {event.endTime ? ` – ${event.endTime}` : ''}
+                        </div>
+                      </td>
+
+                      {/* Timeline Badge (Upcoming vs Past) */}
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        {isUpcoming ? (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            ● Upcoming
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">
+                            Past Event
                           </span>
                         )}
-                      </div>
-                      {evt.shortDescription && (
-                        <p className="text-xs text-text-secondary line-clamp-1 mt-0.5">
-                          {evt.shortDescription}
-                        </p>
-                      )}
-                    </td>
+                      </td>
 
-                    <td className="px-4 py-4">
-                      <span className="inline-block px-2.5 py-1 bg-brand-sage/40 text-brand-navy text-xs font-bold rounded-full border border-border-soft">
-                        {evt.category || 'Environmental'}
-                      </span>
-                    </td>
+                      {/* Category */}
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-800 border border-gray-200">
+                          {event.category || 'General'}
+                        </span>
+                      </td>
 
-                    <td className="px-4 py-4 whitespace-nowrap text-xs text-text-secondary font-medium">
-                      <p className="font-semibold text-brand-navy">
-                        {new Date(evt.date).toLocaleDateString('en-CA', {
-                          weekday: 'short',
-                          year: 'numeric',
-                          month: 'short',
-                          day: 'numeric',
-                        })}
-                      </p>
-                      <p className="text-[11px] text-text-secondary">
-                        {evt.startTime}
-                        {evt.endTime ? ` – ${evt.endTime}` : ''}
-                      </p>
-                    </td>
-
-                    <td className="px-4 py-4 max-w-[180px] text-xs text-text-secondary truncate">
-                      {evt.location}
-                    </td>
-
-                    <td className="px-4 py-4 whitespace-nowrap">
-                      <StatusBadge status={evt.published ? 'PUBLISHED' : 'DRAFT'} />
-                    </td>
-
-                    <td className="px-4 py-4 text-right whitespace-nowrap">
-                      <div className="flex items-center justify-end gap-2">
+                      {/* Featured */}
+                      <td className="px-4 py-4 whitespace-nowrap">
                         <button
-                          onClick={() => handleTogglePublish(evt)}
-                          className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-brand-warm-white hover:bg-brand-cream border border-border-soft transition-colors"
+                          onClick={() => handleToggleFeatured(event)}
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold border transition-colors cursor-pointer ${
+                            event.featured
+                              ? 'bg-amber-100 text-amber-900 border-amber-300'
+                              : 'bg-gray-100 text-gray-500 border-gray-200 hover:text-gray-800'
+                          }`}
+                          title="Click to toggle featured status"
                         >
-                          {evt.published ? 'Unpublish' : 'Publish'}
+                          {event.featured ? '★ Featured' : '☆ Standard'}
                         </button>
+                      </td>
+
+                      {/* Status */}
+                      <td className="px-4 py-4 whitespace-nowrap">
                         <button
-                          onClick={() => handleOpenEdit(evt)}
-                          className="px-2.5 py-1 text-xs font-semibold rounded-lg text-brand-navy hover:bg-brand-cream transition-colors"
+                          onClick={() => handleTogglePublished(event)}
+                          title="Click to toggle published status"
+                          className="cursor-pointer"
+                        >
+                          <StatusBadge status={event.published ? 'PUBLISHED' : 'DRAFT'} />
+                        </button>
+                      </td>
+
+                      {/* Actions */}
+                      <td className="px-5 py-4 text-right whitespace-nowrap space-x-1.5">
+                        <button
+                          onClick={() => handleOpenEdit(event)}
+                          className="px-2.5 py-1.5 text-xs font-semibold text-gray-700 hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
                         >
                           Edit
                         </button>
                         <button
-                          onClick={() => setDeleteTarget(evt)}
-                          className="px-2.5 py-1 text-xs font-semibold rounded-lg text-red-600 hover:bg-red-50 transition-colors"
+                          onClick={() => setDeleteTarget(event)}
+                          className="px-2.5 py-1.5 text-xs font-semibold text-red-600 hover:bg-red-50 rounded-lg transition-colors cursor-pointer"
                         >
                           Delete
                         </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
         )}
       </div>
 
-      {/* Create / Edit Modal */}
+      {/* ── Create / Edit Modal ── */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-border-soft max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between pb-4 border-b border-border-soft mb-6">
-              <h2 className="text-xl font-extrabold text-brand-navy">
-                {isEditing ? 'Edit Event' : 'Add New Event'}
-              </h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs overflow-y-auto">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col overflow-hidden my-8 border border-gray-200">
+            {/* Modal Header */}
+            <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <div>
+                <h2 className="text-lg font-bold text-gray-900">
+                  {isEditing ? 'Edit Event' : 'Create Event'}
+                </h2>
+                <p className="text-xs text-gray-500">
+                  Fill in event information, date, location, and registration details.
+                </p>
+              </div>
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="p-1 text-text-secondary hover:text-brand-navy text-lg font-bold"
+                className="text-gray-400 hover:text-gray-600 text-lg leading-none cursor-pointer"
               >
                 ✕
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1">
-                  Event Title *
-                </label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  placeholder="e.g. Community Waterway Cleanup"
-                  className="w-full px-3.5 py-2.5 border border-border-soft rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan"
-                />
-                {formErrors.title && (
-                  <p className="text-xs text-red-600 mt-1">{formErrors.title}</p>
-                )}
-              </div>
-
+            {/* Modal Body */}
+            <form onSubmit={handleSubmit} className="p-6 overflow-y-auto space-y-4 flex-1">
+              {/* Title & Category */}
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1">
-                    Category
+                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1">
+                    Event Title <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.title}
+                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    placeholder="e.g. Community Job Fair & Networking"
+                    className={`w-full px-3.5 py-2 text-sm rounded-xl border ${
+                      formErrors.title ? 'border-red-400' : 'border-gray-300'
+                    } focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A]`}
+                  />
+                  {formErrors.title && (
+                    <p className="text-red-600 text-xs mt-1">{formErrors.title}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1">
+                    Category <span className="text-red-500">*</span>
                   </label>
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-border-soft rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan bg-white"
+                    className="w-full px-3.5 py-2 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A] bg-white"
                   >
                     {EVENT_CATEGORIES.map((cat) => (
                       <option key={cat} value={cat}>
@@ -471,159 +656,223 @@ export default function EventsManager({
                     ))}
                   </select>
                 </div>
+              </div>
 
+              {/* Date, Start Time, End Time */}
+              <div className="grid sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1">
-                    Event Date *
+                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1">
+                    Event Date <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="date"
+                    required
                     value={formData.date}
                     onChange={(e) => setFormData({ ...formData, date: e.target.value })}
-                    className="w-full px-3.5 py-2.5 border border-border-soft rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan"
+                    className={`w-full px-3.5 py-2 text-sm rounded-xl border ${
+                      formErrors.date ? 'border-red-400' : 'border-gray-300'
+                    } focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A]`}
                   />
                   {formErrors.date && (
-                    <p className="text-xs text-red-600 mt-1">{formErrors.date}</p>
+                    <p className="text-red-600 text-xs mt-1">{formErrors.date}</p>
                   )}
                 </div>
-              </div>
 
-              <div className="grid sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1">
-                    Start Time *
+                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1">
+                    Start Time <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
+                    required
                     value={formData.startTime}
                     onChange={(e) => setFormData({ ...formData, startTime: e.target.value })}
-                    placeholder="e.g. 09:00 AM"
-                    className="w-full px-3.5 py-2.5 border border-border-soft rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan"
+                    placeholder="e.g. 10:00 AM"
+                    className={`w-full px-3.5 py-2 text-sm rounded-xl border ${
+                      formErrors.startTime ? 'border-red-400' : 'border-gray-300'
+                    } focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A]`}
                   />
                   {formErrors.startTime && (
-                    <p className="text-xs text-red-600 mt-1">{formErrors.startTime}</p>
+                    <p className="text-red-600 text-xs mt-1">{formErrors.startTime}</p>
                   )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1">
                     End Time (Optional)
                   </label>
                   <input
                     type="text"
                     value={formData.endTime}
                     onChange={(e) => setFormData({ ...formData, endTime: e.target.value })}
-                    placeholder="e.g. 01:00 PM"
-                    className="w-full px-3.5 py-2.5 border border-border-soft rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan"
+                    placeholder="e.g. 02:00 PM"
+                    className="w-full px-3.5 py-2 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A]"
                   />
                 </div>
               </div>
 
+              {/* Location */}
               <div>
-                <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1">
-                  Location / Venue *
+                <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1">
+                  Location <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
+                  required
                   value={formData.location}
                   onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                  placeholder="e.g. High Park Nature Centre, Toronto"
-                  className="w-full px-3.5 py-2.5 border border-border-soft rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan"
+                  placeholder="e.g. 1900 Eglinton Ave E, Scarborough, ON or Online via Zoom"
+                  className={`w-full px-3.5 py-2 text-sm rounded-xl border ${
+                    formErrors.location ? 'border-red-400' : 'border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A]`}
                 />
                 {formErrors.location && (
-                  <p className="text-xs text-red-600 mt-1">{formErrors.location}</p>
+                  <p className="text-red-600 text-xs mt-1">{formErrors.location}</p>
                 )}
               </div>
 
+              {/* Featured Image Upload / URL */}
               <div>
-                <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1">
-                  Registration Link (Optional)
+                <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1">
+                  Event Image (Upload or URL)
                 </label>
-                <input
-                  type="url"
-                  value={formData.registrationLink}
-                  onChange={(e) => setFormData({ ...formData, registrationLink: e.target.value })}
-                  placeholder="https://eventbrite.com/..."
-                  className="w-full px-3.5 py-2.5 border border-border-soft rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan"
-                />
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={formData.featuredImage}
+                    onChange={(e) => setFormData({ ...formData, featuredImage: e.target.value })}
+                    placeholder="/images/tcip-youth-leadership.jpg or https://..."
+                    className="flex-1 px-3.5 py-2 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A]"
+                  />
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={uploadingImage}
+                    className="px-3.5 py-2 text-xs font-semibold text-gray-800 bg-gray-100 hover:bg-gray-200 border border-gray-300 rounded-xl transition-colors cursor-pointer shrink-0 disabled:opacity-50"
+                  >
+                    {uploadingImage ? 'Uploading…' : 'Upload'}
+                  </button>
+                </div>
+                {formErrors.image && <p className="text-red-600 text-xs mt-1">{formErrors.image}</p>}
+                {formData.featuredImage && (
+                  <div className="mt-2 relative w-20 h-14 rounded-lg overflow-hidden border border-gray-200">
+                    <Image
+                      src={formData.featuredImage}
+                      alt="Preview"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                )}
               </div>
 
+              {/* Registration Link & Registration Open */}
+              <div className="grid sm:grid-cols-2 gap-4 items-center">
+                <div>
+                  <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1">
+                    Registration Link (Optional URL)
+                  </label>
+                  <input
+                    type="url"
+                    value={formData.registrationLink}
+                    onChange={(e) => setFormData({ ...formData, registrationLink: e.target.value })}
+                    placeholder="https://..."
+                    className={`w-full px-3.5 py-2 text-sm rounded-xl border ${
+                      formErrors.registrationLink ? 'border-red-400' : 'border-gray-300'
+                    } focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A]`}
+                  />
+                  {formErrors.registrationLink && (
+                    <p className="text-red-600 text-xs mt-1">{formErrors.registrationLink}</p>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-4 pt-4 sm:pt-6">
+                  <label className="flex items-center gap-2 text-xs font-semibold text-gray-800 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.registrationOpen}
+                      onChange={(e) => setFormData({ ...formData, registrationOpen: e.target.checked })}
+                      className="rounded text-[#16A34A] focus:ring-[#16A34A]"
+                    />
+                    Registration Open
+                  </label>
+                  <label className="flex items-center gap-2 text-xs font-semibold text-gray-800 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.featured}
+                      onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
+                      className="rounded text-[#16A34A] focus:ring-[#16A34A]"
+                    />
+                    Featured Event
+                  </label>
+                  <label className="flex items-center gap-2 text-xs font-semibold text-gray-800 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.published}
+                      onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
+                      className="rounded text-[#16A34A] focus:ring-[#16A34A]"
+                    />
+                    Published
+                  </label>
+                </div>
+              </div>
+
+              {/* Short Description */}
               <div>
-                <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1">
+                <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1">
                   Short Summary (Card Preview)
                 </label>
-                <input
-                  type="text"
+                <textarea
+                  rows={2}
                   value={formData.shortDescription}
                   onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
-                  placeholder="Brief 1-sentence summary for cards..."
-                  className="w-full px-3.5 py-2.5 border border-border-soft rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan"
+                  placeholder="One sentence summary for event card previews…"
+                  className="w-full px-3.5 py-2 text-sm rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A]"
                 />
               </div>
 
+              {/* Full Description */}
               <div>
-                <label className="block text-xs font-bold text-brand-navy uppercase tracking-wider mb-1">
-                  Full Event Description *
+                <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1">
+                  Full Description <span className="text-red-500">*</span>
                 </label>
                 <textarea
                   rows={4}
+                  required
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="Detailed description of the event..."
-                  className="w-full px-3.5 py-2.5 border border-border-soft rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-cyan"
+                  placeholder="Detailed information about the event agenda, speaker details, what to bring, etc.…"
+                  className={`w-full px-3.5 py-2 text-sm rounded-xl border ${
+                    formErrors.description ? 'border-red-400' : 'border-gray-300'
+                  } focus:outline-none focus:ring-2 focus:ring-[#16A34A]/30 focus:border-[#16A34A]`}
                 />
                 {formErrors.description && (
-                  <p className="text-xs text-red-600 mt-1">{formErrors.description}</p>
+                  <p className="text-red-600 text-xs mt-1">{formErrors.description}</p>
                 )}
               </div>
 
-              {/* Switches / Checkboxes */}
-              <div className="flex flex-wrap items-center gap-6 pt-2 border-t border-border-soft">
-                <label className="inline-flex items-center gap-2 cursor-pointer text-sm font-semibold text-brand-navy">
-                  <input
-                    type="checkbox"
-                    checked={formData.published}
-                    onChange={(e) => setFormData({ ...formData, published: e.target.checked })}
-                    className="w-4 h-4 rounded text-brand-green focus:ring-brand-cyan"
-                  />
-                  Publish Event Immediately
-                </label>
-
-                <label className="inline-flex items-center gap-2 cursor-pointer text-sm font-semibold text-brand-navy">
-                  <input
-                    type="checkbox"
-                    checked={formData.featured}
-                    onChange={(e) => setFormData({ ...formData, featured: e.target.checked })}
-                    className="w-4 h-4 rounded text-brand-green focus:ring-brand-cyan"
-                  />
-                  Feature on Homepage
-                </label>
-
-                <label className="inline-flex items-center gap-2 cursor-pointer text-sm font-semibold text-brand-navy">
-                  <input
-                    type="checkbox"
-                    checked={formData.registrationOpen}
-                    onChange={(e) => setFormData({ ...formData, registrationOpen: e.target.checked })}
-                    className="w-4 h-4 rounded text-brand-green focus:ring-brand-cyan"
-                  />
-                  Registration Open
-                </label>
-              </div>
-
-              <div className="flex items-center justify-end gap-3 pt-6 border-t border-border-soft">
+              {/* Modal Actions */}
+              <div className="pt-4 border-t border-gray-100 flex items-center justify-end gap-3">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 text-sm font-bold text-text-secondary hover:text-brand-navy transition-colors"
+                  className="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="px-6 py-2.5 bg-brand-green hover:bg-brand-navy text-white text-sm font-bold rounded-xl shadow-xs transition-colors disabled:opacity-50"
+                  className="px-5 py-2 bg-[#16A34A] hover:bg-[#15803D] text-white text-xs font-semibold rounded-xl shadow-xs transition-colors disabled:opacity-50 cursor-pointer"
                 >
-                  {submitting ? 'Saving…' : isEditing ? 'Update Event' : 'Create Event'}
+                  {submitting ? 'Saving…' : isEditing ? 'Save Changes' : 'Create Event'}
                 </button>
               </div>
             </form>
@@ -631,27 +880,35 @@ export default function EventsManager({
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* ── Delete Confirmation Dialog ── */}
       {deleteTarget && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs">
-          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-border-soft">
-            <h3 className="text-lg font-bold text-brand-navy mb-2">Confirm Delete</h3>
-            <p className="text-sm text-text-secondary mb-6">
-              Are you sure you want to delete <strong className="text-brand-navy">&quot;{deleteTarget.title}&quot;</strong>? This action cannot be undone.
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl shadow-xl w-full max-w-md p-6 border border-red-200">
+            <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-4 text-xl">
+              ⚠️
+            </div>
+            <h3 className="text-lg font-bold text-center text-gray-900 mb-2">
+              Delete Event?
+            </h3>
+            <p className="text-sm text-center text-gray-600 mb-6">
+              Are you sure you want to delete <strong className="text-gray-900">{deleteTarget.title}</strong>? This action cannot be undone.
             </p>
-            <div className="flex items-center justify-end gap-3">
+            <div className="flex items-center justify-center gap-3">
               <button
+                type="button"
                 onClick={() => setDeleteTarget(null)}
-                className="px-4 py-2 text-sm font-bold text-text-secondary hover:text-brand-navy transition-colors"
+                disabled={isDeleting}
+                className="px-4 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-100 rounded-xl transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-sm font-bold rounded-xl shadow-xs transition-colors disabled:opacity-50"
+                className="px-5 py-2 bg-red-600 hover:bg-red-700 text-white text-xs font-semibold rounded-xl transition-colors disabled:opacity-50 cursor-pointer"
               >
-                {isDeleting ? 'Deleting…' : 'Delete Event'}
+                {isDeleting ? 'Deleting…' : 'Yes, Delete'}
               </button>
             </div>
           </div>

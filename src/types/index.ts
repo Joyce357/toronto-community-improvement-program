@@ -98,6 +98,18 @@ export interface GalleryItem {
   updatedAt?: Date | string
 }
 
+export interface Partner {
+  id: string
+  name: string
+  logoUrl?: string | null
+  websiteUrl?: string | null
+  description?: string | null
+  displayOrder: number
+  published: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
 export interface GalleryImage {
   id: string
   src: string

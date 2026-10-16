@@ -67,7 +67,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Only allow deletion of gallery folder assets
-    if (!publicId.startsWith('bridge-of-compassion/gallery')) {
+    if (!publicId.startsWith('bridge-of-compassion/gallery') && !publicId.startsWith('tcip/gallery') && !publicId.includes('gallery')) {
       return NextResponse.json({ error: 'Invalid gallery asset ID.' }, { status: 403 })
     }
 

@@ -9,7 +9,7 @@ import type { SiteSettingsRecord } from '@/types'
 export const DEFAULT_SITE_SETTINGS: SiteSettingsRecord = {
   id:                    'site',
   organizationName:      'Toronto Community Improvement Program',
-  publicEmail:           'contact@torontocip.com',
+  publicEmail:           '',
   phone:                 null,
 
   addressLine1:          null,
