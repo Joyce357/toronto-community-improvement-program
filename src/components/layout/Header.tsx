@@ -6,25 +6,22 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import Button from '@/components/ui/Button'
-import { useVolunteerModal } from '@/context/VolunteerModalContext'
 
 const navItems = [
-  { label: 'Home',         href: '/' },
-  { label: 'About Us',     href: '/#about' },
-  { label: 'Programs',     href: '/programs' },
-  { label: 'Impact',       href: '/#impact' },
-  { label: 'Events',       href: '/events' },
-  { label: 'Gallery',      href: '/gallery' },
-  { label: 'Founder',      href: '/#founder' },
-  { label: 'Contact',      href: '/contact' },
+  { label: 'Home',     href: '/' },
+  { label: 'Contact',  href: '/contact' },
+  { label: 'Services', href: '/programs' },
+  { label: 'Events',   href: '/events' },
+  { label: 'About Us', href: '/#about' },
+  { label: 'Founder',  href: '/#founder' },
+  { label: 'Blog',     href: '/news' },
+  { label: 'Gallery',  href: '/gallery' },
 ]
 
 export default function Header() {
   const [isScrolled, setIsScrolled]     = useState(false)
   const [isMobileOpen, setIsMobileOpen] = useState(false)
   const pathname = usePathname()
-  const { openVolunteerModal } = useVolunteerModal()
 
   // Close mobile menu on route change
   useEffect(() => {
@@ -58,14 +55,6 @@ export default function Header() {
         }`}
         role="banner"
       >
-        {/* ── Top Utility Bar (Stitch design) ── */}
-        <div className="bg-surface-container-low border-b border-outline-variant/30 py-1.5 px-4 md:px-margin-desktop hidden lg:block">
-          <div className="max-w-7xl mx-auto flex items-center justify-between font-label-sm text-label-sm text-on-surface-variant">
-            <span>Toronto Community Improvement Program • Serving Greater Toronto Area Communities</span>
-            <span>09:00 – 17:00 • Toronto, Ontario</span>
-          </div>
-        </div>
-
         {/* ── Main Navigation Bar ── */}
         <div className="h-20 max-w-7xl mx-auto px-4 md:px-margin-desktop flex items-center justify-between gap-space-md">
 
@@ -83,26 +72,18 @@ export default function Header() {
               </span>
               <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-tertiary" />
             </div>
-            <div className="flex flex-col">
-              <span className="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors leading-tight">
-                Toronto Community Improvement Program
-              </span>
-              <span className="font-eyebrow-bold text-eyebrow-bold text-primary uppercase tracking-wider">
-                TCIP Toronto
-              </span>
-            </div>
           </Link>
 
           {/* ── Desktop Navigation Links ──────────────────────────────── */}
           <nav
-            className="hidden xl:flex items-center gap-space-md"
+            className="hidden lg:flex items-center gap-1 xl:gap-2"
             aria-label="Main navigation"
           >
             {navItems.map((item) => (
               <Link
                 key={item.label}
                 href={item.href}
-                className={`font-label-md text-label-md px-2.5 py-1.5 rounded-lg transition-colors ${
+                className={`font-label-md text-label-md uppercase tracking-wider whitespace-nowrap px-3 py-2 rounded-lg transition-colors ${
                   isActive(item.href)
                     ? 'text-primary font-bold'
                     : 'text-on-surface-variant hover:text-on-surface'
@@ -115,23 +96,10 @@ export default function Header() {
 
           {/* ── Right Action Controls (Get Involved + Green Pill Donate) ── */}
           <div className="flex items-center gap-space-md">
-            <Link
-              href="/get-involved"
-              className="hidden sm:inline-block font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors"
-            >
-              Get Involved
-            </Link>
-            <Link
-              href="/donate"
-              className="inline-flex items-center justify-center bg-primary hover:bg-primary-container text-on-primary font-label-md text-label-md px-6 py-2.5 rounded-full shadow-sm hover:shadow transition-all duration-200"
-            >
-              Donate
-            </Link>
-
             {/* Mobile Menu Trigger */}
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
-              className="xl:hidden p-2 rounded-xl text-on-surface hover:bg-surface-container transition-colors"
+              className="lg:hidden p-2 rounded-xl text-on-surface hover:bg-surface-container transition-colors"
               aria-label={isMobileOpen ? 'Close navigation menu' : 'Open navigation menu'}
               aria-expanded={isMobileOpen}
               aria-controls="mobile-menu"
@@ -221,22 +189,6 @@ export default function Header() {
             ))}
           </nav>
 
-          {/* Panel CTA buttons */}
-          <div className="p-5 border-t border-border-soft space-y-2.5">
-            <button
-              type="button"
-              onClick={() => {
-                setIsMobileOpen(false)
-                openVolunteerModal()
-              }}
-              className="btn-secondary w-full justify-center text-xs font-semibold py-2.5 cursor-pointer"
-            >
-              Volunteer With Us
-            </button>
-            <Button href="/donate" variant="primary" size="md" className="w-full justify-center text-xs font-semibold py-2.5">
-              Donate to TCIP
-            </Button>
-          </div>
         </div>
       </div>
     </>

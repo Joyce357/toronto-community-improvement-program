@@ -25,9 +25,9 @@ const navSections: NavSection[] = [
   {
     label: 'Content',
     items: [
-      { href: '/admin/programs', label: 'Programs', icon: 'school' },
+      { href: '/admin/programs', label: 'Programs (Services)', icon: 'school' },
       { href: '/admin/events',   label: 'Events',   icon: 'event' },
-      { href: '/admin/news',     label: 'Stories / News', icon: 'article' },
+      { href: '/admin/news',     label: 'News (Blog)', icon: 'article' },
       { href: '/admin/gallery',  label: 'Gallery',  icon: 'photo_library' },
       { href: '/admin/partners', label: 'Partners', icon: 'handshake' },
     ],

@@ -5,37 +5,9 @@
 import { cache } from 'react'
 import { prisma } from '@/lib/prisma'
 import type { SiteSettingsRecord } from '@/types'
+import { DEFAULT_SITE_SETTINGS } from '@/lib/settings-defaults'
 
-export const DEFAULT_SITE_SETTINGS: SiteSettingsRecord = {
-  id:                    'site',
-  organizationName:      'Toronto Community Improvement Program',
-  publicEmail:           '',
-  phone:                 null,
-
-  addressLine1:          null,
-  addressLine2:          null,
-  city:                  'Toronto',
-  province:              'Ontario',
-  postalCode:            null,
-  country:               'Canada',
-  publicLocationLabel:   'Toronto, Ontario',
-
-  // Social (null/empty = not rendered publicly)
-  facebookUrl:           null,
-  instagramUrl:          null,
-  linkedinUrl:           null,
-  youtubeUrl:            null,
-
-  // Site & Content
-  footerTagline:         'Empowering Toronto newcomers, youth, and families through community programs, skill building, and collaborative advocacy.',
-  defaultCurrency:       'CAD',
-  donationPresetAmounts: [25, 50, 100, 250, 500],
-
-  // SEO
-  seoTitle:              'Toronto Community Improvement Program | Building Stronger Communities',
-  seoDescription:        'Toronto Community Improvement Program supports newcomers, youth, families, and underserved communities through education, empowerment, advocacy, and community development initiatives.',
-}
-
+export { DEFAULT_SITE_SETTINGS }
 
 /**
  * Fetch the singleton site settings record from Neon DB.

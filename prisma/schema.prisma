@@ -1,4 +1,4 @@
-// ─── Prisma Schema — Bridge of Compassion ────────────────────────────────────
+// ─── Prisma Schema — Toronto Community Improvement Program (TCIP) ────────────────────────────────────
 // Database: PostgreSQL via Neon (serverless)
 // ORM:      Prisma
 
@@ -143,7 +143,7 @@ model Program {
   id               String        @id @default(cuid())
   title            String
   slug             String        @unique
-  category         String        // e.g. "Environmental Education", "Outdoor Learning", etc.
+  category         String        // e.g. "Youth Programs", "Newcomer Support", etc.
   shortDescription String        // Summary for cards & previews
   description      String        // Full rich description
   imageUrl         String?       // Featured image URL
@@ -166,7 +166,7 @@ enum ProgramStatus {
 model Event {
   id               String   @id @default(cuid())
   title            String
-  category         String   @default("Environmental")
+  category         String   @default("Community")
   shortDescription String?
   description      String
   date             DateTime
@@ -192,7 +192,7 @@ model NewsPost {
   slug          String    @unique
   excerpt       String?
   content       String
-  category      String?   // e.g. "Environmental", "Youth", "Community", "Conservation"
+  category      String?   // e.g. "Community", "Youth", "Advocacy", "Newcomers"
   featuredImage String?   // Featured image Cloudinary URL
   imagePublicId String?   // Cloudinary public ID for clean deletion/replacement
   author        String?
@@ -293,8 +293,8 @@ enum DonationStatus {
 
 model SiteSettings {
   id                    String   @id @default("site")
-  organizationName      String   @default("Bridge of Compassion")
-  publicEmail           String   @default("admin.bridgeofcompassion@gmail.com")
+  organizationName      String   @default("Toronto Community Improvement Program")
+  publicEmail           String   @default("")
   phone                 String?
   addressLine1          String?
   addressLine2          String?
@@ -311,13 +311,13 @@ model SiteSettings {
   youtubeUrl            String?
 
   // Site & Content
-  footerTagline         String?  @default("Nurturing children, protecting nature, and building futures through hands-on environmental education and community action.")
+  footerTagline         String?  @default("Empowering Toronto newcomers, youth, and families through community programs, skill building, and collaborative advocacy.")
   defaultCurrency       String   @default("CAD")
   donationPresetAmounts Int[]    @default([25, 50, 100, 250, 500])
 
   // SEO Defaults
-  seoTitle              String?  @default("Bridge of Compassion | Environmental Education & Youth Action")
-  seoDescription        String?  @default("Bridge of Compassion empowers children, young people, and communities through environmental education, sustainability programs, climate action, outdoor learning, and community initiatives.")
+  seoTitle              String?  @default("Toronto Community Improvement Program")
+  seoDescription        String?  @default("Toronto Community Improvement Program supports newcomers, youth, families, and underserved communities through education, empowerment, advocacy, and community development initiatives.")
 
   createdAt             DateTime @default(now())
   updatedAt             DateTime @updatedAt

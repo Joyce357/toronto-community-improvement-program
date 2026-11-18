@@ -1,135 +1,107 @@
-// ─── Prisma Seed Script ───────────────────────────────────────────────────
-// Reads ADMIN_EMAIL and ADMIN_INITIAL_PASSWORD from environment variables.
-// Hashes the password with bcrypt. Never stores or exposes plaintext credentials.
+// ─── TCIP Idempotent Seed ───────────────────────────────────────────────────
+// Safe to run repeatedly. Creates only:
+//   1. The singleton SiteSettings record (id = "site") — never overwritten if it exists.
+//   2. The admin user, ONLY if ADMIN_EMAIL and ADMIN_INITIAL_PASSWORD are both set.
+//      An existing user is never modified (password is not reset).
+// It does NOT create Programs, Events, News, Gallery, Partners, or any submissions.
+// Never prints passwords, hashes, or connection strings.
 //
-// Run: npx prisma db seed
-// Requires .env.local with ADMIN_EMAIL and ADMIN_INITIAL_PASSWORD set.
+// Run: npm run db:seed
 
-import { prisma } from '../src/lib/prisma'
+import './load-env'
 import bcrypt from 'bcryptjs'
+import { prisma } from '../src/lib/prisma'
+import { DEFAULT_SITE_SETTINGS } from '../src/lib/settings-defaults'
 
-async function main() {
-  console.log('🌱 Starting database seed…\n')
+// Legacy identities that must never be seeded into the TCIP database.
+const LEGACY_ADMIN_PATTERN = /bridgeofcompassion|bridge-of-compassion/i
 
-  // ── Admin user ─────────────────────────────────────────────────────────────
-  const adminEmail    = process.env.ADMIN_EMAIL
-  const adminPassword = process.env.ADMIN_INITIAL_PASSWORD
-
-  if (!adminEmail || !adminPassword) {
-    throw new Error(
-      'ADMIN_EMAIL and ADMIN_INITIAL_PASSWORD must be set in your .env.local file.\n' +
-      'These are only used for seeding — never stored as plaintext.',
-    )
+async function seedSiteSettings() {
+  const d = DEFAULT_SITE_SETTINGS
+  const existing = await prisma.siteSettings.findUnique({ where: { id: 'site' } })
+  if (existing) {
+    // Never overwrite admin-edited values; only fill blank text fields.
+    const fill: { footerTagline?: string; seoDescription?: string; seoTitle?: string } = {}
+    if (!existing.footerTagline) fill.footerTagline = d.footerTagline ?? undefined
+    if (!existing.seoDescription) fill.seoDescription = d.seoDescription ?? undefined
+    if (!existing.seoTitle) fill.seoTitle = d.seoTitle ?? undefined
+    if (Object.keys(fill).length > 0) {
+      await prisma.siteSettings.update({ where: { id: 'site' }, data: fill })
+      console.log(`SiteSettings: exists; filled blank fields (${Object.keys(fill).join(', ')})`)
+    } else {
+      console.log('SiteSettings: already exists (left unchanged)')
+    }
+    return
   }
-
-  if (adminPassword.length < 10) {
-    throw new Error('ADMIN_INITIAL_PASSWORD must be at least 10 characters.')
-  }
-
-  const hashedPassword = await bcrypt.hash(adminPassword, 12)
-
-  const admin = await prisma.user.upsert({
-    where:  { email: adminEmail },
-    update: {},
-    create: {
-      email:    adminEmail,
-      password: hashedPassword,
-      name:     'Admin',
-      role:     'ADMIN',
+  await prisma.siteSettings.create({
+    data: {
+      id:                    'site',
+      organizationName:      d.organizationName,
+      publicEmail:           d.publicEmail,
+      phone:                 d.phone,
+      addressLine1:          d.addressLine1,
+      addressLine2:          d.addressLine2,
+      city:                  d.city,
+      province:              d.province,
+      postalCode:            d.postalCode,
+      country:               d.country,
+      publicLocationLabel:   d.publicLocationLabel,
+      facebookUrl:           d.facebookUrl,
+      instagramUrl:          d.instagramUrl,
+      linkedinUrl:           d.linkedinUrl,
+      youtubeUrl:            d.youtubeUrl,
+      footerTagline:         d.footerTagline,
+      defaultCurrency:       d.defaultCurrency,
+      donationPresetAmounts: d.donationPresetAmounts,
+      seoTitle:              d.seoTitle,
+      seoDescription:        d.seoDescription,
     },
   })
+  console.log('SiteSettings: created')
+}
 
-  console.log(`✅ Admin account ready: ${admin.email}`)
-  console.log('   (Password is bcrypt-hashed and stored securely)\n')
+async function seedAdmin() {
+  const email = process.env.ADMIN_EMAIL?.toLowerCase().trim()
+  const password = process.env.ADMIN_INITIAL_PASSWORD
 
-  // ── Development events ─────────────────────────────────────────────────────
-  // All content is clearly labeled as development seed data.
-  // Do not use as real organizational content without review.
-
-  const devEvents = [
-    {
-      title:           '[DEV] Community Waterway Cleanup',
-      description:     '[Development seed data] Join us for our seasonal waterway cleanup. Bring gloves and a spirit of community — we supply the rest. All ages and abilities welcome.',
-      date:            new Date('2025-09-20'),
-      startTime:       '9:00 AM',
-      endTime:         '1:00 PM',
-      location:        '[Location TBC]',
-      registrationOpen: true,
-      published:       true,
-    },
-    {
-      title:           '[DEV] Volunteer Orientation Session',
-      description:     '[Development seed data] New to Bridge of Compassion? Attend our orientation to learn about volunteer opportunities and how you can make an impact.',
-      date:            new Date('2025-10-04'),
-      startTime:       '10:00 AM',
-      endTime:         '12:00 PM',
-      location:        '[Location TBC]',
-      registrationOpen: true,
-      published:       true,
-    },
-    {
-      title:           '[DEV] Annual Compassion Gala',
-      description:     '[Development seed data] Our flagship annual fundraising gala. An evening of community, celebration, and support.',
-      date:            new Date('2025-11-15'),
-      startTime:       '6:00 PM',
-      endTime:         '10:00 PM',
-      location:        '[Venue TBC]',
-      registrationOpen: true,
-      published:       true,
-    },
-  ]
-
-  let eventsCreated = 0
-  for (const event of devEvents) {
-    const exists = await prisma.event.findFirst({ where: { title: event.title } })
-    if (!exists) {
-      await prisma.event.create({ data: event })
-      eventsCreated++
-    }
+  if (!email || !password) {
+    console.log('Admin user: SKIPPED (ADMIN_EMAIL and/or ADMIN_INITIAL_PASSWORD not set)')
+    return
   }
-  console.log(`✅ Events: ${eventsCreated} created (${devEvents.length - eventsCreated} already existed)`)
-
-  // ── Development news posts ─────────────────────────────────────────────────
-
-  const devPosts = [
-    {
-      title:       '[DEV] How Community Volunteers Restored a Local Waterway',
-      slug:        'dev-waterway-restoration-story',
-      excerpt:     '[Development seed data] When a community waterway fell into neglect, a small group of volunteers came together with a big vision.',
-      content:     '[Development seed content] This is placeholder content for development purposes. Replace with real content from the client before publishing.\n\nThe story of how this waterway was restored is one of community resilience and determination. Volunteers from across the neighbourhood came together to...',
-      author:      '[Dev Author]',
-      publishedAt: new Date('2025-08-01'),
-      published:   true,
-    },
-    {
-      title:       '[DEV] Youth Leadership Workshop Recap',
-      slug:        'dev-youth-leadership-workshop',
-      excerpt:     '[Development seed data] Our most recent youth leadership workshop brought together young leaders aged 14–24.',
-      content:     '[Development seed content] This is placeholder content for development purposes. Replace with real content from the client before publishing.',
-      author:      '[Dev Author]',
-      publishedAt: new Date('2025-07-15'),
-      published:   true,
-    },
-  ]
-
-  let postsCreated = 0
-  for (const post of devPosts) {
-    const exists = await prisma.newsPost.findUnique({ where: { slug: post.slug } })
-    if (!exists) {
-      await prisma.newsPost.create({ data: post })
-      postsCreated++
-    }
+  if (!email.includes('@')) throw new Error('ADMIN_EMAIL is not a valid email address.')
+  if (LEGACY_ADMIN_PATTERN.test(email)) {
+    throw new Error('ADMIN_EMAIL is a legacy Bridge of Compassion identity. Refusing to seed it into TCIP.')
   }
-  console.log(`✅ News posts: ${postsCreated} created (${devPosts.length - postsCreated} already existed)`)
+  if (password.length < 10) throw new Error('ADMIN_INITIAL_PASSWORD must be at least 10 characters.')
 
-  console.log('\n🎉 Seed complete.')
-  console.log('   Remember: All [DEV] content is placeholder data only.')
+  const existing = await prisma.user.findUnique({ where: { email } })
+  if (existing) {
+    console.log('Admin user: already exists (left unchanged)')
+    return
+  }
+
+  await prisma.user.create({
+    data: {
+      email,
+      password: await bcrypt.hash(password, 12),
+      name: 'Admin',
+      role: 'ADMIN',
+    },
+  })
+  console.log('Admin user: created (password stored as bcrypt hash)')
+}
+
+async function main() {
+  console.log('Seeding TCIP database…')
+  await seedSiteSettings()
+  await seedAdmin()
+  console.log('Done.')
 }
 
 main()
-  .catch((e) => {
-    console.error('\n❌ Seed failed:', e.message)
-    process.exit(1)
+  .catch((err) => {
+    console.error('Seed failed:', (err?.message || String(err)).replace(/postgres(ql)?:\/\/\S+/g, '[REDACTED]'))
+    process.exitCode = 1
   })
   .finally(async () => {
     await prisma.$disconnect()

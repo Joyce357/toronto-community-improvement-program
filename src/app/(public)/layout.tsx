@@ -19,7 +19,7 @@ export default function PublicLayout({
         Skip to main content
       </a>
       <Header />
-      <main id="main-content" className="flex-1 pt-20 lg:pt-28" tabIndex={-1}>
+      <main id="main-content" className="flex-1 pt-20" tabIndex={-1}>
         {children}
       </main>
       <Footer />
