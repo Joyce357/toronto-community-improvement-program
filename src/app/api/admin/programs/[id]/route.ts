@@ -77,15 +77,15 @@ export async function PATCH(
     const updated = await prisma.program.update({
       where: { id: params.id },
       data: {
-        ...(data.title !== undefined && { title: data.title }),
-        ...(data.slug !== undefined && { slug: data.slug }),
-        ...(data.category !== undefined && { category: data.category }),
-        ...(data.shortDescription !== undefined && { shortDescription: data.shortDescription }),
-        ...(data.description !== undefined && { description: data.description }),
-        ...(data.imageUrl !== undefined && { imageUrl: data.imageUrl || null }),
-        ...(data.featured !== undefined && { featured: data.featured }),
-        ...(data.displayOrder !== undefined && { displayOrder: data.displayOrder }),
-        ...(data.status !== undefined && { status: data.status }),
+        ...('title' in body && data.title !== undefined && { title: data.title }),
+        ...('slug' in body && data.slug !== undefined && { slug: data.slug }),
+        ...('category' in body && data.category !== undefined && { category: data.category }),
+        ...('shortDescription' in body && data.shortDescription !== undefined && { shortDescription: data.shortDescription }),
+        ...('description' in body && data.description !== undefined && { description: data.description }),
+        ...('imageUrl' in body && data.imageUrl !== undefined && { imageUrl: data.imageUrl || null }),
+        ...('featured' in body && data.featured !== undefined && { featured: data.featured }),
+        ...('displayOrder' in body && data.displayOrder !== undefined && { displayOrder: data.displayOrder }),
+        ...('status' in body && data.status !== undefined && { status: data.status }),
       },
     })
 

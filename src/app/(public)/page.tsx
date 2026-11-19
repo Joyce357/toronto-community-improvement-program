@@ -73,13 +73,13 @@ export default async function HomePage() {
         <WhoWeAre about={home.about} founder={home.founder} />
 
         {/* SECTION 3: THE TEAM & COMMUNITY LEADERSHIP (Bespoke 3-Column Editorial Grid) */}
-        <TeamLeadership founder={home.founder} />
+        <TeamLeadership founder={home.founder} people={home.people} />
 
         {/* SECTION 4: PROGRAMS & AREAS OF WORK (Varied-Width 4-Column Mosaic Grid) */}
         <ProgramsPreview programs={programs} />
 
         {/* SECTION 5: COMMUNITY IMPACT (Asymmetric 1 Hero Column + 3 Stacked Metric Columns) */}
-        <ImpactStats />
+        <ImpactStats impact={home.impact} />
 
         {/* SECTION 6: IMAGES OF IMPACT (True Editorial Masonry / Mosaic Photo Gallery) */}
         <HomeGallery
@@ -94,7 +94,10 @@ export default async function HomePage() {
         />
 
         {/* SECTION 7: COMMUNITY STORIES & UPCOMING EVENTS (1 Large Story Column + 2 Stacked Event Cards) */}
-        <StoriesPreview featured={home.featuredEvent} />
+        <StoriesPreview
+          featuredStoryId={home.featuredStoryId}
+          featuredEventId={home.featuredEventId}
+        />
 
         {/* SECTION 8: OUR PARTNERS & CIVIC SUPPORTERS (Clean 6-Column Institutional Row) */}
         <Partnerships />
@@ -106,7 +109,7 @@ export default async function HomePage() {
         {/* <Testimonials /> */}
 
         {/* SECTION 11: CONTACT & SEE US IN PERSON (2-Column Practical Layout: 45% Info / 55% Intake Form) */}
-        <HomeContact />
+        <HomeContact contact={home.contact} />
       </div>
     </>
   )

@@ -1,6 +1,7 @@
 // ─── PATCH & DELETE /api/admin/events/[id] ────────────────────────────────
 
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/adminAuth'
 import { eventSchema, formatZodErrors } from '@/lib/validations'
@@ -50,6 +51,7 @@ export async function DELETE(
 
   try {
     await prisma.event.delete({ where: { id: params.id } })
+    revalidatePath('/')
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('[Admin Events/ID DELETE] Error:', err)

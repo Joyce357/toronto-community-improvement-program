@@ -2,6 +2,7 @@
 // Admin Gallery API for listing and creating gallery items.
 
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/adminAuth'
 import { gallerySchema, formatZodErrors } from '@/lib/validations'
@@ -85,6 +86,7 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    revalidatePath('/')
     return NextResponse.json({ success: true, item }, { status: 201 })
   } catch (err) {
     console.error('[Admin Gallery API POST] Error:', err)

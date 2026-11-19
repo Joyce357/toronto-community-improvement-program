@@ -2,6 +2,7 @@
 // Admin endpoint for managing individual gallery items by ID.
 
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/adminAuth'
 import { gallerySchema, formatZodErrors } from '@/lib/validations'
@@ -91,6 +92,7 @@ export async function PATCH(
       },
     })
 
+    revalidatePath('/')
     return NextResponse.json({ success: true, item: updated })
   } catch (err) {
     console.error('[Admin Gallery [id] PATCH] Error:', err)
@@ -128,6 +130,7 @@ export async function DELETE(
       where: { id: existing.id },
     })
 
+    revalidatePath('/')
     return NextResponse.json({ success: true, message: 'Gallery item deleted successfully.' })
   } catch (err) {
     console.error('[Admin Gallery [id] DELETE] Error:', err)

@@ -1,5 +1,6 @@
 // ─── GET, PATCH, DELETE /api/admin/partners/[id] ──────────────────────────
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/adminAuth'
 
@@ -56,6 +57,7 @@ export async function DELETE(_req: NextRequest, { params }: RouteContext) {
   const { id } = await params
   try {
     await prisma.partner.delete({ where: { id } })
+    revalidatePath('/')
     return NextResponse.json({ success: true })
   } catch (err) {
     console.error('[Admin Partner DELETE ID] Error:', err)

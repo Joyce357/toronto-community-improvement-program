@@ -2,6 +2,7 @@
 // Admin endpoint for managing individual news posts by ID or slug.
 
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/adminAuth'
 import { newsSchema, formatZodErrors } from '@/lib/validations'
@@ -121,6 +122,7 @@ export async function PATCH(
       },
     })
 
+    revalidatePath('/')
     return NextResponse.json({ success: true, post: updated })
   } catch (err) {
     console.error('[Admin News [id] PATCH] Error:', err)
@@ -160,6 +162,7 @@ export async function DELETE(
       where: { id: existing.id },
     })
 
+    revalidatePath('/')
     return NextResponse.json({ success: true, message: 'Story deleted successfully.' })
   } catch (err) {
     console.error('[Admin News [id] DELETE] Error:', err)

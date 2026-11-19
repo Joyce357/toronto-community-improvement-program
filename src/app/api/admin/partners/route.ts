@@ -1,5 +1,6 @@
 // ─── GET & POST /api/admin/partners ─────────────────────────────────────────
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/adminAuth'
 import { partnerSchema, formatZodErrors } from '@/lib/validations'
@@ -53,6 +54,7 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    revalidatePath('/')
     return NextResponse.json({ partner }, { status: 201 })
   } catch (err) {
     console.error('[Admin Partners POST] Error:', err)

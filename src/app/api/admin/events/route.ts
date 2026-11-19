@@ -1,6 +1,7 @@
 // ─── GET & POST /api/admin/events ──────────────────────────────────────────
 
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/adminAuth'
 import { eventSchema, formatZodErrors } from '@/lib/validations'
@@ -50,6 +51,8 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    revalidatePath('/')
+    revalidatePath('/events')
     return NextResponse.json({ event }, { status: 201 })
   } catch (err) {
     console.error('[Admin Events POST] Error:', err)

@@ -1,13 +1,14 @@
 import Link from 'next/link'
 import { getFeaturedNews } from '@/lib/news'
 import type { NewsPost } from '@/types'
-import { getFeaturedEvent, getFeaturedStory } from '@/lib/homepage'
-import type { HomepageContent } from '@/lib/homepage-defaults'
+import { getFeaturedStory, getHomepageEvents } from '@/lib/homepage'
 
 export default async function StoriesPreview({
-  featured,
+  featuredStoryId = '',
+  featuredEventId = '',
 }: {
-  featured?: HomepageContent['featuredEvent']
+  featuredStoryId?: string
+  featuredEventId?: string
 }) {
   let stories: NewsPost[] = []
 
@@ -17,10 +18,10 @@ export default async function StoriesPreview({
     // fallback
   }
 
-  const pickedStory =
-    featured?.type === 'story' ? await getFeaturedStory(featured.id) : null
-  const pickedEvent =
-    featured?.type === 'event' ? await getFeaturedEvent(featured.id) : null
+  const [pickedStory, dbEvents] = await Promise.all([
+    featuredStoryId ? getFeaturedStory(featuredStoryId) : Promise.resolve(null),
+    getHomepageEvents(featuredEventId),
+  ])
   const story = pickedStory ? (pickedStory as unknown as NewsPost) : stories?.[0]
   const featuredStory = {
     id: story?.id || 'featured-1',
@@ -37,7 +38,21 @@ export default async function StoriesPreview({
     location: 'Toronto, ON',
   }
 
-  const defaultUpcomingEvents = [
+  const defaultUpcomingEvents: Array<{
+    id: string
+    month: string
+    day: string
+    badge: string
+    title: string
+    location: string
+    tag: string
+    btnText: string
+    href: string
+    accentBorder: string
+    tagColor: string
+    btnColor: string
+    featuredImage?: string | null
+  }> = [
     {
       id: 'event-1',
       month: 'UPCOMING',
@@ -51,6 +66,7 @@ export default async function StoriesPreview({
       accentBorder: 'border-primary',
       tagColor: 'text-primary',
       btnColor: 'bg-primary hover:bg-primary-container text-on-primary',
+      featuredImage: null,
     },
     {
       id: 'event-2',
@@ -65,28 +81,31 @@ export default async function StoriesPreview({
       accentBorder: 'border-tertiary',
       tagColor: 'text-tertiary',
       btnColor: 'bg-surface-container-lowest hover:bg-surface-container text-on-surface shadow-sm',
+      featuredImage: null,
     },
   ]
 
-  const upcomingEvents = pickedEvent
-    ? [
-        {
-          id: pickedEvent.id,
-          month: pickedEvent.date.toLocaleString('en-CA', { month: 'short', timeZone: 'UTC' }).toUpperCase(),
-          day: String(pickedEvent.date.getUTCDate()).padStart(2, '0'),
-          badge: (pickedEvent.category || 'EVENT').toUpperCase(),
-          title: pickedEvent.title,
-          location: pickedEvent.location,
-          tag: pickedEvent.registrationOpen ? 'Registration Open' : 'Featured Event',
+  const upcomingEvents =
+    dbEvents.length > 0
+      ? dbEvents.map((ev, idx) => ({
+          id: ev.id,
+          month: ev.date.toLocaleString('en-CA', { month: 'short', timeZone: 'UTC' }).toUpperCase(),
+          day: String(ev.date.getUTCDate()).padStart(2, '0'),
+          badge: (ev.category || 'EVENT').toUpperCase(),
+          title: ev.title,
+          location: ev.location,
+          tag: ev.registrationOpen ? 'Registration Open' : 'Featured Event',
           btnText: 'Learn More',
-          href: `/events/${pickedEvent.id}`,
-          accentBorder: 'border-primary',
-          tagColor: 'text-primary',
-          btnColor: 'bg-primary hover:bg-primary-container text-on-primary',
-        },
-        ...defaultUpcomingEvents.slice(1),
-      ]
-    : defaultUpcomingEvents
+          href: `/events/${ev.id}`,
+          accentBorder: idx === 0 ? 'border-primary' : 'border-tertiary',
+          tagColor: idx === 0 ? 'text-primary' : 'text-tertiary',
+          btnColor:
+            idx === 0
+              ? 'bg-primary hover:bg-primary-container text-on-primary'
+              : 'bg-surface-container-lowest hover:bg-surface-container text-on-surface shadow-sm',
+          featuredImage: ev.featuredImage,
+        }))
+      : defaultUpcomingEvents
 
   return (
     <section id="events" className="w-full bg-surface-bright py-space-3xl scroll-mt-20 border-b border-outline-variant/30">
@@ -170,8 +189,19 @@ export default async function StoriesPreview({
             {upcomingEvents.map((evt) => (
               <div
                 key={evt.id}
-                className="bg-surface-container-low rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow flex gap-5 items-start border border-outline-variant/30"
+                className="bg-surface-container-low rounded-3xl p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col gap-4 border border-outline-variant/30"
               >
+                {evt.featuredImage && (
+                  <div className="w-full h-36 rounded-2xl overflow-hidden bg-surface-container">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={evt.featuredImage}
+                      alt={evt.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <div className="flex gap-5 items-start">
                 {/* Date Badge */}
                 <div
                   className={`w-16 h-20 rounded-2xl bg-surface-container-lowest flex flex-col items-center justify-center shrink-0 shadow-sm border-t-4 ${evt.accentBorder}`}
@@ -208,6 +238,7 @@ export default async function StoriesPreview({
                       {evt.btnText}
                     </Link>
                   </div>
+                </div>
                 </div>
               </div>
             ))}

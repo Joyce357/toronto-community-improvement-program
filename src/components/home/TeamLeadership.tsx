@@ -2,8 +2,10 @@ import { DEFAULT_HOMEPAGE, type HomepageContent } from '@/lib/homepage-defaults'
 
 export default function TeamLeadership({
   founder = DEFAULT_HOMEPAGE.founder,
+  people = DEFAULT_HOMEPAGE.people,
 }: {
   founder?: HomepageContent['founder']
+  people?: HomepageContent['people']
 }) {
   const peoplePillars = [
     {
@@ -18,25 +20,23 @@ export default function TeamLeadership({
     },
     {
       badge: 'VOLUNTEERS',
-      role: 'Volunteers & Peer Mentors',
-      name: 'Community Volunteers',
-      description:
-        'Dedicated community members and youth mentors who contribute their time, skills, and energy to support community workshops, events, and neighbor-to-neighbor aid.',
+      role: people.volunteers.heading,
+      name: people.volunteers.subtitle,
+      description: people.volunteers.description,
       feature: 'Grassroots Community Action',
       icon: 'volunteer_activism',
-      image: '/images/tcip-hero-community.jpg',
-      alt: 'Community volunteers and peer mentors in Toronto',
+      image: people.volunteers.imageUrl,
+      alt: people.volunteers.imageAlt,
     },
     {
       badge: 'COLLABORATORS',
-      role: 'Community Advocates & Supporters',
-      name: 'Local Collaborators',
-      description:
-        'Working hand-in-hand with neighborhood advocates, community organizations, and civic allies to build safe, welcoming spaces where everyone can thrive.',
+      role: people.advocates.heading,
+      name: people.advocates.subtitle,
+      description: people.advocates.description,
       feature: 'Civic Connection & Belonging',
       icon: 'groups',
-      image: '/images/tcip-youth-leadership.jpg',
-      alt: 'Community advocates and partners collaborating',
+      image: people.advocates.imageUrl,
+      alt: people.advocates.imageAlt,
     },
   ]
 

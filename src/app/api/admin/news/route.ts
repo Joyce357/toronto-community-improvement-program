@@ -2,6 +2,7 @@
 // Admin News API for listing and creating news posts.
 
 import { NextRequest, NextResponse } from 'next/server'
+import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/adminAuth'
 import { newsSchema, formatZodErrors } from '@/lib/validations'
@@ -100,6 +101,7 @@ export async function POST(req: NextRequest) {
       },
     })
 
+    revalidatePath('/')
     return NextResponse.json({ success: true, post }, { status: 201 })
   } catch (err) {
     console.error('[Admin News API POST] Error:', err)

@@ -8,10 +8,11 @@ import {
   DEFAULT_HOMEPAGE,
   type HomepageContent,
   type HomepageSlide,
+  type PeopleCardContent,
 } from '@/lib/homepage-defaults'
 
 export { DEFAULT_HOMEPAGE }
-export type { HomepageContent }
+export type { HomepageContent, PeopleCardContent }
 
 const str = (v: unknown): string => (typeof v === 'string' ? v.trim() : '')
 const strArr = (v: unknown, max = 24): string[] =>
@@ -28,15 +29,29 @@ export function safeUrl(v: unknown): string {
   return ''
 }
 
+function normalizePeopleCard(raw: unknown, fallback: PeopleCardContent): PeopleCardContent {
+  const o = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>
+  return {
+    heading: str(o.heading) || fallback.heading,
+    subtitle: str(o.subtitle) || fallback.subtitle,
+    description: str(o.description) || fallback.description,
+    imageUrl: safeUrl(o.imageUrl) || fallback.imageUrl,
+    imageAlt: str(o.imageAlt).slice(0, 200) || fallback.imageAlt,
+  }
+}
+
 /** Normalizes any stored JSON into a complete HomepageContent (blank → default). */
 export function normalizeHomepageContent(raw: unknown): HomepageContent {
   const d = DEFAULT_HOMEPAGE
   const r = (raw && typeof raw === 'object' ? raw : {}) as Record<string, unknown>
-  const hero = (r.hero ?? {}) as Record<string, unknown>
-  const about = (r.about ?? {}) as Record<string, unknown>
-  const founder = (r.founder ?? {}) as Record<string, unknown>
-  const cta = (r.cta ?? {}) as Record<string, unknown>
-  const fe = (r.featuredEvent ?? {}) as Record<string, unknown>
+  const hero = (r.hero && typeof r.hero === 'object' ? r.hero : {}) as Record<string, unknown>
+  const about = (r.about && typeof r.about === 'object' ? r.about : {}) as Record<string, unknown>
+  const impact = (r.impact && typeof r.impact === 'object' ? r.impact : {}) as Record<string, unknown>
+  const founder = (r.founder && typeof r.founder === 'object' ? r.founder : {}) as Record<string, unknown>
+  const people = (r.people && typeof r.people === 'object' ? r.people : {}) as Record<string, unknown>
+  const cta = (r.cta && typeof r.cta === 'object' ? r.cta : {}) as Record<string, unknown>
+  const contact = (r.contact && typeof r.contact === 'object' ? r.contact : {}) as Record<string, unknown>
+  const legacyFe = (r.featuredEvent && typeof r.featuredEvent === 'object' ? r.featuredEvent : {}) as Record<string, unknown>
 
   const slides: HomepageSlide[] = Array.isArray(hero.slides)
     ? (hero.slides as Array<Record<string, unknown> | null>)
@@ -50,7 +65,11 @@ export function normalizeHomepageContent(raw: unknown): HomepageContent {
   const secondaryLabel = savedHero ? str(hero.secondaryLabel) : d.hero.secondaryLabel
   const secondaryHref = savedHero ? safeUrl(hero.secondaryHref) : d.hero.secondaryHref
 
-  const feType = fe.type === 'event' || fe.type === 'story' ? fe.type : ''
+  // Support both the new independent story/event IDs and the legacy combined featuredEvent field
+  const featuredStoryId =
+    str(r.featuredStoryId) || (legacyFe.type === 'story' ? str(legacyFe.id) : '')
+  const featuredEventId =
+    str(r.featuredEventId) || (legacyFe.type === 'event' ? str(legacyFe.id) : '')
 
   return {
     hero: {
@@ -69,7 +88,13 @@ export function normalizeHomepageContent(raw: unknown): HomepageContent {
       imageAlt: str(about.imageAlt).slice(0, 200) || d.about.imageAlt,
     },
     featuredProgramIds: strArr(r.featuredProgramIds, 8),
-    featuredEvent: { type: feType, id: feType ? str(fe.id) : '' },
+    impact: {
+      badge: str(impact.badge) || d.impact.badge,
+      heading: str(impact.heading) || d.impact.heading,
+      description: str(impact.description) || d.impact.description,
+      imageUrl: safeUrl(impact.imageUrl) || d.impact.imageUrl,
+      imageAlt: str(impact.imageAlt).slice(0, 200) || d.impact.imageAlt,
+    },
     founder: {
       heading: str(founder.heading) || d.founder.heading,
       name: str(founder.name) || d.founder.name,
@@ -77,12 +102,23 @@ export function normalizeHomepageContent(raw: unknown): HomepageContent {
       imageUrl: safeUrl(founder.imageUrl) || d.founder.imageUrl,
       imageAlt: str(founder.imageAlt).slice(0, 200) || d.founder.imageAlt,
     },
+    people: {
+      volunteers: normalizePeopleCard(people.volunteers, d.people.volunteers),
+      advocates: normalizePeopleCard(people.advocates, d.people.advocates),
+    },
     galleryItemIds: strArr(r.galleryItemIds, 12),
+    featuredStoryId,
+    featuredEventId,
     cta: {
       heading: str(cta.heading) || d.cta.heading,
       text: str(cta.text) || d.cta.text,
       buttonLabel: str(cta.buttonLabel),
       buttonHref: safeUrl(cta.buttonHref),
+    },
+    contact: {
+      imageUrl: safeUrl(contact.imageUrl) || d.contact.imageUrl,
+      imageAlt: str(contact.imageAlt).slice(0, 200) || d.contact.imageAlt,
+      caption: str(contact.caption) || d.contact.caption,
     },
   }
 }
@@ -97,14 +133,27 @@ export async function getHomepageContent(): Promise<HomepageContent> {
   }
 }
 
-/** Published programs chosen by the admin, kept in the admin-selected order. */
+/**
+ * Published programs for the homepage:
+ *  - If admin selected specific IDs, returns those published programs in admin order.
+ *  - Otherwise, automatically uses up to 4 published programs from the database
+ *    (featured first, then displayOrder), falling back to [] only when none exist.
+ */
 export async function getFeaturedPrograms(ids: string[]) {
-  if (ids.length === 0) return []
   try {
-    const rows = await prisma.program.findMany({
-      where: { id: { in: ids }, status: 'PUBLISHED' },
+    if (ids.length > 0) {
+      const rows = await prisma.program.findMany({
+        where: { id: { in: ids }, status: 'PUBLISHED' },
+      })
+      return ids
+        .map((id) => rows.find((r) => r.id === id))
+        .filter((r): r is NonNullable<typeof r> => !!r)
+    }
+    return await prisma.program.findMany({
+      where: { status: 'PUBLISHED' },
+      orderBy: [{ featured: 'desc' }, { displayOrder: 'asc' }, { createdAt: 'desc' }],
+      take: 4,
     })
-    return ids.map((id) => rows.find((r) => r.id === id)).filter((r): r is NonNullable<typeof r> => !!r)
   } catch {
     return []
   }
@@ -132,6 +181,26 @@ export async function getFeaturedEvent(id: string) {
   }
 }
 
+/** Returns up to 2 published events for the homepage (admin-selected event first). */
+export async function getHomepageEvents(featuredEventId: string) {
+  try {
+    const picked = featuredEventId
+      ? await prisma.event.findFirst({ where: { id: featuredEventId, published: true } })
+      : null
+    const others = await prisma.event.findMany({
+      where: {
+        published: true,
+        ...(picked ? { id: { not: picked.id } } : {}),
+      },
+      orderBy: [{ featured: 'desc' }, { date: 'asc' }],
+      take: picked ? 1 : 2,
+    })
+    return picked ? [picked, ...others] : others
+  } catch {
+    return []
+  }
+}
+
 export async function getFeaturedStory(id: string) {
   if (!id) return null
   try {
@@ -140,4 +209,3 @@ export async function getFeaturedStory(id: string) {
     return null
   }
 }
-

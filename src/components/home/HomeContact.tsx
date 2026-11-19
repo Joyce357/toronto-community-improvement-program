@@ -1,8 +1,13 @@
 'use client'
 
 import { useState } from 'react'
+import { DEFAULT_HOMEPAGE, type HomepageContent } from '@/lib/homepage-defaults'
 
-export default function HomeContact() {
+export default function HomeContact({
+  contact = DEFAULT_HOMEPAGE.contact,
+}: {
+  contact?: HomepageContent['contact']
+}) {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -127,13 +132,13 @@ export default function HomeContact() {
             {/* Small Vignette Photo */}
             <div className="mt-8 rounded-2xl overflow-hidden h-36 relative shadow-sm border border-outline-variant/30 bg-surface-container">
               <img
-                src="/images/tcip-community-workshop.jpg"
-                alt="TCIP Community Workshop in Toronto"
+                src={contact.imageUrl}
+                alt={contact.imageAlt}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-inverse-surface/20" />
               <div className="absolute bottom-3 left-4 text-surface-container-lowest font-label-sm text-label-sm font-semibold">
-                Community Gathering • Toronto, ON
+                {contact.caption}
               </div>
             </div>
           </div>

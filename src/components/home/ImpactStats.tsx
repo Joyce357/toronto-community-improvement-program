@@ -1,4 +1,10 @@
-export default function ImpactStats() {
+import { DEFAULT_HOMEPAGE, type HomepageContent } from '@/lib/homepage-defaults'
+
+export default function ImpactStats({
+  impact = DEFAULT_HOMEPAGE.impact,
+}: {
+  impact?: HomepageContent['impact']
+}) {
   const qualitativeThemes = [
     {
       id: 'employment',
@@ -55,20 +61,20 @@ export default function ImpactStats() {
           {/* Large Visual Anchor Column (5 cols) */}
           <div className="lg:col-span-5 relative rounded-3xl overflow-hidden min-h-[420px] shadow-md flex flex-col justify-end p-8 bg-surface-container-high border border-outline-variant/30">
             <img
-              src="/images/tcip-hero-community.jpg"
-              alt="TCIP community participants and organizers in Toronto"
+              src={impact.imageUrl}
+              alt={impact.imageAlt}
               className="absolute inset-0 w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-on-primary-fixed via-on-primary-fixed/40 to-transparent" />
             <div className="relative z-10 text-on-primary">
               <span className="bg-primary px-3 py-1 rounded-full font-eyebrow-bold text-eyebrow-bold uppercase inline-block mb-3 shadow-xs">
-                GRASSROOTS INITIATIVE
+                {impact.badge}
               </span>
               <h3 className="font-headline-md text-headline-md leading-tight mb-2">
-                Community-Led Action
+                {impact.heading}
               </h3>
               <p className="font-body-md text-body-md text-primary-fixed leading-relaxed">
-                Initiatives developed in dialogue with community members, youth, newcomers, and families living in Toronto neighborhoods.
+                {impact.description}
               </p>
             </div>
           </div>

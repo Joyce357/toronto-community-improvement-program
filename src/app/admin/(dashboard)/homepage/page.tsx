@@ -18,17 +18,17 @@ export default async function AdminHomepagePage() {
     getHomepageContent(),
     prisma.program.findMany({
       orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }],
-      select: { id: true, title: true, status: true },
+      select: { id: true, title: true, status: true, imageUrl: true },
     }),
     prisma.event.findMany({
       orderBy: { date: 'desc' },
       take: 100,
-      select: { id: true, title: true, published: true },
+      select: { id: true, title: true, published: true, featuredImage: true },
     }),
     prisma.newsPost.findMany({
       orderBy: { createdAt: 'desc' },
       take: 100,
-      select: { id: true, title: true, published: true },
+      select: { id: true, title: true, published: true, featuredImage: true },
     }),
     prisma.galleryItem.findMany({
       orderBy: [{ displayOrder: 'asc' }, { createdAt: 'desc' }],
@@ -40,9 +40,24 @@ export default async function AdminHomepagePage() {
   return (
     <HomepageManager
       initialContent={content}
-      programs={programs.map((p) => ({ id: p.id, title: p.title, live: p.status === 'PUBLISHED' }))}
-      events={events.map((e) => ({ id: e.id, title: e.title, live: e.published }))}
-      stories={stories.map((s) => ({ id: s.id, title: s.title, live: s.published }))}
+      programs={programs.map((p) => ({
+        id: p.id,
+        title: p.title,
+        live: p.status === 'PUBLISHED',
+        imageUrl: p.imageUrl,
+      }))}
+      events={events.map((e) => ({
+        id: e.id,
+        title: e.title,
+        live: e.published,
+        imageUrl: e.featuredImage,
+      }))}
+      stories={stories.map((s) => ({
+        id: s.id,
+        title: s.title,
+        live: s.published,
+        imageUrl: s.featuredImage,
+      }))}
       gallery={gallery.map((g) => ({
         id: g.id,
         title: g.title || 'Untitled photo',
@@ -52,4 +67,3 @@ export default async function AdminHomepagePage() {
     />
   )
 }
-
