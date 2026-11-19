@@ -12,6 +12,10 @@ import GetInvolved       from '@/components/home/GetInvolved'
 import HomeContact       from '@/components/home/HomeContact'
 import { getBaseUrl, getCanonicalUrl } from '@/lib/seo'
 import { DEFAULT_SITE_SETTINGS } from '@/lib/settings'
+import { getHomepageContent, getFeaturedPrograms, getFeaturedGalleryItems } from '@/lib/homepage'
+
+// Re-check admin homepage edits regularly (admin saves also revalidate immediately).
+export const revalidate = 60
 
 export const metadata: Metadata = {
   title: {
@@ -28,8 +32,13 @@ export const metadata: Metadata = {
   },
 }
 
-export default function HomePage() {
+export default async function HomePage() {
   const baseUrl = getBaseUrl()
+  const home = await getHomepageContent()
+  const [programs, galleryItems] = await Promise.all([
+    getFeaturedPrograms(home.featuredProgramIds),
+    getFeaturedGalleryItems(home.galleryItemIds),
+  ])
 
   const orgJsonLd = {
     '@context': 'https://schema.org',
@@ -58,31 +67,40 @@ export default function HomePage() {
       {/* Homepage sections in exact Stitch editorial UI/UX sequence */}
       <div className="flex flex-col w-full">
         {/* SECTION 1: HERO / WELCOME (Asymmetric 2-Column: 45% Text / 55% Slideshow) */}
-        <Hero />
+        <Hero content={home.hero} />
 
         {/* SECTION 2: WHO WE ARE & FOUNDER STORY (Asymmetric Split 2-Column: 50% Photo / 50% Editorial Pull-Quote) */}
-        <WhoWeAre />
+        <WhoWeAre about={home.about} founder={home.founder} />
 
         {/* SECTION 3: THE TEAM & COMMUNITY LEADERSHIP (Bespoke 3-Column Editorial Grid) */}
-        <TeamLeadership />
+        <TeamLeadership founder={home.founder} />
 
         {/* SECTION 4: PROGRAMS & AREAS OF WORK (Varied-Width 4-Column Mosaic Grid) */}
-        <ProgramsPreview />
+        <ProgramsPreview programs={programs} />
 
         {/* SECTION 5: COMMUNITY IMPACT (Asymmetric 1 Hero Column + 3 Stacked Metric Columns) */}
         <ImpactStats />
 
         {/* SECTION 6: IMAGES OF IMPACT (True Editorial Masonry / Mosaic Photo Gallery) */}
-        <HomeGallery />
+        <HomeGallery
+          items={galleryItems.map((g) => ({
+            id: g.id,
+            title: g.title,
+            caption: g.caption,
+            altText: g.altText,
+            imageUrl: g.imageUrl,
+            category: g.category,
+          }))}
+        />
 
         {/* SECTION 7: COMMUNITY STORIES & UPCOMING EVENTS (1 Large Story Column + 2 Stacked Event Cards) */}
-        <StoriesPreview />
+        <StoriesPreview featured={home.featuredEvent} />
 
         {/* SECTION 8: OUR PARTNERS & CIVIC SUPPORTERS (Clean 6-Column Institutional Row) */}
         <Partnerships />
 
         {/* SECTION 9: GET INVOLVED (3 Dedicated Action Pathway Columns) */}
-        <GetInvolved />
+        <GetInvolved cta={home.cta} />
 
         {/* SECTION 10: WHAT PEOPLE SAY (Testimonials hidden until verified participant testimonials are published) */}
         {/* <Testimonials /> */}

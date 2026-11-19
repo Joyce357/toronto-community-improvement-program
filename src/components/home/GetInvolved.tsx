@@ -1,6 +1,7 @@
 import Link from 'next/link'
+import { DEFAULT_HOMEPAGE, type HomepageContent } from '@/lib/homepage-defaults'
 
-export default function GetInvolved() {
+export default function GetInvolved({ cta = DEFAULT_HOMEPAGE.cta }: { cta?: HomepageContent['cta'] }) {
   return (
     <section id="get-involved" className="w-full bg-surface-bright py-space-3xl scroll-mt-20 border-b border-outline-variant/30">
       <div className="max-w-7xl mx-auto px-4 md:px-margin-desktop">
@@ -11,11 +12,19 @@ export default function GetInvolved() {
             JOIN OUR MOVEMENT
           </span>
           <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface">
-            Be Part of the Change
+            {cta.heading}
           </h2>
           <p className="font-body-md text-body-md text-on-surface-variant mt-2">
-            Whether giving your time as a volunteer, exploring community partnerships, or supporting our work through donations, your participation strengthens Toronto communities.
+            {cta.text}
           </p>
+          {cta.buttonLabel && cta.buttonHref && (
+            <Link
+              href={cta.buttonHref}
+              className="inline-flex items-center justify-center bg-primary hover:bg-primary-container text-on-primary font-title-md text-title-md px-8 py-3 rounded-full shadow-sm hover:shadow transition-all duration-200 mt-space-md"
+            >
+              {cta.buttonLabel}
+            </Link>
+          )}
         </div>
 
         {/* 3 Columns with Varied Accent Styles */}

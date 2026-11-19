@@ -1,6 +1,13 @@
 import Link from 'next/link'
+import { DEFAULT_HOMEPAGE, type HomepageContent } from '@/lib/homepage-defaults'
 
-export default function WhoWeAre() {
+export default function WhoWeAre({
+  about = DEFAULT_HOMEPAGE.about,
+  founder = DEFAULT_HOMEPAGE.founder,
+}: {
+  about?: HomepageContent['about']
+  founder?: HomepageContent['founder']
+}) {
   return (
     <section id="about" className="w-full bg-surface-container-low py-space-3xl scroll-mt-20 border-b border-outline-variant/30">
       <div className="max-w-7xl mx-auto px-4 md:px-margin-desktop">
@@ -10,8 +17,8 @@ export default function WhoWeAre() {
           <div className="lg:col-span-6 relative">
             <div className="relative w-full h-[460px] rounded-3xl overflow-hidden shadow-md bg-surface-container">
               <img
-                src="/images/tcip-youth-leadership.jpg"
-                alt="Adaikpoh Dumebi, Founder of TCIP"
+                src={about.imageUrl}
+                alt="Toronto Community Improvement Program"
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/60 via-transparent to-transparent" />
@@ -28,7 +35,7 @@ export default function WhoWeAre() {
                     ESTABLISHED 2020
                   </span>
                   <p className="font-title-md text-title-md text-on-surface font-bold">
-                    Adaikpoh Dumebi
+                    {founder.name}
                   </p>
                   <span className="font-label-sm text-label-sm text-primary font-semibold">
                     Founder
@@ -51,11 +58,11 @@ export default function WhoWeAre() {
             </div>
 
             <h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface leading-tight">
-              Building Communities Where Everyone Can Thrive
+              {about.heading}
             </h2>
 
             <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-              Founded in 2020 by Adaikpoh Dumebi, who recognized the critical need for an organization dedicated to helping immigrants of Black descent navigate systemic barriers. Since then, TCIP has worked to empower individuals and families across the Greater Toronto Area through dedicated community programs and advocacy.
+              {about.summary}
             </p>
 
             {/* Large Editorial Pull-Quote Module */}

@@ -78,13 +78,46 @@ const galleryItems: GalleryItem[] = [
   },
 ]
 
-export default function HomeGallery() {
+export interface HomeGalleryInput {
+  id: string
+  title: string | null
+  caption: string | null
+  altText: string | null
+  imageUrl: string
+  category: string | null
+}
+
+const CUSTOM_GRID = [
+  'md:col-span-8 md:row-span-2',
+  'md:col-span-4 md:row-span-2',
+  'md:col-span-4 md:row-span-1',
+  'md:col-span-4 md:row-span-1',
+  'md:col-span-4 md:row-span-1',
+]
+
+export default function HomeGallery({ items }: { items?: HomeGalleryInput[] }) {
+  const usingCustom = !!items && items.length > 0
+  const sourceItems: GalleryItem[] = usingCustom
+    ? items!.map((g, i) => ({
+        id: g.id,
+        category: 'events',
+        badge: (g.category || 'Gallery').toUpperCase(),
+        badgeColor: 'bg-primary text-on-primary',
+        title: g.title || '',
+        subtitle: g.caption || undefined,
+        gridClass: CUSTOM_GRID[i] ?? 'md:col-span-4 md:row-span-1',
+        image: g.imageUrl,
+        fallback: '/images/tcip-hero-community.jpg',
+        alt: g.altText || g.title || 'TCIP gallery photo',
+      }))
+    : galleryItems
+
   const [selectedFilter, setSelectedFilter] = useState<'all' | 'youth' | 'employment' | 'health' | 'events'>('all')
   const [activeLightbox, setActiveLightbox] = useState<GalleryItem | null>(null)
 
-  const filteredItems = galleryItems.filter(
-    (item) => selectedFilter === 'all' || item.category === selectedFilter
-  )
+  const filteredItems = usingCustom
+    ? sourceItems
+    : sourceItems.filter((item) => selectedFilter === 'all' || item.category === selectedFilter)
 
   const filterButtons: { label: string; value: 'all' | 'youth' | 'employment' | 'health' | 'events' }[] = [
     { label: 'All Photos', value: 'all' },
@@ -113,6 +146,7 @@ export default function HomeGallery() {
           </div>
 
           {/* Filter Pills */}
+          {!usingCustom && (
           <div className="flex flex-wrap items-center gap-2">
             {filterButtons.map((btn) => (
               <button
@@ -129,6 +163,7 @@ export default function HomeGallery() {
               </button>
             ))}
           </div>
+          )}
         </div>
 
         {/* Masonry / Mosaic Photo Grid */}

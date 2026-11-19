@@ -1,8 +1,14 @@
 import Link from 'next/link'
 import { getFeaturedNews } from '@/lib/news'
 import type { NewsPost } from '@/types'
+import { getFeaturedEvent, getFeaturedStory } from '@/lib/homepage'
+import type { HomepageContent } from '@/lib/homepage-defaults'
 
-export default async function StoriesPreview() {
+export default async function StoriesPreview({
+  featured,
+}: {
+  featured?: HomepageContent['featuredEvent']
+}) {
   let stories: NewsPost[] = []
 
   try {
@@ -11,7 +17,11 @@ export default async function StoriesPreview() {
     // fallback
   }
 
-  const story = stories?.[0]
+  const pickedStory =
+    featured?.type === 'story' ? await getFeaturedStory(featured.id) : null
+  const pickedEvent =
+    featured?.type === 'event' ? await getFeaturedEvent(featured.id) : null
+  const story = pickedStory ? (pickedStory as unknown as NewsPost) : stories?.[0]
   const featuredStory = {
     id: story?.id || 'featured-1',
     title: story?.title || 'Youth Summer Job Fair: Creating Employment Pathways for Toronto Youth',
@@ -27,7 +37,7 @@ export default async function StoriesPreview() {
     location: 'Toronto, ON',
   }
 
-  const upcomingEvents = [
+  const defaultUpcomingEvents = [
     {
       id: 'event-1',
       month: 'UPCOMING',
@@ -57,6 +67,26 @@ export default async function StoriesPreview() {
       btnColor: 'bg-surface-container-lowest hover:bg-surface-container text-on-surface shadow-sm',
     },
   ]
+
+  const upcomingEvents = pickedEvent
+    ? [
+        {
+          id: pickedEvent.id,
+          month: pickedEvent.date.toLocaleString('en-CA', { month: 'short', timeZone: 'UTC' }).toUpperCase(),
+          day: String(pickedEvent.date.getUTCDate()).padStart(2, '0'),
+          badge: (pickedEvent.category || 'EVENT').toUpperCase(),
+          title: pickedEvent.title,
+          location: pickedEvent.location,
+          tag: pickedEvent.registrationOpen ? 'Registration Open' : 'Featured Event',
+          btnText: 'Learn More',
+          href: `/events/${pickedEvent.id}`,
+          accentBorder: 'border-primary',
+          tagColor: 'text-primary',
+          btnColor: 'bg-primary hover:bg-primary-container text-on-primary',
+        },
+        ...defaultUpcomingEvents.slice(1),
+      ]
+    : defaultUpcomingEvents
 
   return (
     <section id="events" className="w-full bg-surface-bright py-space-3xl scroll-mt-20 border-b border-outline-variant/30">
@@ -107,7 +137,7 @@ export default async function StoriesPreview() {
 
               <div className="pt-6 mt-6 border-t border-outline-variant/30 flex items-center justify-between">
                 <Link
-                  href="/events"
+                  href={story ? `/news/${story.slug}` : '/events'}
                   className="inline-flex items-center gap-2 font-title-md text-title-md text-primary hover:text-primary-container transition-colors group"
                 >
                   <span>Read Full Story</span>

@@ -51,7 +51,38 @@ const featuredPrograms = [
   },
 ]
 
-export default function ProgramsPreview() {
+export interface FeaturedProgramInput {
+  id: string
+  title: string
+  slug: string
+  category: string
+  shortDescription: string
+  imageUrl: string | null
+}
+
+const CARD_BADGES = [
+  'bg-primary text-on-primary',
+  'bg-secondary text-on-secondary',
+  'bg-tertiary-container text-on-tertiary-container',
+]
+const CARD_HEIGHTS = ['h-64', 'h-56', 'h-48']
+
+export default function ProgramsPreview({ programs }: { programs?: FeaturedProgramInput[] }) {
+  const cards =
+    programs && programs.length > 0
+      ? programs.map((p, i) => ({
+          tag: p.category,
+          badgeColor: CARD_BADGES[i % CARD_BADGES.length],
+          heightClass: CARD_HEIGHTS[i % CARD_HEIGHTS.length],
+          title: p.title,
+          description: p.shortDescription,
+          linkText: 'Learn More',
+          href: `/programs/${p.slug}`,
+          image: p.imageUrl || '/images/tcip-hero-community.jpg',
+          alt: p.title,
+        }))
+      : featuredPrograms
+
   return (
     <section id="programs" className="w-full bg-surface-container-low py-space-3xl scroll-mt-20 border-b border-outline-variant/30">
       <div className="max-w-7xl mx-auto px-4 md:px-margin-desktop">
@@ -71,7 +102,7 @@ export default function ProgramsPreview() {
 
         {/* 4 Columns with Visual Hierarchy & Varied Card Heights */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter-desktop">
-          {featuredPrograms.map((prog) => (
+          {cards.map((prog) => (
             <div
               key={prog.title}
               className="bg-surface-container-lowest rounded-3xl p-6 flex flex-col justify-between shadow-sm hover:shadow-lg transition-all duration-300 border border-outline-variant/30"

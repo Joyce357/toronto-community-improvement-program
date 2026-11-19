@@ -149,6 +149,13 @@ export default async function AdminDashboardPage() {
             <span>Upload Photos</span>
           </Link>
           <Link
+            href="/admin/homepage"
+            className="inline-flex items-center gap-2 bg-white hover:bg-[#F9FAFB] text-[#111827] font-semibold text-xs px-4 py-2.5 rounded-xl border border-[#E5E7EB] shadow-2xs transition-colors"
+          >
+            <span className="material-symbols-outlined text-base text-[#7C3AED]">home</span>
+            <span>Home Page</span>
+          </Link>
+          <Link
             href="/admin/programs"
             className="inline-flex items-center gap-2 bg-white hover:bg-[#F9FAFB] text-[#111827] font-semibold text-xs px-4 py-2.5 rounded-xl border border-[#E5E7EB] shadow-2xs transition-colors"
           >

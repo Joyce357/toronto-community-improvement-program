@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { DEFAULT_HOMEPAGE, DEFAULT_HERO_HEADING, type HomepageContent } from '@/lib/homepage-defaults'
 
-const heroSlides = [
+const defaultSlides = [
   {
     id: 1,
     tag: 'Community Empowerment',
@@ -30,7 +31,19 @@ const heroSlides = [
   },
 ]
 
-export default function Hero() {
+export default function Hero({ content }: { content?: HomepageContent['hero'] }) {
+  const hero = content ?? DEFAULT_HOMEPAGE.hero
+  const heroSlides =
+    hero.slides.length > 0
+      ? hero.slides.map((s, i) => ({
+          id: i + 1,
+          tag: '',
+          caption: s.caption,
+          image: s.imageUrl,
+          fallback: defaultSlides[0].image,
+          alt: s.caption || 'TCIP community photo',
+        }))
+      : defaultSlides
   const [currentSlide, setCurrentSlide] = useState(1)
   const totalSlides = heroSlides.length
 
@@ -67,32 +80,39 @@ export default function Hero() {
 
             {/* Display Headline */}
             <h1 className="font-display-xl text-display-xl-mobile md:text-display-xl text-on-surface text-balance">
-              Creating Opportunity. <br />
-              <span className="text-primary">Strengthening Belonging.</span> <br />
-              Empowering Communities.
+              {hero.heading === DEFAULT_HERO_HEADING ? (
+                <>
+                  Creating Opportunity. <br />
+                  <span className="text-primary">Strengthening Belonging.</span> <br />
+                  Empowering Communities.
+                </>
+              ) : (
+                hero.heading
+              )}
             </h1>
 
             {/* Narrative Body */}
             <p className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
-              Toronto Community Improvement Program: Empowering Communities for Change. Supporting Black immigrants,
-              newcomers, youth, women, families, and job seekers through advocacy, education, and community partnerships.
+              {hero.text}
             </p>
 
             {/* Action CTAs */}
             <div className="flex flex-wrap items-center gap-space-md pt-space-xs w-full sm:w-auto">
               <Link
-                href="/programs"
+                href={hero.primaryHref}
                 className="inline-flex items-center justify-center bg-primary hover:bg-primary-container text-on-primary font-title-md text-title-md px-8 py-3.5 rounded-full shadow-sm hover:shadow transition-all duration-200"
               >
-                Explore Our Programs
+                {hero.primaryLabel}
               </Link>
-              <Link
-                href="/get-involved"
-                className="inline-flex items-center justify-center gap-2 bg-surface-container-low hover:bg-surface-container text-on-surface font-title-md text-title-md px-6 py-3.5 rounded-full shadow-sm hover:shadow transition-all duration-200"
-              >
-                <span>Get Involved</span>
-                <span className="material-symbols-outlined text-lg">arrow_forward</span>
-              </Link>
+              {hero.secondaryLabel && hero.secondaryHref && (
+                <Link
+                  href={hero.secondaryHref}
+                  className="inline-flex items-center justify-center gap-2 bg-surface-container-low hover:bg-surface-container text-on-surface font-title-md text-title-md px-6 py-3.5 rounded-full shadow-sm hover:shadow transition-all duration-200"
+                >
+                  <span>{hero.secondaryLabel}</span>
+                  <span className="material-symbols-outlined text-lg">arrow_forward</span>
+                </Link>
+              )}
             </div>
 
             {/* Trust Metric Badge */}
@@ -142,16 +162,20 @@ export default function Hero() {
                       <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/80 via-transparent to-transparent" />
                       
                       {/* Glassmorphism Caption Card */}
+                      {(slide.tag || slide.caption) && (
                       <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-on-primary">
                         <div className="bg-surface-container-lowest/95 backdrop-blur-md text-on-surface p-4 rounded-xl shadow-lg max-w-md border border-outline-variant/30">
-                          <span className="font-eyebrow-bold text-eyebrow-bold text-primary block uppercase tracking-wider">
-                            {slide.tag}
-                          </span>
+                          {slide.tag && (
+                            <span className="font-eyebrow-bold text-eyebrow-bold text-primary block uppercase tracking-wider">
+                              {slide.tag}
+                            </span>
+                          )}
                           <p className="font-title-md text-title-md mt-1 leading-snug">
                             {slide.caption}
                           </p>
                         </div>
                       </div>
+                      )}
                     </div>
                   )
                 })}

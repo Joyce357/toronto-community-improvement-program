@@ -1,14 +1,19 @@
-export default function TeamLeadership() {
+import { DEFAULT_HOMEPAGE, type HomepageContent } from '@/lib/homepage-defaults'
+
+export default function TeamLeadership({
+  founder = DEFAULT_HOMEPAGE.founder,
+}: {
+  founder?: HomepageContent['founder']
+}) {
   const peoplePillars = [
     {
       badge: 'LEADERSHIP',
-      role: 'Founder & Community Leadership',
-      name: 'Adaikpoh Dumebi, Founder',
-      description:
-        'Guided by lived experience and a commitment to advocacy, education, and community empowerment for Black immigrants, newcomers, and families in Toronto.',
+      role: founder.heading,
+      name: `${founder.name}, Founder`,
+      description: founder.bio,
       feature: 'Community Stewardship & Vision',
       icon: 'verified',
-      image: '/images/tcip-community-workshop.jpg',
+      image: founder.imageUrl,
       alt: 'TCIP community leadership and founder engagement',
     },
     {

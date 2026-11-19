@@ -325,4 +325,16 @@ model SiteSettings {
   @@map("site_settings")
 }
 
+// ─── Homepage Settings ────────────────────────────────────────────────────────
+// Singleton (id = "home"). Stores admin-editable homepage copy and the IDs of
+// existing Programs / Events / News / Gallery records to feature. It never
+// duplicates those records. Empty values fall back to built-in defaults.
 
+model HomepageSettings {
+  id        String   @id @default("home")
+  content   Json     @default("{}")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("homepage_settings")
+}
