@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/adminAuth'
 import { gallerySchema, formatZodErrors } from '@/lib/validations'
-import { deleteGalleryImage } from '@/lib/cloudinary'
+import { deleteImageIfUnreferenced } from '@/lib/media'
 
 // ── GET: Get gallery item by ID ───────────────────────────────────────────
 
@@ -70,7 +70,10 @@ export async function PATCH(
       existing.imagePublicId &&
       result.data.imagePublicId !== existing.imagePublicId
     ) {
-      await deleteGalleryImage(existing.imagePublicId)
+      await deleteImageIfUnreferenced(
+        { url: existing.imageUrl, publicId: existing.imagePublicId },
+        { galleryItemId: existing.id },
+      )
     }
 
     const updated = await prisma.galleryItem.update({
@@ -115,7 +118,10 @@ export async function DELETE(
 
     // Clean up Cloudinary asset if present
     if (existing.imagePublicId) {
-      await deleteGalleryImage(existing.imagePublicId)
+      await deleteImageIfUnreferenced(
+        { url: existing.imageUrl, publicId: existing.imagePublicId },
+        { galleryItemId: existing.id },
+      )
     }
 
     await prisma.galleryItem.delete({

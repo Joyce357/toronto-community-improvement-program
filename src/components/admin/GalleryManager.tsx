@@ -2,6 +2,7 @@
 'use client'
 
 import { useState, useTransition, useRef, ChangeEvent } from 'react'
+import { uploadImage } from '@/lib/uploadClient'
 import Image from 'next/image'
 import type { GalleryItem } from '@/types'
 import { GALLERY_CATEGORIES, getGalleryCategoryStyle } from '@/lib/validations'
@@ -133,30 +134,22 @@ export default function GalleryManager({ initialItems, totalCount }: GalleryMana
     })
 
     try {
-      const uploadFormData = new FormData()
-      uploadFormData.append('file', file)
-
-      const res = await fetch('/api/admin/gallery/image', {
-        method: 'POST',
-        body: uploadFormData,
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setErrors((prev) => ({ ...prev, image: data.error || 'Failed to upload image.' }))
+      const result = await uploadImage(file, 'gallery')
+      if (!result.ok) {
+        setErrors((prev) => ({ ...prev, image: result.message }))
       } else {
+        const media = result.media
         setFormData((prev) => ({
           ...prev,
-          imageUrl: data.imageUrl,
-          imagePublicId: data.imagePublicId,
+          imageUrl: media.url,
+          imagePublicId: media.publicId,
           // Pre-populate title from clean filename if empty
           title: prev.title || file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
           altText: prev.altText || file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' '),
         }))
       }
     } catch {
-      setErrors((prev) => ({ ...prev, image: 'Network error during image upload.' }))
+      setErrors((prev) => ({ ...prev, image: 'Upload failed unexpectedly. Please try again.' }))
     } finally {
       setUploadingImage(false)
       if (fileInputRef.current) fileInputRef.current.value = ''
@@ -183,6 +176,7 @@ export default function GalleryManager({ initialItems, totalCount }: GalleryMana
 
     const newlyAdded: GalleryItem[] = []
     let failedCount = 0
+    let lastUploadError = ''
 
     let currentMaxOrder = items.length > 0 ? Math.max(...items.map((i) => i.displayOrder)) : 0
 
@@ -192,19 +186,13 @@ export default function GalleryManager({ initialItems, totalCount }: GalleryMana
 
       try {
         // 1. Upload file to Cloudinary
-        const uploadFormData = new FormData()
-        uploadFormData.append('file', file)
-
-        const imgRes = await fetch('/api/admin/gallery/image', {
-          method: 'POST',
-          body: uploadFormData,
-        })
-        const imgData = await imgRes.json()
-
-        if (!imgRes.ok || !imgData.imageUrl) {
+        const up = await uploadImage(file, 'gallery')
+        if (!up.ok) {
           failedCount++
+          lastUploadError = up.message
           continue
         }
+        const imgData = { imageUrl: up.media.url, imagePublicId: up.media.publicId }
 
         // 2. Derive title and create DB record
         const cleanName = file.name.replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ')
@@ -256,7 +244,7 @@ export default function GalleryManager({ initialItems, totalCount }: GalleryMana
     } else if (failedCount > 0) {
       setBannerMsg({
         type: 'error',
-        text: `Failed to upload photos. Please check your network connection and file sizes.`,
+        text: `Failed to upload photos. ${lastUploadError || 'Please check your connection and file sizes.'}`,
       })
     }
   }
@@ -323,7 +311,7 @@ export default function GalleryManager({ initialItems, totalCount }: GalleryMana
         closeModal()
       }
     } catch {
-      setBannerMsg({ type: 'error', text: 'Network error while saving photo.' })
+      setBannerMsg({ type: 'error', text: 'The photo could not be saved. Please check your connection and sign-in, then try again.' })
     } finally {
       setIsSaving(false)
     }

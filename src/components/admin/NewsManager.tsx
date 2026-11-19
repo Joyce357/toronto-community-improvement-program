@@ -2,6 +2,7 @@
 'use client'
 
 import { useState, useTransition, useRef, ChangeEvent } from 'react'
+import { uploadImage } from '@/lib/uploadClient'
 import Image from 'next/image'
 import type { NewsPost } from '@/types'
 import { NEWS_CATEGORIES, getNewsCategoryStyle } from '@/lib/validations'
@@ -142,27 +143,19 @@ export default function NewsManager({ initialPosts, totalCount }: NewsManagerPro
     })
 
     try {
-      const uploadFormData = new FormData()
-      uploadFormData.append('file', file)
-
-      const res = await fetch('/api/admin/gallery/image', {
-        method: 'POST',
-        body: uploadFormData,
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setErrors((prev) => ({ ...prev, image: data.error || 'Failed to upload image.' }))
+      const result = await uploadImage(file, 'news')
+      if (!result.ok) {
+        setErrors((prev) => ({ ...prev, image: result.message }))
       } else {
+        const media = result.media
         setFormData((prev) => ({
           ...prev,
-          featuredImage: data.imageUrl,
-          imagePublicId: data.imagePublicId || '',
+          featuredImage: media.url,
+          imagePublicId: media.publicId || '',
         }))
       }
     } catch {
-      setErrors((prev) => ({ ...prev, image: 'Network error during image upload.' }))
+      setErrors((prev) => ({ ...prev, image: 'Upload failed unexpectedly. Please try again.' }))
     } finally {
       setUploadingImage(false)
       if (fileInputRef.current) fileInputRef.current.value = ''

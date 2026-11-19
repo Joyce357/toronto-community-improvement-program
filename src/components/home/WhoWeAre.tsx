@@ -18,7 +18,7 @@ export default function WhoWeAre({
             <div className="relative w-full h-[460px] rounded-3xl overflow-hidden shadow-md bg-surface-container">
               <img
                 src={about.imageUrl}
-                alt="Toronto Community Improvement Program"
+                alt={about.imageAlt}
                 className="w-full h-full object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-inverse-surface/60 via-transparent to-transparent" />

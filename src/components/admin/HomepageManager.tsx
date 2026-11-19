@@ -4,6 +4,8 @@
 // Stories / Gallery items are chosen from existing records (never duplicated).
 
 import { useState } from 'react'
+import ImagePicker from '@/components/admin/ImagePicker'
+import { ACCEPT_ATTR, uploadImage } from '@/lib/uploadClient'
 import type { HomepageContent } from '@/lib/homepage-defaults'
 
 interface Option { id: string; title: string; live: boolean }
@@ -45,42 +47,6 @@ function Section({ title, description, children }: { title: string; description:
   )
 }
 
-function ImageField({
-  title, value, onChange, gallery,
-}: { title: string; value: string; onChange: (v: string) => void; gallery: GalleryOption[] }) {
-  return (
-    <div>
-      <label className={label}>{title}</label>
-      <div className="flex gap-3 items-start">
-        {value ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={value} alt="" className="w-20 h-20 rounded-lg object-cover border border-gray-200 shrink-0" />
-        ) : (
-          <div className="w-20 h-20 rounded-lg bg-gray-100 border border-dashed border-gray-300 shrink-0" />
-        )}
-        <div className="flex-1 space-y-2">
-          <select
-            className={input}
-            value=""
-            onChange={(e) => e.target.value && onChange(e.target.value)}
-          >
-            <option value="">Choose from Gallery images…</option>
-            {gallery.map((g) => (
-              <option key={g.id} value={g.imageUrl}>{g.title}</option>
-            ))}
-          </select>
-          <input
-            className={input}
-            placeholder="…or paste an image URL / site path (e.g. /images/photo.jpg)"
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-          />
-        </div>
-      </div>
-    </div>
-  )
-}
-
 function MultiPick({
   options, selected, onChange, max, empty,
 }: { options: Option[]; selected: string[]; onChange: (ids: string[]) => void; max: number; empty: string }) {
@@ -108,6 +74,26 @@ function MultiPick({
 
 export default function HomepageManager({ initialContent, programs, events, stories, gallery }: Props) {
   const [c, setC] = useState<HomepageContent>(initialContent)
+  const [galleryOpts, setGalleryOpts] = useState<GalleryOption[]>(gallery)
+  const [galleryUploading, setGalleryUploading] = useState(false)
+  const [galleryUploadMsg, setGalleryUploadMsg] = useState<{ ok: boolean; text: string } | null>(null)
+
+  async function uploadToHomepageGallery(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setGalleryUploading(true)
+    setGalleryUploadMsg(null)
+    const r = await uploadImage(file, 'gallery', { registerInLibrary: true, publish: true })
+    setGalleryUploading(false)
+    if (!r.ok) { setGalleryUploadMsg({ ok: false, text: r.message }); return }
+    const item = r.media.galleryItem
+    if (item) {
+      setGalleryOpts((prev) => [{ id: item.id, title: item.title || 'Untitled photo', imageUrl: item.imageUrl, live: item.published }, ...prev])
+      setC((prev) => ({ ...prev, galleryItemIds: prev.galleryItemIds.length < 12 ? [...prev.galleryItemIds, item.id] : prev.galleryItemIds }))
+    }
+    setGalleryUploadMsg({ ok: true, text: 'Photo uploaded to the Gallery and selected. Remember to save your changes.' })
+  }
   const [saving, setSaving] = useState(false)
   const [status, setStatus] = useState<{ ok: boolean; msg: string } | null>(null)
 
@@ -178,8 +164,8 @@ export default function HomepageManager({ initialContent, programs, events, stor
           <p className={label}>Hero slideshow images (leave empty to use the default slideshow)</p>
           {slides.map((s, i) => (
             <div key={i} className="rounded-lg border border-gray-200 p-3 space-y-3">
-              <ImageField title={`Slide ${i + 1} image`} value={s.imageUrl} gallery={gallery} onChange={(v) => setSlide(i, { imageUrl: v })} />
-              <Field title="Caption (optional)"><input className={input} value={s.caption} onChange={(e) => setSlide(i, { caption: e.target.value })} /></Field>
+              <ImagePicker label={`Slide ${i + 1} image`} value={s.imageUrl} purpose="homepage" onChange={(v) => setSlide(i, { imageUrl: v })} />
+              <Field title="Caption (optional, also used as the image description)"><input className={input} value={s.caption} onChange={(e) => setSlide(i, { caption: e.target.value })} /></Field>
               <button type="button" className="text-xs font-semibold text-red-600" onClick={() => set('hero', { slides: slides.filter((_, idx) => idx !== i) })}>Remove slide</button>
             </div>
           ))}
@@ -194,7 +180,8 @@ export default function HomepageManager({ initialContent, programs, events, stor
       <Section title="2. About / Who We Are" description="Heading, short summary and photo for the About section.">
         <Field title="Section heading"><input className={input} value={c.about.heading} onChange={(e) => set('about', { heading: e.target.value })} /></Field>
         <Field title="Short summary"><textarea rows={4} className={input} value={c.about.summary} onChange={(e) => set('about', { summary: e.target.value })} /></Field>
-        <ImageField title="Image (optional)" value={c.about.imageUrl} gallery={gallery} onChange={(v) => set('about', { imageUrl: v })} />
+        <ImagePicker label="Image" value={c.about.imageUrl} purpose="homepage" resetLabel="Reset to default"
+          onChange={(v) => set('about', { imageUrl: v })} alt={c.about.imageAlt} onAltChange={(v) => set('about', { imageAlt: v })} />
       </Section>
 
       <Section title="3. Featured Services / Programs" description="Pick existing Programs to show on the homepage (up to 8, in the order selected). Leave none selected to show the default cards.">
@@ -228,11 +215,22 @@ export default function HomepageManager({ initialContent, programs, events, stor
         <Field title="Heading"><input className={input} value={c.founder.heading} onChange={(e) => set('founder', { heading: e.target.value })} /></Field>
         <Field title="Founder name"><input className={input} value={c.founder.name} onChange={(e) => set('founder', { name: e.target.value })} /></Field>
         <Field title="Short bio"><textarea rows={4} className={input} value={c.founder.bio} onChange={(e) => set('founder', { bio: e.target.value })} /></Field>
-        <ImageField title="Founder image" value={c.founder.imageUrl} gallery={gallery} onChange={(v) => set('founder', { imageUrl: v })} />
+        <ImagePicker label="Founder image" value={c.founder.imageUrl} purpose="homepage" resetLabel="Reset to default"
+          onChange={(v) => set('founder', { imageUrl: v })} alt={c.founder.imageAlt} onAltChange={(v) => set('founder', { imageAlt: v })} />
       </Section>
 
       <Section title="6. Homepage Gallery" description="Choose existing Gallery photos to feature (up to 12). Leave none selected to show the default photos.">
-        <MultiPick options={gallery} selected={c.galleryItemIds} onChange={(ids) => setC({ ...c, galleryItemIds: ids })} max={12} empty="No gallery photos yet. Upload some in Gallery first." />
+        <MultiPick options={galleryOpts} selected={c.galleryItemIds} onChange={(ids) => setC({ ...c, galleryItemIds: ids })} max={12} empty="No Gallery images available yet. Upload one below." />
+        <div className="flex flex-wrap items-center gap-3">
+          <label className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-2 rounded-lg bg-[#16A34A] text-white hover:bg-[#15803D] cursor-pointer focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[#16A34A]">
+            {galleryUploading ? 'Uploading…' : 'Upload New Image'}
+            <input type="file" accept={ACCEPT_ATTR} className="sr-only" disabled={galleryUploading} onChange={uploadToHomepageGallery} aria-label="Upload a new photo to the Gallery from your computer" />
+          </label>
+          <span className={hint}>Adds the photo to the Gallery (published) and selects it here.</span>
+        </div>
+        {galleryUploadMsg && (
+          <p role={galleryUploadMsg.ok ? 'status' : 'alert'} className={`text-xs font-medium ${galleryUploadMsg.ok ? 'text-green-700' : 'text-red-600'}`}>{galleryUploadMsg.text}</p>
+        )}
         <p className={hint}>Only published photos appear publicly. Upload and manage photos in Gallery.</p>
       </Section>
 

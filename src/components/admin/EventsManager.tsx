@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useRef, ChangeEvent } from 'react'
+import { uploadImage } from '@/lib/uploadClient'
 import Image from 'next/image'
 import StatusBadge from '@/components/admin/StatusBadge'
 import EmptyState from '@/components/admin/EmptyState'
@@ -132,23 +133,15 @@ export default function EventsManager({
     })
 
     try {
-      const uploadFormData = new FormData()
-      uploadFormData.append('file', file)
-
-      const res = await fetch('/api/admin/gallery/image', {
-        method: 'POST',
-        body: uploadFormData,
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setFormErrors((prev) => ({ ...prev, image: data.error || 'Failed to upload image.' }))
+      const result = await uploadImage(file, 'events')
+      if (!result.ok) {
+        setFormErrors((prev) => ({ ...prev, image: result.message }))
       } else {
-        setFormData((prev) => ({ ...prev, featuredImage: data.imageUrl }))
+        const media = result.media
+        setFormData((prev) => ({ ...prev, featuredImage: media.url }))
       }
     } catch {
-      setFormErrors((prev) => ({ ...prev, image: 'Network error during image upload.' }))
+      setFormErrors((prev) => ({ ...prev, image: 'Upload failed unexpectedly. Please try again.' }))
     } finally {
       setUploadingImage(false)
       if (fileInputRef.current) fileInputRef.current.value = ''

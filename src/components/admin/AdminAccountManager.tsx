@@ -5,6 +5,7 @@
 import { useState, useRef, FormEvent, ChangeEvent } from 'react'
 import { useSession } from 'next-auth/react'
 import Image from 'next/image'
+import { uploadImage } from '@/lib/uploadClient'
 
 export default function AdminAccountManager() {
   const { data: session, update } = useSession()
@@ -48,7 +49,7 @@ export default function AdminAccountManager() {
       return
     }
 
-    // Validate size client-side (max 3 MB)
+    // Validate size client-side (max 3 MB; server enforces the same limit)
     if (file.size > 3 * 1024 * 1024) {
       setAvatarMsg({ type: 'error', text: 'Image exceeds 3 MB limit. Please select a smaller photo.' })
       if (fileInputRef.current) fileInputRef.current.value = ''
@@ -61,27 +62,20 @@ export default function AdminAccountManager() {
     setUploadingAvatar(true)
 
     try {
-      const formData = new FormData()
-      formData.append('file', file)
+      // 'avatar' purpose: uploads to Cloudinary AND saves User.avatarUrl server-side.
+      const result = await uploadImage(file, 'avatar')
 
-      const res = await fetch('/api/admin/profile/avatar', {
-        method: 'POST',
-        body: formData,
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setAvatarMsg({ type: 'error', text: data.error ?? 'Upload failed.' })
+      if (!result.ok) {
+        setAvatarMsg({ type: 'error', text: result.message })
         setPreviewUrl(null)
       } else {
         setAvatarMsg({ type: 'success', text: 'Profile picture updated successfully.' })
-        setPreviewUrl(data.avatarUrl)
-        // Refresh NextAuth session
-        await update({ image: data.avatarUrl })
+        setPreviewUrl(result.media.url)
+        // Refresh NextAuth session so the header and sidebar update immediately
+        await update({ image: result.media.url })
       }
     } catch {
-      setAvatarMsg({ type: 'error', text: 'Network error while uploading photo.' })
+      setAvatarMsg({ type: 'error', text: 'Upload failed unexpectedly. Please try again.' })
       setPreviewUrl(null)
     } finally {
       setUploadingAvatar(false)
@@ -105,7 +99,8 @@ export default function AdminAccountManager() {
       const data = await res.json()
 
       if (!res.ok) {
-        setAvatarMsg({ type: 'error', text: data.error ?? 'Failed to remove photo.' })
+        const msg = typeof data.error === 'string' ? data.error : data.error?.message
+        setAvatarMsg({ type: 'error', text: msg ?? 'Failed to remove photo.' })
       } else {
         setPreviewUrl(null)
         setAvatarMsg({ type: 'success', text: 'Profile photo removed.' })
@@ -113,7 +108,7 @@ export default function AdminAccountManager() {
         await update({ image: null })
       }
     } catch {
-      setAvatarMsg({ type: 'error', text: 'Network error while removing photo.' })
+      setAvatarMsg({ type: 'error', text: 'Could not remove the photo. Check your connection and sign-in, then try again.' })
     } finally {
       setRemovingAvatar(false)
     }

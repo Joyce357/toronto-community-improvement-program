@@ -2,6 +2,7 @@
 'use client'
 
 import { useState, useRef, ChangeEvent } from 'react'
+import { uploadImage } from '@/lib/uploadClient'
 import Image from 'next/image'
 import type { Partner } from '@/types'
 import StatusBadge from './StatusBadge'
@@ -106,23 +107,15 @@ export default function PartnersManager({
     })
 
     try {
-      const uploadFormData = new FormData()
-      uploadFormData.append('file', file)
-
-      const res = await fetch('/api/admin/gallery/image', {
-        method: 'POST',
-        body: uploadFormData,
-      })
-
-      const data = await res.json()
-
-      if (!res.ok) {
-        setErrors((prev) => ({ ...prev, logo: data.error || 'Failed to upload logo.' }))
+      const result = await uploadImage(file, 'partners')
+      if (!result.ok) {
+        setErrors((prev) => ({ ...prev, logo: result.message }))
       } else {
-        setFormData((prev) => ({ ...prev, logoUrl: data.imageUrl }))
+        const media = result.media
+        setFormData((prev) => ({ ...prev, logoUrl: media.url }))
       }
     } catch {
-      setErrors((prev) => ({ ...prev, logo: 'Network error during logo upload.' }))
+      setErrors((prev) => ({ ...prev, logo: 'Upload failed unexpectedly. Please try again.' }))
     } finally {
       setUploadingLogo(false)
       if (fileInputRef.current) fileInputRef.current.value = ''

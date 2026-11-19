@@ -14,7 +14,7 @@ export default function TeamLeadership({
       feature: 'Community Stewardship & Vision',
       icon: 'verified',
       image: founder.imageUrl,
-      alt: 'TCIP community leadership and founder engagement',
+      alt: founder.imageAlt,
     },
     {
       badge: 'VOLUNTEERS',

@@ -3,19 +3,25 @@
 
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary'
 
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key:    process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
-  secure:     true,
-})
+export function ensureCloudinaryConfig() {
+  cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME?.trim(),
+    api_key:    process.env.CLOUDINARY_API_KEY?.trim(),
+    api_secret: process.env.CLOUDINARY_API_SECRET?.trim(),
+    secure:     true,
+  })
+}
+
+ensureCloudinaryConfig()
 
 export const CLOUDINARY_FOLDERS = {
   adminAvatars: 'tcip/admin-avatars',
+  homepage:     'tcip/homepage',
   programs:     'tcip/programs',
   events:       'tcip/events',
   news:         'tcip/news',
   gallery:      'tcip/gallery',
+  partners:     'tcip/partners',
 } as const
 
 /**

@@ -36,7 +36,10 @@ const nextConfig = {
 
   // Compiler options
   compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+    // Keep error/warn/info so production logs (e.g. Hostinger) show real failures.
+    // Previously ALL console output was stripped, which hid upload errors.
+    removeConsole:
+      process.env.NODE_ENV === 'production' ? { exclude: ['error', 'warn', 'info'] } : false,
   },
 };
 

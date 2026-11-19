@@ -66,6 +66,7 @@ export function normalizeHomepageContent(raw: unknown): HomepageContent {
       heading: str(about.heading) || d.about.heading,
       summary: str(about.summary) || d.about.summary,
       imageUrl: safeUrl(about.imageUrl) || d.about.imageUrl,
+      imageAlt: str(about.imageAlt).slice(0, 200) || d.about.imageAlt,
     },
     featuredProgramIds: strArr(r.featuredProgramIds, 8),
     featuredEvent: { type: feType, id: feType ? str(fe.id) : '' },
@@ -74,6 +75,7 @@ export function normalizeHomepageContent(raw: unknown): HomepageContent {
       name: str(founder.name) || d.founder.name,
       bio: str(founder.bio) || d.founder.bio,
       imageUrl: safeUrl(founder.imageUrl) || d.founder.imageUrl,
+      imageAlt: str(founder.imageAlt).slice(0, 200) || d.founder.imageAlt,
     },
     galleryItemIds: strArr(r.galleryItemIds, 12),
     cta: {

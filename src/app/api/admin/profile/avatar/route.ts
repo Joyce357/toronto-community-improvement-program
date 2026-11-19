@@ -1,102 +1,40 @@
 // ─── POST & DELETE /api/admin/profile/avatar ────────────────────────────────
-// Manages admin avatar uploads to Cloudinary and persists URLs in Neon.
+// POST uses the shared media pipeline (upload → Cloudinary → User.avatarUrl).
+// DELETE removes the avatar asset and clears User.avatarUrl.
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/adminAuth'
-import { uploadAdminAvatar, deleteAdminAvatar } from '@/lib/cloudinary'
+import { handleMediaUpload } from '@/lib/mediaHandler'
+import { cloudinary } from '@/lib/cloudinary'
+import { mediaFail, mediaLog, mediaOk } from '@/lib/media'
 
-const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/webp']
-const MAX_FILE_SIZE = 3 * 1024 * 1024 // 3 MB
-
-// ── POST: Upload / Replace Avatar ──────────────────────────────────────────
+export const runtime = 'nodejs'
+export const dynamic = 'force-dynamic'
 
 export async function POST(req: NextRequest) {
-  const { session, error } = await requireAdminSession()
-  if (error) return error
-
-  try {
-    const formData = await req.formData()
-    const file = formData.get('file') as File | null
-
-    if (!file || typeof file === 'string') {
-      return NextResponse.json(
-        { error: 'No image file provided.' },
-        { status: 400 },
-      )
-    }
-
-    // Server-side type validation
-    if (!ALLOWED_MIME_TYPES.includes(file.type)) {
-      return NextResponse.json(
-        { error: 'Invalid file type. Only JPEG, PNG, and WebP are accepted.' },
-        { status: 415 },
-      )
-    }
-
-    // Server-side size validation (max 3 MB)
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json(
-        { error: 'File size exceeds the 3 MB limit.' },
-        { status: 413 },
-      )
-    }
-
-    // Convert to Buffer
-    const arrayBuffer = await file.arrayBuffer()
-    const buffer = Buffer.from(arrayBuffer)
-
-    // Upload to Cloudinary with deterministic user ID
-    const { secure_url } = await uploadAdminAvatar(buffer, session.user.id)
-
-    // Update Neon User.avatarUrl
-    const updatedUser = await prisma.user.update({
-      where: { id: session.user.id },
-      data:  { avatarUrl: secure_url },
-      select: { id: true, name: true, email: true, avatarUrl: true, role: true },
-    })
-
-    return NextResponse.json({
-      success: true,
-      avatarUrl: updatedUser.avatarUrl,
-      user: updatedUser,
-    })
-  } catch (err) {
-    console.error('[Admin Avatar POST] Upload failed:', err)
-    return NextResponse.json(
-      { error: 'Failed to upload profile picture. Please try again.' },
-      { status: 500 },
-    )
-  }
+  return handleMediaUpload(req, 'POST /api/admin/profile/avatar', 'avatar')
 }
-
-// ── DELETE: Remove Avatar ──────────────────────────────────────────────────
 
 export async function DELETE() {
   const { session, error } = await requireAdminSession()
-  if (error) return error
+  if (error || !session) return mediaFail(401, 'UNAUTHENTICATED', 'Your session has expired. Please sign in again.')
 
   try {
-    // Delete from Cloudinary
-    await deleteAdminAvatar(session.user.id)
+    await cloudinary.uploader
+      .destroy(`tcip/admin-avatars/${session.user.id}`, { invalidate: true, resource_type: 'image' })
+      .catch((err: Error) =>
+        mediaLog('warn', 'DELETE /api/admin/profile/avatar', 'cloudinary_destroy', { message: err?.message }),
+      )
 
-    // Clear in Neon database
-    const updatedUser = await prisma.user.update({
+    const user = await prisma.user.update({
       where: { id: session.user.id },
-      data:  { avatarUrl: null },
+      data: { avatarUrl: null },
       select: { id: true, name: true, email: true, avatarUrl: true, role: true },
     })
-
-    return NextResponse.json({
-      success: true,
-      avatarUrl: null,
-      user: updatedUser,
-    })
+    return mediaOk({ avatarUrl: null, user }, { success: true, avatarUrl: null, user })
   } catch (err) {
-    console.error('[Admin Avatar DELETE] Deletion failed:', err)
-    return NextResponse.json(
-      { error: 'Failed to remove profile picture.' },
-      { status: 500 },
-    )
+    mediaLog('error', 'DELETE /api/admin/profile/avatar', 'database', { message: (err as Error)?.message })
+    return mediaFail(500, 'DB_SAVE_FAILED', 'Failed to remove the profile photo. Please try again.')
   }
 }

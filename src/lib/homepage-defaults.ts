@@ -21,6 +21,7 @@ export interface HomepageContent {
     heading: string
     summary: string
     imageUrl: string
+    imageAlt: string
   }
   featuredProgramIds: string[]
   featuredEvent: {
@@ -32,6 +33,7 @@ export interface HomepageContent {
     name: string
     bio: string
     imageUrl: string
+    imageAlt: string
   }
   galleryItemIds: string[]
   cta: {
@@ -61,6 +63,7 @@ export const DEFAULT_HOMEPAGE: HomepageContent = {
     summary:
       'Founded in 2020 by Adaikpoh Dumebi, who recognized the critical need for an organization dedicated to helping immigrants of Black descent navigate systemic barriers. Since then, TCIP has worked to empower individuals and families across the Greater Toronto Area through dedicated community programs and advocacy.',
     imageUrl: '/images/tcip-youth-leadership.jpg',
+    imageAlt: 'Toronto Community Improvement Program community photo',
   },
   featuredProgramIds: [],
   featuredEvent: { type: '', id: '' },
@@ -70,6 +73,7 @@ export const DEFAULT_HOMEPAGE: HomepageContent = {
     bio:
       'Guided by lived experience and a commitment to advocacy, education, and community empowerment for Black immigrants, newcomers, and families in Toronto.',
     imageUrl: '/images/tcip-community-workshop.jpg',
+    imageAlt: 'TCIP community leadership and founder engagement',
   },
   galleryItemIds: [],
   cta: {

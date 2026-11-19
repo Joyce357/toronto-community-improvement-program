@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAdminSession } from '@/lib/adminAuth'
 import { newsSchema, formatZodErrors } from '@/lib/validations'
-import { deleteNewsImage } from '@/lib/cloudinary'
+import { deleteImageIfUnreferenced } from '@/lib/media'
 
 // ── GET: Get news post by ID or slug ───────────────────────────────────────
 
@@ -98,7 +98,10 @@ export async function PATCH(
       existing.imagePublicId &&
       result.data.imagePublicId !== existing.imagePublicId
     ) {
-      await deleteNewsImage(existing.imagePublicId)
+      await deleteImageIfUnreferenced(
+        { url: existing.featuredImage, publicId: existing.imagePublicId },
+        { newsPostId: existing.id },
+      )
     }
 
     const updated = await prisma.newsPost.update({
@@ -147,7 +150,10 @@ export async function DELETE(
 
     // Clean up Cloudinary asset if present
     if (existing.imagePublicId) {
-      await deleteNewsImage(existing.imagePublicId)
+      await deleteImageIfUnreferenced(
+        { url: existing.featuredImage, publicId: existing.imagePublicId },
+        { newsPostId: existing.id },
+      )
     }
 
     await prisma.newsPost.delete({
